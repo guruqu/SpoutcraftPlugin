@@ -37,7 +37,7 @@ import org.getspout.spoutapi.io.SpoutInputStream;
 import org.getspout.spoutapi.io.SpoutOutputStream;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketEntityInformation implements CompressiblePacket {
+public class PacketEntityInformation implements CompressablePacket {
 	private boolean compressed = false;
 	private byte[] data = null;
 

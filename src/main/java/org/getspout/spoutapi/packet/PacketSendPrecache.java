@@ -31,7 +31,7 @@ import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.io.SpoutInputStream;
 import org.getspout.spoutapi.io.SpoutOutputStream;
 
-public class PacketSendPrecache implements CompressiblePacket {
+public class PacketSendPrecache implements CompressablePacket {
 	private byte[] fileData;
 	private String plugin;
 	private String version;

@@ -36,7 +36,7 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 import org.bukkit.Chunk;
 import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
 
-public class PacketCustomBlockChunkOverride implements CompressiblePacket {
+public class PacketCustomBlockChunkOverride implements CompressablePacket {
 	private int chunkX;
 	private int chunkZ;
 	private boolean hasData = false;

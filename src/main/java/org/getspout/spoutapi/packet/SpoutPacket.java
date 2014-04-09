@@ -20,7 +20,9 @@
 package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
+import net.minecraft.server.v1_6_R3.EntityPlayer;
 import org.getspout.spoutapi.io.SpoutInputStream;
 import org.getspout.spoutapi.io.SpoutOutputStream;
 
@@ -29,32 +31,21 @@ public interface SpoutPacket {
 	 * Reads the incoming data from the client.
 	 * <p/>
 	 * Note: Data should be read in exactly the same order as it was written.
-	 * @param input stream to read data from
+	 * @param buf The byte buffer to read data from
 	 */
-	public void readData(SpoutInputStream input) throws IOException;
+	public void decode(ByteBuffer buf) throws IOException;
 
 	/**
 	 * Writes the outgoing data to the output stream.
-	 * @param output to write data to
+	 * @param buf The buffer to write data to
 	 */
-	public void writeData(SpoutOutputStream output) throws IOException;
+	public void encode(ByteBuffer buf) throws IOException;
 
 	/**
 	 * Performs any tasks for the packet after data has been successfully read into the packet.
-	 * @param playerId for the packet
+	 * @param player The player of this packet
 	 */
-	public void run(int playerId);
-
-	/**
-	 * Performs any tasks for the packet after the data has NOT been successfully read into the packet.
-	 * All values will be at defaults (0, null, etc) and are unsafe.
-	 * <p/>
-	 * Failure is run when the packet versions mismatch and data could not be safely read.
-	 * <p/>
-	 * It may not be called for all cases of failure.
-	 * @param playerId
-	 */
-	public void failure(int playerId);
+	public void handle(EntityPlayer player);
 
 	/**
 	 * The type of packet represented. Used to rebuild the correct packet on the client.

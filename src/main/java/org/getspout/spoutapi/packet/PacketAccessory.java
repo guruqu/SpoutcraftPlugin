@@ -20,6 +20,7 @@
 package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import org.getspout.spoutapi.io.SpoutInputStream;
 import org.getspout.spoutapi.io.SpoutOutputStream;
@@ -45,15 +46,15 @@ public class PacketAccessory implements SpoutPacket{
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		who = input.readString();
-		type = AccessoryType.get(input.readInt());
-		url = input.readString();
-		add = input.readBoolean();
+	public void decode(ByteBuffer buf) throws IOException {
+		who = buf.();
+		type = AccessoryType.get(buf.getInt());
+		url = buf.get();
+		add = buf.get();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
+	public void encode(ByteBuffer buf) throws IOException {
 		output.writeString(who);
 		output.writeInt(type.getId());
 		output.writeString(url);
