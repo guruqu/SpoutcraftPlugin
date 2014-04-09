@@ -23,8 +23,6 @@ import java.io.File;
 import java.io.IOException;
 
 import org.getspout.spoutapi.SpoutManager;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketPreCacheFile implements SpoutPacket {
@@ -69,7 +67,7 @@ public class PacketPreCacheFile implements SpoutPacket {
 			if (player != null) {
 				File file = new File(this.file);
 				if (file.exists()) {
-					player.sendPacket(new PacketCacheFile(plugin, file));
+					player.sendPacket(new PacketDownloadFile(plugin, file));
 				}
 			}
 		}

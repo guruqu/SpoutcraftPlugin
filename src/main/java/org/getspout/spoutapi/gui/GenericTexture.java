@@ -21,9 +21,6 @@ package org.getspout.spoutapi.gui;
 
 import java.io.IOException;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
-
 public class GenericTexture extends GenericWidget implements Texture {
 	protected String url = null;
 	protected boolean drawAlpha = false;

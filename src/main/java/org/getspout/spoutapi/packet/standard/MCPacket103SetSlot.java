@@ -28,6 +28,69 @@ import org.bukkit.inventory.ItemStack;
  */
 public interface MCPacket103SetSlot extends MCPacket {
 	/**
+	 * Get the slot that the packet indicated.
+	 *
+	 * @return an enum value representing the data in the packet
+	 */
+	public Slot getSlot();
+
+	/**
+	 * Set the slot in the packet to a new value.
+	 *
+	 * @param slot the new slot value
+	 */
+	public void setSlot(Slot slot);
+
+	/**
+	 * Get the window that the packet indicated.
+	 *
+	 * @return an enum value representing the data in the packet
+	 */
+	public Window getWindow();
+
+	/**
+	 * Get the raw slot value from the packet.
+	 *
+	 * @return the integer value from the packet
+	 */
+	public int getRawSlot();
+
+	/**
+	 * Set the slot in the packet to a new value.
+	 *
+	 * @param slot the new slot value
+	 */
+	public void setRawSlot(int slot);
+
+	/**
+	 * Get the raw window value from the packet.
+	 *
+	 * @return the integer value from the packet
+	 */
+	public int getRawWindow();
+
+	/**
+	 * Set the window in the packet to a new value.
+	 *
+	 * @param window the new window value
+	 */
+	public void setRawWindow(int window);
+
+	/**
+	 * Get the ItemStack from the packet. Can be null, representing an empty slot.
+	 *
+	 * @return a Bukkit ItemStack representing the value from the packet
+	 */
+	public ItemStack getItemStack();
+
+	/**
+	 * Set the item stack in the packet to a new value. Can be null, representing an empty slot.
+	 *
+	 * @param itemStack a Bukkit ItemStack representing the new value
+	 */
+	public void setItemStack(ItemStack itemStack);
+
+	/**
 	 * Indicates the Window identified by the packet
 	 */
 	public enum Window {
@@ -49,6 +112,7 @@ public interface MCPacket103SetSlot extends MCPacket {
 
 		/**
 		 * Gets a Window enum that represents the raw id.
+		 *
 		 * @param id the raw id to get an enum value for
 		 * @return a Window enum value that represents the raw id
 		 */
@@ -406,6 +470,9 @@ public interface MCPacket103SetSlot extends MCPacket {
 		DISPENSER_HELD_7(5, 42),
 		DISPENSER_HELD_8(5, 43),
 		DISPENSER_HELD_9(5, 44);
+		// No way I'm writing a huge switch nest to do a lookup. Use some hash tables instead.
+		// This is also easier to use in the future if any more windows were added.
+		private static HashMap<Integer, HashMap<Integer, Slot>> slots;
 		/**
 		 * The raw value contained in the packet.
 		 */
@@ -432,14 +499,11 @@ public interface MCPacket103SetSlot extends MCPacket {
 			slots.get(window).put(slot, value);
 		}
 
-		// No way I'm writing a huge switch nest to do a lookup. Use some hash tables instead.
-		// This is also easier to use in the future if any more windows were added.
-		private static HashMap<Integer, HashMap<Integer, Slot>> slots;
-
 		/**
 		 * Gets a Slot enum value based on the raw values in the packet.
+		 *
 		 * @param window the window id from the packet
-		 * @param slot   the slot id from the packet
+		 * @param slot the slot id from the packet
 		 * @return an enum value that represents the data in the packet
 		 */
 		public static Slot getSlotByRawValues(int window, int slot) {
@@ -454,6 +518,7 @@ public interface MCPacket103SetSlot extends MCPacket {
 
 		/**
 		 * Gets the Window enum value that represents the window in the packet.
+		 *
 		 * @return an enum value that represents the window in the packet
 		 */
 		public Window getWindow() {
@@ -462,6 +527,7 @@ public interface MCPacket103SetSlot extends MCPacket {
 
 		/**
 		 * Indicates whether the slot is in the player's inventory window.
+		 *
 		 * @return true if the slot is in the player's inventory window or false otherwise
 		 */
 		public boolean isPlayerInventory() {
@@ -470,6 +536,7 @@ public interface MCPacket103SetSlot extends MCPacket {
 
 		/**
 		 * Indicates whether the slot is in a workbench window.
+		 *
 		 * @return true if the slot is in a workbench window or false otherwise
 		 */
 		public boolean isWorkbench() {
@@ -478,6 +545,7 @@ public interface MCPacket103SetSlot extends MCPacket {
 
 		/**
 		 * Indicates whether the slot is in a furnace window.
+		 *
 		 * @return true if the slot is in a furnace window or false otherwise
 		 */
 		public boolean isFurnace() {
@@ -486,6 +554,7 @@ public interface MCPacket103SetSlot extends MCPacket {
 
 		/**
 		 * Indicates whether the slot is in a single chest window.
+		 *
 		 * @return true if the slot is in a single chest window or false otherwise
 		 */
 		public boolean isChest() {
@@ -494,6 +563,7 @@ public interface MCPacket103SetSlot extends MCPacket {
 
 		/**
 		 * Indicates whether the slot is in a double chest window.
+		 *
 		 * @return true if the slot is in a double chest window or false otherwise
 		 */
 		public boolean isDoubleChest() {
@@ -502,6 +572,7 @@ public interface MCPacket103SetSlot extends MCPacket {
 
 		/**
 		 * Indicates whether the slot is in a dispenser window.
+		 *
 		 * @return true if the slot is in a dispenser window or false otherwise
 		 */
 		public boolean isDispenser() {
@@ -510,6 +581,7 @@ public interface MCPacket103SetSlot extends MCPacket {
 
 		/**
 		 * Indicates whether the slot is in the player's inventory section of the window.
+		 *
 		 * @return true if the slot is in the player's inventory or false otherwise
 		 */
 		public boolean isInventory() {
@@ -532,6 +604,7 @@ public interface MCPacket103SetSlot extends MCPacket {
 
 		/**
 		 * Indicates whether the slot is in the player's held items bar.
+		 *
 		 * @return true if the slot is in the held items or false otherwise
 		 */
 		public boolean isHeldItems() {
@@ -553,8 +626,8 @@ public interface MCPacket103SetSlot extends MCPacket {
 		}
 
 		/**
-		 * Indicates whether the slot is in the player's armor bar.
-		 * This is only valid for player inventory.
+		 * Indicates whether the slot is in the player's armor bar. This is only valid for player inventory.
+		 *
 		 * @return true if the slot is in the armor or false otherwise
 		 */
 		public boolean isArmor() {
@@ -562,8 +635,8 @@ public interface MCPacket103SetSlot extends MCPacket {
 		}
 
 		/**
-		 * Indicates whether the slot is in the contents of a container.
-		 * This is only valid for chests and dispensers.
+		 * Indicates whether the slot is in the contents of a container. This is only valid for chests and dispensers.
+		 *
 		 * @return true if the slot is in contents or false otherwise
 		 */
 		public boolean isContents() {
@@ -580,8 +653,8 @@ public interface MCPacket103SetSlot extends MCPacket {
 		}
 
 		/**
-		 * Indicates whether the slot is in any crafting or furnace input.
-		 * This is only valid for player inventory, workbenches, and furnaces.
+		 * Indicates whether the slot is in any crafting or furnace input. This is only valid for player inventory, workbenches, and furnaces.
+		 *
 		 * @return true if the slot is in crafting or furnace input or false otherwise
 		 */
 		public boolean isInput() {
@@ -598,9 +671,7 @@ public interface MCPacket103SetSlot extends MCPacket {
 		}
 
 		/**
-		 * Indicates whether the slot is in any crafting or furnace output.
-		 * This is only valid for player inventory, workbenches, and furnaces.
-		 * @return
+		 * Indicates whether the slot is in any crafting or furnace output. This is only valid for player inventory, workbenches, and furnaces.
 		 */
 		public boolean isOutput() {
 			switch (rawWindowId) {
@@ -614,60 +685,4 @@ public interface MCPacket103SetSlot extends MCPacket {
 			}
 		}
 	}
-
-	/**
-	 * Get the slot that the packet indicated.
-	 * @return an enum value representing the data in the packet
-	 */
-	public Slot getSlot();
-
-	/**
-	 * Set the slot in the packet to a new value.
-	 * @param slot the new slot value
-	 */
-	public void setSlot(Slot slot);
-
-	/**
-	 * Get the window that the packet indicated.
-	 * @return an enum value representing the data in the packet
-	 */
-	public Window getWindow();
-
-	/**
-	 * Get the raw slot value from the packet.
-	 * @return the integer value from the packet
-	 */
-	public int getRawSlot();
-
-	/**
-	 * Set the slot in the packet to a new value.
-	 * @param slot the new slot value
-	 */
-	public void setRawSlot(int slot);
-
-	/**
-	 * Get the raw window value from the packet.
-	 * @return the integer value from the packet
-	 */
-	public int getRawWindow();
-
-	/**
-	 * Set the window in the packet to a new value.
-	 * @param window the new window value
-	 */
-	public void setRawWindow(int window);
-
-	/**
-	 * Get the ItemStack from the packet.
-	 * Can be null, representing an empty slot.
-	 * @return a Bukkit ItemStack representing the value from the packet
-	 */
-	public ItemStack getItemStack();
-
-	/**
-	 * Set the item stack in the packet to a new value.
-	 * Can be null, representing an empty slot.
-	 * @param itemStack a Bukkit ItemStack representing the new value
-	 */
-	public void setItemStack(ItemStack itemStack);
 }

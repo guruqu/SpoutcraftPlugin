@@ -23,9 +23,6 @@ import java.io.IOException;
 
 import org.bukkit.ChatColor;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
-
 public class GenericLabel extends GenericWidget implements Label {
 	protected String text = "Your Text Here";
 	protected WidgetAnchor align = WidgetAnchor.TOP_LEFT;

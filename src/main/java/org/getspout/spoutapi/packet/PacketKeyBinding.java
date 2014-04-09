@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.util.UUID;
 
 import org.getspout.spoutapi.SpoutManager;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
 import org.getspout.spoutapi.keyboard.KeyBinding;
 import org.getspout.spoutapi.keyboard.Keyboard;
 

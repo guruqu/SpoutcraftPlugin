@@ -43,7 +43,7 @@ import org.getspout.spoutapi.material.CustomBlock;
 import org.getspout.spoutapi.material.Material;
 import org.getspout.spoutapi.material.MaterialData;
 import org.getspout.spoutapi.packet.PacketBlockData;
-import org.getspout.spoutapi.packet.PacketItemName;
+import org.getspout.spoutapi.packet.PacketChangeItemDisplayName;
 import org.getspout.spoutapi.packet.SpoutPacket;
 import org.getspout.spoutapi.player.SpoutPlayer;
 import org.getspout.spoutapi.util.map.TIntPairFloatHashMap;
@@ -65,7 +65,7 @@ public abstract class AbstractBlockManager implements MaterialManager {
 		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 			if (player instanceof SpoutCraftPlayer) {
 				if (((SpoutPlayer) player).isSpoutCraftEnabled()) {
-					((SpoutPlayer) player).sendPacket(new PacketItemName(0, (short) 0, "[resetall]"));
+					((SpoutPlayer) player).sendPacket(new PacketChangeItemDisplayName(0, (short) 0, "[resetall]"));
 				}
 			}
 		}
@@ -75,7 +75,7 @@ public abstract class AbstractBlockManager implements MaterialManager {
 		if ((player).isSpoutCraftEnabled()) {
 			for (TLongObjectIterator<String> it = customNames.iterator(); it.hasNext();) {
 				it.advance();
-				(player).sendPacket(new PacketItemName(TIntPairHashSet.longToKey1(it.key()), (short) TIntPairHashSet.longToKey2(it.key()), it.value()));
+				(player).sendPacket(new PacketChangeItemDisplayName(TIntPairHashSet.longToKey1(it.key()), (short) TIntPairHashSet.longToKey2(it.key()), it.value()));
 			}
 		}
 	}
@@ -86,7 +86,7 @@ public abstract class AbstractBlockManager implements MaterialManager {
 		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 			if (player instanceof SpoutCraftPlayer) {
 				if (((SpoutPlayer) player).isSpoutCraftEnabled()) {
-					((SpoutPlayer) player).sendPacket(new PacketItemName(item.getRawId(), (short) item.getRawData(), name));
+					((SpoutPlayer) player).sendPacket(new PacketChangeItemDisplayName(item.getRawId(), (short) item.getRawData(), name));
 				}
 			}
 		}
@@ -101,7 +101,7 @@ public abstract class AbstractBlockManager implements MaterialManager {
 			for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 				if (player instanceof SpoutCraftPlayer) {
 					if (((SpoutPlayer) player).isSpoutCraftEnabled()) {
-						((SpoutPlayer) player).sendPacket(new PacketItemName(id, (short) data, "[reset]"));
+						((SpoutPlayer) player).sendPacket(new PacketChangeItemDisplayName(id, (short) data, "[reset]"));
 					}
 				}
 			}

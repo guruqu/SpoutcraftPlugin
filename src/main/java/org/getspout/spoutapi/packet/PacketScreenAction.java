@@ -22,15 +22,12 @@ package org.getspout.spoutapi.packet;
 import java.io.IOException;
 
 import org.bukkit.Bukkit;
-
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.event.screen.ScreenCloseEvent;
 import org.getspout.spoutapi.event.screen.ScreenEvent;
 import org.getspout.spoutapi.event.screen.ScreenOpenEvent;
 import org.getspout.spoutapi.gui.PopupScreen;
 import org.getspout.spoutapi.gui.ScreenType;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketScreenAction implements SpoutPacket {
@@ -108,7 +105,7 @@ public class PacketScreenAction implements SpoutPacket {
 
 	private void handleScreenClose(SpoutPlayer player, ScreenCloseEvent e, boolean update) {
 		PopupScreen p = player.getMainScreen().getActivePopup();
-		if (update && p != null){
+		if (update && p != null) {
 			p.onScreenClose(e);
 		}
 		if (e.isCancelled()) {

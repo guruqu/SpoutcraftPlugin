@@ -22,8 +22,6 @@ package org.getspout.spoutapi.gui;
 import java.io.IOException;
 
 import org.getspout.spoutapi.event.screen.SliderDragEvent;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
 
 public class GenericSlider extends GenericControl implements Slider {
 	protected Label label = new GenericLabel();

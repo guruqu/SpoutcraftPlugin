@@ -21,9 +21,6 @@ package org.getspout.spoutapi.gui;
 
 import java.io.IOException;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
-
 public abstract class GenericControl extends GenericWidget implements Control {
 	protected boolean focus = false;
 	protected boolean enabled = true;

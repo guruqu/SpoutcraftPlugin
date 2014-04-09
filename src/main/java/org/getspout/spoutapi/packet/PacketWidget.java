@@ -25,8 +25,6 @@ import java.util.UUID;
 
 import org.getspout.spoutapi.gui.Widget;
 import org.getspout.spoutapi.gui.WidgetType;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
 
 public class PacketWidget implements SpoutPacket {
 	protected Widget widget;

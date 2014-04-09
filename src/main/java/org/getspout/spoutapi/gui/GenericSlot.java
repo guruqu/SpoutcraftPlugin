@@ -21,14 +21,10 @@ package org.getspout.spoutapi.gui;
 
 import java.io.IOException;
 import java.util.Map.Entry;
-import java.util.logging.Level;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
 
 public class GenericSlot extends GenericControl implements Slot {
 	private ItemStack stack = new ItemStack(Material.AIR);

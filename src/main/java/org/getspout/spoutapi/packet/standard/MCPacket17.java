@@ -32,6 +32,7 @@ public interface MCPacket17 extends MCPacket {
 
 	/**
 	 * 0: Player entered bed?
+	 *
 	 * @return the bed field
 	 */
 	public int getBed();
@@ -43,13 +44,13 @@ public interface MCPacket17 extends MCPacket {
 
 	public int getBlockX();
 
-	public int getBlockY();
-
-	public int getBlockZ();
-
 	public void setBlockX(int x);
 
+	public int getBlockY();
+
 	public void setBlockY(int y);
+
+	public int getBlockZ();
 
 	public void setBlockZ(int z);
 }

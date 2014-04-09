@@ -28,17 +28,16 @@ import java.util.zip.Inflater;
 import gnu.trove.list.array.TByteArrayList;
 import gnu.trove.list.array.TIntArrayList;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
-
-public class PacketCustomMultiBlockOverride implements CompressablePacket {
+public class PacketOverrideMultiBlock implements CompressiblePacket {
 	private int chunkX;
 	private int chunkZ;
 	private boolean compressed = false;
 	private byte[] data;
 
-	public PacketCustomMultiBlockOverride(TIntArrayList xCoords, TIntArrayList yCoords, TIntArrayList zCoords, TIntArrayList blockTypeIds, TByteArrayList blockData) {
+	public PacketOverrideMultiBlock(TIntArrayList xCoords, TIntArrayList yCoords, TIntArrayList zCoords, TIntArrayList blockTypeIds, TByteArrayList blockData) {
 		short size = (short) xCoords.size();
 		ByteBuffer rawData = ByteBuffer.allocate(size * 7);
 		chunkX = xCoords.get(0) >> 4;
@@ -54,38 +53,28 @@ public class PacketCustomMultiBlockOverride implements CompressablePacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		chunkX = input.readInt();
-		chunkZ = input.readInt();
-		int size = input.readInt();
-		data = new byte[size];
-		input.read(data);
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		chunkX = buf.getInt();
+		chunkZ = buf.getInt();
+		data = new byte[buf.getInt()];
+		buf.get(data);
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeInt(chunkX);
-		output.writeInt(chunkZ);
-		output.writeInt(data.length);
-		output.write(data);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putInt(chunkX);
+		buf.putInt(chunkZ);
+		buf.putInt(data.length);
+		buf.put(data);
 	}
 
 	@Override
-	public void run(int playerId) {
-	}
-
-	@Override
-	public void failure(int playerId) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketCustomMultiBlockOverride;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override
 	public int getVersion() {
-		return 4;
+		return 0;
 	}
 
 	@Override
@@ -126,12 +115,12 @@ public class PacketCustomMultiBlockOverride implements CompressablePacket {
 				try {
 					int count = decompressor.inflate(buf);
 					bos.write(buf, 0, count);
-				} catch (DataFormatException e) {
+				} catch (DataFormatException ignored) {
 				}
 			}
 			try {
 				bos.close();
-			} catch (IOException e) {
+			} catch (IOException ignored) {
 			}
 
 			data = bos.toByteArray();

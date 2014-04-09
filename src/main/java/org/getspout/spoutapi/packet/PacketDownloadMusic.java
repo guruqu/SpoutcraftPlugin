@@ -23,9 +23,6 @@ import java.io.IOException;
 
 import org.bukkit.Location;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
-
 public class PacketDownloadMusic implements SpoutPacket {
 	int x, y, z;
 	int volume, distance;

@@ -22,38 +22,64 @@ package org.getspout.spoutapi.packet;
 import java.io.IOException;
 
 import org.bukkit.Bukkit;
-import org.getspout.spoutapi.event.input.PlayerClipboardEvent;
+import org.getspout.spoutapi.event.input.RenderDistanceChangeEvent;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.RenderDistance;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketClipboardText implements SpoutPacket {
-	private String text;
+public class PacketChangeRenderDistance implements SpoutPacket {
+	public RenderDistance distance = RenderDistance.TINY;
+	public RenderDistance max = RenderDistance.TINY;
+	public RenderDistance min = RenderDistance.TINY;
 
-	public PacketClipboardText() {
+	protected PacketChangeRenderDistance() {
 	}
 
-	public PacketClipboardText(String text) {
-		this.text = text;
+	public PacketChangeRenderDistance(boolean resetMax, boolean resetMin) {
+		if (resetMax) {
+			max = RenderDistance.RESET;
+		}
+		if (resetMin) {
+			min = RenderDistance.RESET;
+		}
+	}
+
+	public PacketChangeRenderDistance(RenderDistance distance, RenderDistance max, RenderDistance min) {
+		if (distance != null) {
+			this.distance = distance;
+		}
+		if (max != null) {
+			this.max = max;
+		}
+		if (min != null) {
+			this.min = min;
+		}
 	}
 
 	@Override
 	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
-		text = buf.getUTF8();
+		distance = RenderDistance.get(buf.get());
+		max = RenderDistance.get(buf.get());
+		min = RenderDistance.get(buf.get());
 	}
 
 	@Override
 	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
-		buf.putUTF8(text);
+		buf.put(distance.getValue());
+		buf.put(max.getValue());
+		buf.put(min.getValue());
 	}
 
 	@Override
 	public void handle(SpoutPlayer player) {
-		final PlayerClipboardEvent event = new PlayerClipboardEvent(player, text);
+		final RenderDistanceChangeEvent event = new RenderDistanceChangeEvent(player, distance);
 		Bukkit.getServer().getPluginManager().callEvent(event);
-		if (event.isCancelled()) {
-			player.setClipboardText(text, false);
+		if (!event.isCancelled()) {
+			player.setRenderDistance(event.getNewRenderDistance(), false);
+			player.setMaximumRenderDistance(event.getNewMaxRenderDistance());
+			player.setMinimumRenderDistance(event.getNewMinRenderDistance());
 		} else {
-			player.setClipboardText(event.getNewClipboard(), true);
+			player.sendPacket(new PacketChangeRenderDistance(player.getRenderDistance(), null, null));
 		}
 	}
 

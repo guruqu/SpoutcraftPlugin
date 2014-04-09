@@ -22,9 +22,6 @@ package org.getspout.spoutapi.gui;
 import java.io.IOException;
 import java.util.UUID;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
-
 /**
  * The Spout implementation of the default Bubble Bar.
  */

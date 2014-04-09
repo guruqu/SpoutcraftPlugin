@@ -20,27 +20,24 @@
 package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
-import net.minecraft.server.v1_6_R3.EntityPlayer;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
+import org.getspout.spoutapi.player.SpoutPlayer;
 import org.getspout.spoutapi.player.accessories.AccessoryType;
 
-public class PacketAccessory implements SpoutPacket{
+public class PacketAccessory implements SpoutPacket {
 	private AccessoryType type;
 	private String url, who;
 	private boolean add;
 
-	public PacketAccessory() {
+	protected PacketAccessory() {
 	}
 
-	public PacketAccessory(String who,AccessoryType type, String url) {
+	public PacketAccessory(String who, AccessoryType type, String url) {
 		this(who, type, url, true);
 	}
 
-	public PacketAccessory(String who,AccessoryType type, String url, boolean add) {
+	public PacketAccessory(String who, AccessoryType type, String url, boolean add) {
 		this.who = who;
 		this.type = type;
 		this.url = url;
@@ -64,16 +61,7 @@ public class PacketAccessory implements SpoutPacket{
 	}
 
 	@Override
-	public void handle(EntityPlayer player) {
-	}
-
-	@Override
-	public void failure(EntityPlayer player) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketAccessory;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override

@@ -22,8 +22,6 @@ package org.getspout.spoutapi.gui;
 import java.io.IOException;
 
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
 
 public class GenericButton extends GenericControl implements Button {
 	protected GenericLabel label = (GenericLabel) new GenericLabel().setAlign(WidgetAnchor.TOP_CENTER);

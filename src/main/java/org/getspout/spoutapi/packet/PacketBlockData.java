@@ -21,33 +21,28 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
-
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.material.Block;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketBlockData implements CompressiblePacket {
-	byte[] data;
-	boolean compressed = false;
+	private byte[] data;
+	private boolean compressed = false;
 
-	public PacketBlockData() {
+	protected PacketBlockData() {
 	}
 
 	public PacketBlockData(Set<Block> modifiedData) {
 		if (modifiedData.size() > 0) {
 			ByteBuffer rawData = ByteBuffer.allocate(modifiedData.size() * (15));
 
-			Iterator<Block> i = modifiedData.iterator();
-			while (i.hasNext()) {
-				Block next = i.next();
-
+			for (Block next : modifiedData) {
 				rawData.put((byte) next.getRawId());
 				rawData.put((byte) next.getRawData());
 				rawData.putFloat(next.getHardness());
@@ -58,6 +53,34 @@ public class PacketBlockData implements CompressiblePacket {
 
 			data = rawData.array();
 		}
+	}
+
+	@Override
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		int size = buf.getInt();
+		compressed = buf.getBoolean();
+		if (size > 0) {
+			data = new byte[size];
+			buf.get(data);
+		}
+	}
+
+	@Override
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putInt(data == null ? 0 : data.length);
+		buf.putBoolean(compressed);
+		if (data != null) {
+			buf.put(data);
+		}
+	}
+
+	@Override
+	public void handle(SpoutPlayer player) {
+	}
+
+	@Override
+	public int getVersion() {
+		return 0;
 	}
 
 	public void compress() {
@@ -96,12 +119,12 @@ public class PacketBlockData implements CompressiblePacket {
 				try {
 					int count = decompressor.inflate(buf);
 					bos.write(buf, 0, count);
-				} catch (DataFormatException e) {
+				} catch (DataFormatException ignored) {
 				}
 			}
 			try {
 				bos.close();
-			} catch (IOException e) {
+			} catch (IOException ignored) {
 			}
 
 			data = bos.toByteArray();
@@ -109,43 +132,6 @@ public class PacketBlockData implements CompressiblePacket {
 	}
 
 	public boolean isCompressed() {
-		return compressed || (data == null || data.length < 256); //dont compress for small sizes
-	}
-
-	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		int size = input.readInt();
-		compressed = input.readBoolean();
-		if (size > 0) {
-			data = new byte[size];
-			input.read(data);
-		}
-	}
-
-	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeInt(data == null ? 0 : data.length);
-		output.writeBoolean(compressed);
-		if (data != null) {
-			output.write(data);
-		}
-	}
-
-	@Override
-	public void run(int playerId) {
-	}
-
-	@Override
-	public void failure(int playerId) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketBlockData;
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
+		return compressed || (data == null || data.length < 256);
 	}
 }

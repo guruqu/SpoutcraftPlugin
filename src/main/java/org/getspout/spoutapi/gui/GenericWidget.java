@@ -26,9 +26,6 @@ import javax.xml.bind.TypeConstraintException;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
-
 public abstract class GenericWidget implements Widget {
 	/**
 	 * Set if this is Spoutcraft (client), cleared if it is Spout (server)...

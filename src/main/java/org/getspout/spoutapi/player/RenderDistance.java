@@ -19,27 +19,32 @@
  */
 package org.getspout.spoutapi.player;
 
+import gnu.trove.map.hash.TByteObjectHashMap;
+
 public enum RenderDistance {
-	FAR(0),
-	NORMAL(1),
-	SHORT(2),
-	TINY(3);
-	private final int value;
+	RESET((byte) -2),
+	FAR((byte) 0),
+	NORMAL((byte) 1),
+	SHORT((byte) 2),
+	TINY((byte) 3);
+	private final byte value;
+	private static final TByteObjectHashMap<RenderDistance> renderDistancesByID = new TByteObjectHashMap<RenderDistance>();
 
-	RenderDistance(final int i) {
-		value = i;
-	}
-
-	public final int getValue() {
-		return value;
-	}
-
-	public static RenderDistance getRenderDistanceFromValue(int value) {
+	static {
 		for (RenderDistance rd : values()) {
-			if (rd.getValue() == value) {
-				return rd;
-			}
+			renderDistancesByID.put(rd.getValue(), rd);
 		}
-		return null;
+	}
+
+	public static RenderDistance get(byte value) {
+		return renderDistancesByID.get(value);
+	}
+
+	RenderDistance(byte value) {
+		this.value = value;
+	}
+
+	public final byte getValue() {
+		return value;
 	}
 }

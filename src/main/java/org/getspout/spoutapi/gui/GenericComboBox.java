@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
 import org.getspout.spoutapi.packet.PacketComboBox;
 
 public class GenericComboBox extends GenericButton implements ComboBox {

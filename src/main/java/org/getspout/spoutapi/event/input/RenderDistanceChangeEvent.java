@@ -20,35 +20,70 @@
 package org.getspout.spoutapi.event.input;
 
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-
+import org.bukkit.event.player.PlayerEvent;
+import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.player.RenderDistance;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class RenderDistanceChangeEvent extends Event implements Cancellable {
+public class RenderDistanceChangeEvent extends PlayerEvent implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
-	private final RenderDistance newView;
-	private final SpoutPlayer player;
+	private RenderDistance newDistance, maxDistance, minDistance;
 	private boolean cancel = false;
 
-	public RenderDistanceChangeEvent(SpoutPlayer player, RenderDistance newView) {
-		this.player = player;
-		this.newView = newView;
+	public RenderDistanceChangeEvent(SpoutPlayer player, RenderDistance newDistance) {
+		this(player, newDistance, null, null);
+	}
+
+	public RenderDistanceChangeEvent(SpoutPlayer player, RenderDistance newDistance, RenderDistance maxDistance, RenderDistance minDistance) {
+		super(player);
+		this.newDistance = newDistance;
+		this.maxDistance = maxDistance;
+		this.minDistance = minDistance;
 	}
 
 	public RenderDistance getCurrentRenderDistance() {
-		return player.getRenderDistance();
+		return SpoutManager.getPlayer(player).getRenderDistance();
 	}
 
 	public RenderDistance getNewRenderDistance() {
-		return newView;
+		return newDistance;
 	}
 
+	public RenderDistance getCurrentMaxRenderDistance() {
+		return SpoutManager.getPlayer(player).getMaximumRenderDistance();
+	}
+
+	public RenderDistance getNewMaxRenderDistance() {
+		return maxDistance;
+	}
+
+	public RenderDistance getCurrentMinRenderDistance() {
+		return SpoutManager.getPlayer(player).getMinimumRenderDistance();
+	}
+
+	public RenderDistance getNewMinRenderDistance() {
+		return minDistance;
+	}
+
+	public void setNewDistance(RenderDistance newDistance) {
+		this.newDistance = newDistance;
+	}
+
+	public void setMaxDistance(RenderDistance maxDistance) {
+		this.maxDistance = maxDistance;
+	}
+
+	public void setMinDistance(RenderDistance minDistance) {
+		this.minDistance = minDistance;
+	}
+
+	@Override
 	public boolean isCancelled() {
 		return cancel;
 	}
 
+	@Override
 	public void setCancelled(boolean cancel) {
 		this.cancel = cancel;
 	}

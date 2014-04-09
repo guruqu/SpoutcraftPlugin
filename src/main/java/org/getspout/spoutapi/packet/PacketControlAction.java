@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-
-import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.event.screen.SliderDragEvent;
 import org.getspout.spoutapi.event.screen.TextFieldChangeEvent;
@@ -38,15 +36,14 @@ import org.getspout.spoutapi.gui.Scrollable;
 import org.getspout.spoutapi.gui.Slider;
 import org.getspout.spoutapi.gui.TextField;
 import org.getspout.spoutapi.gui.Widget;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketControlAction implements SpoutPacket {
-	protected UUID screen;
-	protected UUID widget;
-	protected float state;
-	protected String data = "";
+	private UUID screen;
+	private UUID widget;
+	private float state;
+	private String data = "";
 
 	public PacketControlAction() {
 	}
@@ -65,112 +62,94 @@ public class PacketControlAction implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		long msb = input.readLong();
-		long lsb = input.readLong();
-		this.screen = new UUID(msb, lsb);
-		msb = input.readLong();
-		lsb = input.readLong();
-		this.widget = new UUID(msb, lsb);
-		this.state = input.readFloat();
-		this.data = input.readString();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		this.screen = buf.getUUID();
+		this.widget = buf.getUUID();
+		this.state = buf.getFloat();
+		this.data = buf.getUTF8();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeLong(screen.getMostSignificantBits());
-		output.writeLong(screen.getLeastSignificantBits());
-		output.writeLong(widget.getMostSignificantBits());
-		output.writeLong(widget.getLeastSignificantBits());
-		output.writeFloat(state);
-		output.writeString(data);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putUUID(screen);
+		buf.putUUID(widget);
+		buf.putFloat(state);
+		buf.putUTF8(data);
 	}
 
 	@Override
-	public void run(int playerId) {
-		SpoutPlayer player = SpoutManager.getPlayerFromId(playerId);
-		if (player != null) {
-			Screen screen = null;
-			if (player.getMainScreen().getId().equals(this.screen)) {
-				screen = player.getMainScreen();
-			}
-			if (player.getMainScreen().getActivePopup() != null && player.getMainScreen().getActivePopup().getId().equals(this.screen)) {
-				screen = player.getMainScreen().getActivePopup();
-			}
-			if (player.getCurrentScreen() != null && player.getCurrentScreen().getId().equals(this.screen)) {
-				screen = player.getCurrentScreen();
-			}
-			if (screen != null) {
-				Widget control = screen.getWidget(widget);
-				if (control != null) {
-					if (control instanceof Button) {
-						if (control instanceof CheckBox) {
-							((CheckBox) control).setChecked(!((CheckBox) control).isChecked());
-						}
-						if (control instanceof RadioButton) {
-							((RadioButton) control).setSelected(true);
-						}
-						ButtonClickEvent event = new ButtonClickEvent(player, screen, (Button) control);
-						((Button) control).onButtonClick(event);
-						Bukkit.getServer().getPluginManager().callEvent(event);
-					} else if (control instanceof Slider) {
-						SliderDragEvent event = new SliderDragEvent(player, screen, (Slider) control, state);
-						((Slider) control).onSliderDrag(event);
-						Bukkit.getServer().getPluginManager().callEvent(event);
-						if (event.isCancelled()) {
-							((Slider) control).setSliderPosition(event.getOldPosition());
-							control.setDirty(true);
-						} else if (event.getNewPosition() != state) {
-							((Slider) control).setSliderPosition(event.getNewPosition());
-							control.setDirty(true);
-						} else {
-							((Slider) control).setSliderPosition(event.getNewPosition());
-						}
-					} else if (control instanceof TextField) {
-						TextFieldChangeEvent event = new TextFieldChangeEvent(player, screen, (TextField) control, data);
-						((TextField) control).onTextFieldChange(event);
-						Bukkit.getServer().getPluginManager().callEvent(event);
-						if (event.isCancelled()) {
-							((TextField) control).setText(event.getOldText());
-							control.setDirty(true);
-						} else if (!event.getNewText().equals(data)) {
-							((TextField) control).setText(event.getNewText());
-							control.setDirty(true);
-						} else {
-							((TextField) control).setText(event.getNewText());
-							((TextField) control).setCursorPosition((int) state);
-							control.setDirty(false);
-						}
-					} else if (control instanceof Scrollable) {
-						if (data.equals("HORIZONTAL") || data.equals("VERTICAL")) {
-							Orientation axis = Orientation.valueOf(data);
-							Scrollable scroll = (Scrollable) control;
-							scroll.setScrollPosition(axis, (int) state);
-						} else if (control instanceof ListWidget) {
-							ListWidget list = (ListWidget) control;
-							boolean dblclick = false;
-							if (data.equals("click") || data.equals("doubleclick") || data.equals("selected")) {
-								int item = (int) state;
-								if (data.equals("doubleclick")) {
-									dblclick = true;
-								}
-								list.setSelection(item);
-								list.onSelected(item, dblclick);
+	public void handle(SpoutPlayer player) {
+		Screen screen = null;
+		if (player.getMainScreen().getId().equals(this.screen)) {
+			screen = player.getMainScreen();
+		}
+		if (player.getMainScreen().getActivePopup() != null && player.getMainScreen().getActivePopup().getId().equals(this.screen)) {
+			screen = player.getMainScreen().getActivePopup();
+		}
+		if (player.getCurrentScreen() != null && player.getCurrentScreen().getId().equals(this.screen)) {
+			screen = player.getCurrentScreen();
+		}
+		if (screen != null) {
+			Widget control = screen.getWidget(widget);
+			if (control != null) {
+				if (control instanceof Button) {
+					if (control instanceof CheckBox) {
+						((CheckBox) control).setChecked(!((CheckBox) control).isChecked());
+					}
+					if (control instanceof RadioButton) {
+						((RadioButton) control).setSelected(true);
+					}
+					ButtonClickEvent event = new ButtonClickEvent(player, screen, (Button) control);
+					((Button) control).onButtonClick(event);
+					Bukkit.getServer().getPluginManager().callEvent(event);
+				} else if (control instanceof Slider) {
+					SliderDragEvent event = new SliderDragEvent(player, screen, (Slider) control, state);
+					((Slider) control).onSliderDrag(event);
+					Bukkit.getServer().getPluginManager().callEvent(event);
+					if (event.isCancelled()) {
+						((Slider) control).setSliderPosition(event.getOldPosition());
+						control.setDirty(true);
+					} else if (event.getNewPosition() != state) {
+						((Slider) control).setSliderPosition(event.getNewPosition());
+						control.setDirty(true);
+					} else {
+						((Slider) control).setSliderPosition(event.getNewPosition());
+					}
+				} else if (control instanceof TextField) {
+					TextFieldChangeEvent event = new TextFieldChangeEvent(player, screen, (TextField) control, data);
+					((TextField) control).onTextFieldChange(event);
+					Bukkit.getServer().getPluginManager().callEvent(event);
+					if (event.isCancelled()) {
+						((TextField) control).setText(event.getOldText());
+						control.setDirty(true);
+					} else if (!event.getNewText().equals(data)) {
+						((TextField) control).setText(event.getNewText());
+						control.setDirty(true);
+					} else {
+						((TextField) control).setText(event.getNewText());
+						((TextField) control).setCursorPosition((int) state);
+						control.setDirty(false);
+					}
+				} else if (control instanceof Scrollable) {
+					if (data.equals("HORIZONTAL") || data.equals("VERTICAL")) {
+						Orientation axis = Orientation.valueOf(data);
+						Scrollable scroll = (Scrollable) control;
+						scroll.setScrollPosition(axis, (int) state);
+					} else if (control instanceof ListWidget) {
+						ListWidget list = (ListWidget) control;
+						boolean dblclick = false;
+						if (data.equals("click") || data.equals("doubleclick") || data.equals("selected")) {
+							int item = (int) state;
+							if (data.equals("doubleclick")) {
+								dblclick = true;
 							}
+							list.setSelection(item);
+							list.onSelected(item, dblclick);
 						}
 					}
 				}
 			}
 		}
-	}
-
-	@Override
-	public void failure(int id) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketControlAction;
 	}
 
 	@Override

@@ -26,27 +26,23 @@ import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
-
-import org.getspout.spoutapi.SpoutManager;
-import org.getspout.spoutapi.block.SpoutChunk;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
-import org.getspout.spoutapi.player.SpoutPlayer;
-
 import org.bukkit.Chunk;
 import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
+import org.getspout.spoutapi.block.SpoutChunk;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketCustomBlockChunkOverride implements CompressablePacket {
+public class PacketOverrideChunk implements CompressiblePacket {
 	private int chunkX;
 	private int chunkZ;
 	private boolean hasData = false;
 	private byte[] data;
 	private boolean compressed = false;
 
-	public PacketCustomBlockChunkOverride() {
+	public PacketOverrideChunk() {
 	}
 
-	public PacketCustomBlockChunkOverride(short[] customIds, byte[] customData, int x, int z) {
+	public PacketOverrideChunk(short[] customIds, byte[] customData, int x, int z) {
 		chunkX = x;
 		chunkZ = z;
 		if (customIds != null) {
@@ -61,59 +57,46 @@ public class PacketCustomBlockChunkOverride implements CompressablePacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		chunkX = input.readInt();
-		chunkZ = input.readInt();
-		hasData = input.readBoolean();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		chunkX = buf.getInt();
+		chunkZ = buf.getInt();
+		hasData = buf.getBoolean();
 		if (hasData) {
-			int size = input.readInt();
-			data = new byte[size];
-			input.read(data);
+			data = new byte[buf.getInt()];
+			buf.get(data);
 		}
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeInt(chunkX);
-		output.writeInt(chunkZ);
-		output.writeBoolean(hasData);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putInt(chunkX);
+		buf.putInt(chunkZ);
+		buf.putBoolean(hasData);
 		if (hasData) {
-			output.writeInt(data.length);
-			output.write(data);
+			buf.putInt(data.length);
+			buf.put(data);
 		}
 	}
 
 	@Override
-	public void run(int playerId) {
-		SpoutPlayer player = SpoutManager.getPlayerFromId(playerId);
-		if (player != null) {
-			CraftWorld cw = ((CraftWorld)player.getWorld());
-			if (cw.getHandle().chunkProviderServer.unloadQueue.contains(chunkX, chunkZ)) {
-				return;
-			}
-			if (!cw.getHandle().chunkProviderServer.isChunkLoaded(chunkX, chunkZ)) {
-				return;
-			}
-			Chunk c = player.getWorld().getChunkAt(chunkX, chunkZ);
-			if (c instanceof SpoutChunk) {
-				SpoutChunk chunk = (SpoutChunk)c;
-				player.sendPacket(new PacketCustomBlockChunkOverride(chunk.getCustomBlockIds(), chunk.getCustomBlockData(), chunkX, chunkZ));
-			}
+	public void handle(SpoutPlayer player) {
+		CraftWorld cw = ((CraftWorld) player.getWorld());
+		if (cw.getHandle().chunkProviderServer.unloadQueue.contains(chunkX, chunkZ)) {
+			return;
 		}
-	}
-
-	@Override
-	public void failure(int playerId) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketCustomBlockChunkOverride;
+		if (!cw.getHandle().chunkProviderServer.isChunkLoaded(chunkX, chunkZ)) {
+			return;
+		}
+		Chunk c = player.getWorld().getChunkAt(chunkX, chunkZ);
+		if (c instanceof SpoutChunk) {
+			SpoutChunk chunk = (SpoutChunk) c;
+			player.sendPacket(new PacketOverrideChunk(chunk.getCustomBlockIds(), chunk.getCustomBlockData(), chunkX, chunkZ));
+		}
 	}
 
 	@Override
 	public int getVersion() {
-		return 2;
+		return 0;
 	}
 
 	@Override
@@ -154,12 +137,12 @@ public class PacketCustomBlockChunkOverride implements CompressablePacket {
 				try {
 					int count = decompressor.inflate(buf);
 					bos.write(buf, 0, count);
-				} catch (DataFormatException e) {
+				} catch (DataFormatException ignored) {
 				}
 			}
 			try {
 				bos.close();
-			} catch (IOException e) {
+			} catch (IOException ignored) {
 			}
 
 			data = bos.toByteArray();

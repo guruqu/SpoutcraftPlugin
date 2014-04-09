@@ -21,9 +21,6 @@ package org.getspout.spoutapi.gui;
 
 import java.io.IOException;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
-
 public class GenericCheckBox extends GenericButton implements CheckBox {
 	boolean checked = false;
 

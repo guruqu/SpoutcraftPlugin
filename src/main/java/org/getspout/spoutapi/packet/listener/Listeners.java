@@ -27,13 +27,13 @@ import org.getspout.spoutapi.SpoutManager;
  * Keeps track of packet listeners
  */
 public class Listeners {
+	private static ConcurrentHashMap<Listener, PacketListener> map = new ConcurrentHashMap<Listener, PacketListener>();
+
 	/**
 	 * Private constructor to avoid initialization
 	 */
 	private Listeners() {
 	}
-
-	private static ConcurrentHashMap<Listener, PacketListener> map = new ConcurrentHashMap<Listener, PacketListener>();
 
 	public static void addListenerUncompressedChunk(Listener listener) {
 		PacketListener fake = new FakeListener(listener);

@@ -20,7 +20,6 @@
 package org.getspout.spoutapi.packet.listener;
 
 import org.bukkit.entity.Player;
-
 import org.getspout.spoutapi.packet.standard.MCPacket;
 
 class FakeListener implements PacketListener {
@@ -30,7 +29,7 @@ class FakeListener implements PacketListener {
 		this.listener = listener;
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings ("deprecation")
 	@Override
 	public boolean checkPacket(Player player, MCPacket packet) {
 		Object raw = packet.getPacket();

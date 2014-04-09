@@ -17,41 +17,43 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.getspout.spoutapi.material.item;
+package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
-import org.bukkit.plugin.Plugin;
-import org.getspout.spoutapi.material.Food;
-import org.getspout.spoutapi.packet.PacketType;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class GenericCustomFood extends GenericCustomItem implements Food {
-	private int hunger;
+public class PacketAirCapacity implements SpoutPacket {
+	public int airTime;
+	public int air;
 
-	public GenericCustomFood(Plugin plugin, String name, String texture, int hungerRestored) {
-		super(plugin, name, texture);
-		hunger = hungerRestored;
+	protected PacketAirCapacity() {
+	}
+
+	public PacketAirCapacity(int maxTime, int time) {
+		this.airTime = maxTime;
+		this.air = time;
 	}
 
 	@Override
-	public int getHungerRestored() {
-		return hunger;
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		this.airTime = buf.getInt();
+		this.air = buf.getInt();
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		hunger = input.read();
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putInt(this.airTime);
+		buf.putInt(this.air);
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.write(getHungerRestored());
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketCustomFood;
+	public int getVersion() {
+		return 0;
 	}
 }

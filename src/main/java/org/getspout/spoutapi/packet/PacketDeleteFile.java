@@ -21,48 +21,34 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketItemName implements SpoutPacket {
-	private int id;
-	private short data;
-	private String name;
+public class PacketDeleteFile implements SpoutPacket {
+	private String plugin;
+	private String fileName;
 
-	public PacketItemName() {
+	protected PacketDeleteFile() {
 	}
 
-	public PacketItemName(int id, short data, String name) {
-		this.id = id;
-		this.data = data;
-		this.name = name;
-	}
-
-	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		id = input.readInt();
-		data = input.readShort();
-		name = input.readString();
+	public PacketDeleteFile(String plugin, String fileName) {
+		this.plugin = plugin;
+		this.fileName = fileName;
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeInt(id);
-		output.writeShort(data);
-		output.writeString(name);
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		throw new IOException("The server should not recieve a PacketDeleteFile from the client (hack?)!");
 	}
 
 	@Override
-	public void run(int PlayerId) {
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putUTF8(fileName);
+		buf.putUTF8(plugin);
 	}
 
 	@Override
-	public void failure(int id) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketItemName;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override

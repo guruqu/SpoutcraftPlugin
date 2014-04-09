@@ -22,8 +22,6 @@ package org.getspout.spoutapi.gui;
 import java.io.IOException;
 
 import org.getspout.spoutapi.event.screen.TextFieldChangeEvent;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
 
 public class GenericTextField extends GenericControl implements TextField {
 	private static final char MASK_MAXLINES = 0x7F; // bits 1–7

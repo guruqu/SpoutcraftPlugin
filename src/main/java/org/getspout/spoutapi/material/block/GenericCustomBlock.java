@@ -33,13 +33,11 @@ import org.getspout.spoutapi.Spout;
 import org.getspout.spoutapi.block.design.Axis;
 import org.getspout.spoutapi.block.design.BlockDesign;
 import org.getspout.spoutapi.inventory.SpoutItemStack;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
 import org.getspout.spoutapi.material.CustomBlock;
 import org.getspout.spoutapi.material.CustomItem;
 import org.getspout.spoutapi.material.MaterialData;
 import org.getspout.spoutapi.material.item.GenericCustomItem;
-import org.getspout.spoutapi.packet.PacketCustomBlockDesign;
+import org.getspout.spoutapi.packet.PacketBlockModel;
 import org.getspout.spoutapi.packet.PacketType;
 import org.getspout.spoutapi.packet.SpoutPacket;
 import org.getspout.spoutapi.player.SpoutPlayer;
@@ -378,7 +376,7 @@ public class GenericCustomBlock extends GenericBlock implements CustomBlock, Spo
 		this.design[id + 128] = design;
 
 		for (SpoutPlayer sp : Spout.getServer().getOnlinePlayers()) {
-			sp.sendPacket(new PacketCustomBlockDesign((short) customId, design, (byte) id));
+			sp.sendPacket(new PacketBlockModel((short) customId, design, (byte) id));
 		}
 		return this;
 	}

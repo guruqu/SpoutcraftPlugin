@@ -26,24 +26,24 @@ public interface MCPacket51MapChunk {
 	public int getX();
 
 	/**
-	 * @return the y world block coordinate
-	 */
-	public int getY();
-
-	/**
-	 * @return the z world block coordinate
-	 */
-	public int getZ();
-
-	/**
 	 * @param x sets the x world block coordinate
 	 */
 	public void setX(int x);
 
 	/**
+	 * @return the y world block coordinate
+	 */
+	public int getY();
+
+	/**
 	 * @param y sets the y world block coordinate
 	 */
 	public void setY(int y);
+
+	/**
+	 * @return the z world block coordinate
+	 */
+	public int getZ();
 
 	/**
 	 * @param z sets the z world block coordinate
@@ -56,9 +56,23 @@ public interface MCPacket51MapChunk {
 	public int getSizeX();
 
 	/**
+	 * The cuboid to update must be completely within 1 chunk
+	 *
+	 * @param x (Z size of cuboid) - 1
+	 */
+	public void setSizeX(int x);
+
+	/**
 	 * @return (Y size of the cuboid) - 1
 	 */
 	public int getSizeY();
+
+	/**
+	 * The cuboid to update must be completely within 1 chunk
+	 *
+	 * @param y (Y size of cuboid) - 1
+	 */
+	public void setSizeY(int y);
 
 	/**
 	 * @return (Z size of the cuboid) - 1
@@ -67,18 +81,7 @@ public interface MCPacket51MapChunk {
 
 	/**
 	 * The cuboid to update must be completely within 1 chunk
-	 * @param x (Z size of cuboid) - 1
-	 */
-	public void setSizeX(int x);
-
-	/**
-	 * The cuboid to update must be completely within 1 chunk
-	 * @param y (Y size of cuboid) - 1
-	 */
-	public void setSizeY(int y);
-
-	/**
-	 * The cuboid to update must be completely within 1 chunk
+	 *
 	 * @param z (Z size of cuboid) - 1
 	 */
 	public void setSizeZ(int z);

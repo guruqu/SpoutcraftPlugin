@@ -22,23 +22,20 @@ package org.getspout.spoutapi.packet;
 import java.io.IOException;
 
 import org.bukkit.Bukkit;
-
-import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.event.sound.BackgroundMusicEvent;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 import org.getspout.spoutapi.sound.Music;
 
-public class PacketMusicChange implements SpoutPacket {
-	protected int id;
-	protected int volumePercent;
-	boolean cancel = false;
+public class PacketChangeMusic implements SpoutPacket {
+	public int id;
+	public int volumePercent;
+	public boolean cancel = false;
 
-	public PacketMusicChange() {
+	public PacketChangeMusic() {
 	}
 
-	public PacketMusicChange(int music, int volumePercent) {
+	public PacketChangeMusic(int music, int volumePercent) {
 		this.id = music;
 		this.volumePercent = volumePercent;
 	}
@@ -48,40 +45,31 @@ public class PacketMusicChange implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		id = input.readInt();
-		volumePercent = input.readInt();
-		cancel = input.readBoolean();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		id = buf.getInt();
+		volumePercent = buf.getInt();
+		cancel = buf.getBoolean();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeInt(id);
-		output.writeInt(volumePercent);
-		output.writeBoolean(cancel);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putInt(id);
+		buf.putInt(volumePercent);
+		buf.putBoolean(cancel);
 	}
 
 	@Override
-	public void run(int playerId) {
-		SpoutPlayer player = SpoutManager.getPlayerFromId(playerId);
+	public void handle(SpoutPlayer player) {
 		Music music = Music.getMusicFromId(id);
-		if (player != null && music != null) {
-			BackgroundMusicEvent event = new BackgroundMusicEvent(music, volumePercent, player);
+		if (music != null) {
+			final BackgroundMusicEvent event = new BackgroundMusicEvent(music, volumePercent, player);
 			Bukkit.getServer().getPluginManager().callEvent(event);
-			if (event.isCancelled()) {
-				cancel = true;
+			cancel = event.isCancelled();
+			if (!cancel) {
+				volumePercent = event.getVolumePercent();
 			}
 			player.sendPacket(this);
 		}
-	}
-
-	@Override
-	public void failure(int id) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketMusicChange;
 	}
 
 	@Override

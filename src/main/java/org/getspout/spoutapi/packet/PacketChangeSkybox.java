@@ -22,26 +22,26 @@ package org.getspout.spoutapi.packet;
 import java.io.IOException;
 
 import org.getspout.spoutapi.gui.Color;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketSky implements SpoutPacket {
+public class PacketChangeSkybox implements SpoutPacket {
+	private String sun = "";
+	private String moon = "";
 	private int cloudY = 0, stars = 0, sunPercent = 0, moonPercent = 0;
 	private Color skyColor = Color.ignore(), fogColor = Color.ignore(), cloudColor = Color.ignore();
-	String sun = "";
-	String moon = "";
 
-	public PacketSky() {
+	public PacketChangeSkybox() {
 	}
 
-	public PacketSky(int cloudY, int stars, int sunPercent, int moonPercent) {
+	public PacketChangeSkybox(int cloudY, int stars, int sunPercent, int moonPercent) {
 		this.cloudY = cloudY;
 		this.stars = stars;
 		this.sunPercent = sunPercent;
 		this.moonPercent = moonPercent;
 	}
 
-	public PacketSky(String sunUrl, String moonUrl) {
+	public PacketChangeSkybox(String sunUrl, String moonUrl) {
 		this.cloudY = 0;
 		this.stars = 0;
 		this.sunPercent = 0;
@@ -50,7 +50,7 @@ public class PacketSky implements SpoutPacket {
 		this.moon = moonUrl;
 	}
 
-	public PacketSky(Color sky, Color fog, Color cloud) {
+	public PacketChangeSkybox(Color sky, Color fog, Color cloud) {
 		if (sky != null) {
 			skyColor = sky.clone();
 		}
@@ -62,7 +62,7 @@ public class PacketSky implements SpoutPacket {
 		}
 	}
 
-	public PacketSky(int cloudY, int stars, int sunPercent, int moonPercent, Color sky, Color fog, Color cloud, String sunUrl, String moonUrl) {
+	public PacketChangeSkybox(int cloudY, int stars, int sunPercent, int moonPercent, Color sky, Color fog, Color cloud, String sunUrl, String moonUrl) {
 		this.cloudY = cloudY;
 		this.stars = stars;
 		this.sunPercent = sunPercent;
@@ -81,46 +81,38 @@ public class PacketSky implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		cloudY = input.readInt();
-		stars = input.readInt();
-		sunPercent = input.readInt();
-		moonPercent = input.readInt();
-		sun = input.readString();
-		moon = input.readString();
-		skyColor = input.readColor();
-		fogColor = input.readColor();
-		cloudColor = input.readColor();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		cloudY = buf.getInt();
+		stars = buf.getInt();
+		sunPercent = buf.getInt();
+		moonPercent = buf.getInt();
+		sun = buf.getUTF8();
+		moon = buf.getUTF8();
+		skyColor = buf.getColor();
+		fogColor = buf.getColor();
+		cloudColor = buf.getColor();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeInt(cloudY);
-		output.writeInt(stars);
-		output.writeInt(sunPercent);
-		output.writeInt(moonPercent);
-		output.writeString(sun);
-		output.writeString(moon);
-		output.writeColor(skyColor);
-		output.writeColor(fogColor);
-		output.writeColor(cloudColor);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putInt(cloudY);
+		buf.putInt(stars);
+		buf.putInt(sunPercent);
+		buf.putInt(moonPercent);
+		buf.putUTF8(sun);
+		buf.putUTF8(moon);
+		buf.putColor(skyColor);
+		buf.putColor(fogColor);
+		buf.putColor(cloudColor);
 	}
 
 	@Override
-	public void run(int PlayerId) {
-	}
-
-	@Override
-	public void failure(int id) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketSky;
+	public void handle(SpoutPlayer player) {
+		// TODO: Fire cancellable event for the server to control this?
 	}
 
 	@Override
 	public int getVersion() {
-		return 2;
+		return 0;
 	}
 }

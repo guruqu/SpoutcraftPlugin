@@ -21,9 +21,6 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
-
 public class PacketSetVelocity implements SpoutPacket {
 	private double motX = 0;
 	private double motY = 0;

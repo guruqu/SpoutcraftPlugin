@@ -21,9 +21,6 @@ package org.getspout.spoutapi.gui;
 
 import java.io.IOException;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
-
 public class GenericGradient extends GenericWidget implements Gradient {
 	protected Color color1 = new Color(0, 0, 0, 0), color2 = new Color(0, 0, 0, 0);
 	protected Orientation axis = Orientation.VERTICAL;

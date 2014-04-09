@@ -24,9 +24,6 @@ import java.util.UUID;
 
 import org.bukkit.plugin.Plugin;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
-
 /**
  * This is the base class of all other widgets, and should never be used
  * directly.

@@ -24,9 +24,6 @@ import java.io.IOException;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
-
 public class PacketSpawnTextEntity implements SpoutPacket {
 	private String text;
 	private Location location;

@@ -59,7 +59,7 @@ import org.getspout.spoutapi.inventory.SpoutItemStack;
 import org.getspout.spoutapi.material.CustomBlock;
 import org.getspout.spoutapi.material.CustomItem;
 import org.getspout.spoutapi.material.MaterialData;
-import org.getspout.spoutapi.packet.PacketAllowVisualCheats;
+import org.getspout.spoutapi.packet.PacketToggleCheats;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class SpoutPlayerListener implements Listener {
@@ -129,7 +129,7 @@ public class SpoutPlayerListener implements Listener {
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Spout.getInstance(), update, 2);
 		}
 		if (event.getPlayer() instanceof SpoutPlayer) {
-			scp.sendPacket(new PacketAllowVisualCheats(PermHandler.allowSkyCheat(scp),PermHandler.forceSkyCheat(scp),PermHandler.showSkyCheat(scp),PermHandler.allowClearWaterCheat(scp),PermHandler.forceClearWaterCheat(scp),PermHandler.showClearWaterCheat(scp),PermHandler.allowStarsCheat(scp),PermHandler.forceStarsCheat(scp),PermHandler.showStarsCheat(scp),PermHandler.allowWeatherCheat(scp),PermHandler.forceWeatherCheat(scp),PermHandler.showWeatherCheat(scp),PermHandler.allowTimeCheat(scp),PermHandler.allowCoordsCheat(scp),PermHandler.allowEntityLabelCheat(scp),PermHandler.allowVoidFogCheat(scp),PermHandler.forceVoidFogCheat(scp),PermHandler.showVoidFogCheat(scp),PermHandler.allowFlightSpeedCheat(scp)));
+			scp.sendPacket(new PacketToggleCheats(PermHandler.allowSkyCheat(scp),PermHandler.forceSkyCheat(scp),PermHandler.showSkyCheat(scp),PermHandler.allowClearWaterCheat(scp),PermHandler.forceClearWaterCheat(scp),PermHandler.showClearWaterCheat(scp),PermHandler.allowStarsCheat(scp),PermHandler.forceStarsCheat(scp),PermHandler.showStarsCheat(scp),PermHandler.allowWeatherCheat(scp),PermHandler.forceWeatherCheat(scp),PermHandler.showWeatherCheat(scp),PermHandler.allowTimeCheat(scp),PermHandler.allowCoordsCheat(scp),PermHandler.allowEntityLabelCheat(scp),PermHandler.allowVoidFogCheat(scp),PermHandler.forceVoidFogCheat(scp),PermHandler.showVoidFogCheat(scp),PermHandler.allowFlightSpeedCheat(scp)));
 		}
 	}
 

@@ -21,9 +21,6 @@ package org.getspout.spoutapi.gui;
 
 import java.io.IOException;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
-
 public abstract class GenericScrollable extends GenericControl implements Scrollable {
 	protected ScrollBarPolicy sbpVert;
 	protected ScrollBarPolicy sbpHoriz = sbpVert = ScrollBarPolicy.SHOW_IF_NEEDED;

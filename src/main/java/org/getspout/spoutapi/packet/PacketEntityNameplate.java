@@ -21,44 +21,41 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
+public class PacketEntityNameplate implements SpoutPacket {
+	public String title;
+	public int entityId;
 
-public class PacketCacheDeleteFile implements SpoutPacket {
-	private String plugin;
-	private String fileName;
-
-	public PacketCacheDeleteFile() {
+	public PacketEntityNameplate() {
 	}
 
-	public PacketCacheDeleteFile(String plugin, String fileName) {
-		this.plugin = plugin;
-		this.fileName = fileName;
+	public PacketEntityNameplate(int entityId, String title) {
+		this.entityId = entityId;
+		this.title = title;
 	}
 
 	@Override
 	public void readData(SpoutInputStream input) throws IOException {
-		fileName = input.readString();
-		plugin = input.readString();
+		entityId = input.readInt();
+		title = input.readString();
 	}
 
 	@Override
 	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeString(fileName);
-		output.writeString(plugin);
+		output.writeInt(entityId);
+		output.writeString(title);
 	}
 
 	@Override
-	public void run(int playerId) {
+	public void run(int id) {
 	}
 
 	@Override
-	public void failure(int playerId) {
+	public void failure(int id) {
 	}
 
 	@Override
 	public PacketType getPacketType() {
-		return PacketType.PacketCacheDeleteFile;
+		return PacketType.PacketEntityTitle;
 	}
 
 	@Override

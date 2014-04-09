@@ -21,8 +21,6 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
 import org.getspout.spoutapi.particle.Particle;
 
 public class PacketParticle implements SpoutPacket {

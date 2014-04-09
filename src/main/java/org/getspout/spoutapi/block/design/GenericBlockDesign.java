@@ -26,11 +26,10 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.BlockVector;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
-import org.getspout.spoutapi.packet.PacketUtil;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 
 public class GenericBlockDesign implements BlockDesign {
+	public static final String RESET_STRING = "[reset]";
 	protected boolean reset = false;
 	protected float lowXBound;
 	protected float lowYBound;
@@ -102,89 +101,57 @@ public class GenericBlockDesign implements BlockDesign {
 		return 3;
 	}
 
-	public void read(SpoutInputStream input) throws IOException {
-		textureURL = input.readString();
-		if (textureURL.equals(resetString)) {
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		textureURL = buf.getUTF8();
+		if (textureURL.equals(RESET_STRING)) {
 			reset = true;
 			return;
 		}
 		reset = false;
-		texturePlugin = input.readString();
-		xPos = PacketUtil.readDoubleArray(input);
-		yPos = PacketUtil.readDoubleArray(input);
-		zPos = PacketUtil.readDoubleArray(input);
-		textXPos = PacketUtil.readDoubleArray(input);
-		textYPos = PacketUtil.readDoubleArray(input);
-		lowXBound = input.readFloat();
-		lowYBound = input.readFloat();
-		lowZBound = input.readFloat();
-		highXBound = input.readFloat();
-		highYBound = input.readFloat();
-		highZBound = input.readFloat();
-		maxBrightness = input.readFloat();
-		minBrightness = input.readFloat();
-		renderPass = input.readInt();
-		lightSourceXOffset = PacketUtil.readIntArray(input);
-		lightSourceYOffset = PacketUtil.readIntArray(input);
-		lightSourceZOffset = PacketUtil.readIntArray(input);
+		texturePlugin = buf.getUTF8();
+		xPos = buf.get2DFloats();
+		yPos = buf.get2DFloats();
+		zPos = buf.get2DFloats();
+		textXPos = buf.get2DFloats();
+		textYPos = buf.get2DFloats();
+		lowXBound = buf.getFloat();
+		lowYBound = buf.getFloat();
+		lowZBound = buf.getFloat();
+		highXBound = buf.getFloat();
+		highYBound = buf.getFloat();
+		highZBound = buf.getFloat();
+		maxBrightness = buf.getFloat();
+		minBrightness = buf.getFloat();
+		renderPass = buf.getInt();
+		lightSourceXOffset = buf.getInts();
+		lightSourceYOffset = buf.getInts();
+		lightSourceZOffset = buf.getInts();
 	}
 
-	private final static String resetString = "[reset]";
-
-	public void writeReset(SpoutOutputStream output) throws IOException {
-		output.writeString(resetString);
-	}
-
-	public void write(SpoutOutputStream output) throws IOException {
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
 		if (reset) {
-			output.writeString(resetString);
+			buf.putUTF8(RESET_STRING);
 			return;
 		}
-		output.writeString(textureURL);
-		output.writeString(texturePlugin);
-		PacketUtil.writeDoubleArray(output, xPos);
-		PacketUtil.writeDoubleArray(output, yPos);
-		PacketUtil.writeDoubleArray(output, zPos);
-		PacketUtil.writeDoubleArray(output, textXPos);
-		PacketUtil.writeDoubleArray(output, textYPos);
-		output.writeFloat(lowXBound);
-		output.writeFloat(lowYBound);
-		output.writeFloat(lowZBound);
-		output.writeFloat(highXBound);
-		output.writeFloat(highYBound);
-		output.writeFloat(highZBound);
-		output.writeFloat(maxBrightness);
-		output.writeFloat(minBrightness);
-		output.writeInt(renderPass);
-		PacketUtil.writeIntArray(output, lightSourceXOffset);
-		PacketUtil.writeIntArray(output, lightSourceYOffset);
-		PacketUtil.writeIntArray(output, lightSourceZOffset);
-	}
-
-	public void write(DataOutputStream output) throws IOException {
-		if (reset) {
-			PacketUtil.writeString(output, resetString);
-			return;
-		}
-		PacketUtil.writeString(output, textureURL);
-		PacketUtil.writeString(output, texturePlugin);
-		PacketUtil.writeDoubleArray(output, xPos);
-		PacketUtil.writeDoubleArray(output, yPos);
-		PacketUtil.writeDoubleArray(output, zPos);
-		PacketUtil.writeDoubleArray(output, textXPos);
-		PacketUtil.writeDoubleArray(output, textYPos);
-		output.writeFloat(lowXBound);
-		output.writeFloat(lowYBound);
-		output.writeFloat(lowZBound);
-		output.writeFloat(highXBound);
-		output.writeFloat(highYBound);
-		output.writeFloat(highZBound);
-		output.writeFloat(maxBrightness);
-		output.writeFloat(minBrightness);
-		output.writeInt(renderPass);
-		PacketUtil.writeIntArray(output, lightSourceXOffset);
-		PacketUtil.writeIntArray(output, lightSourceYOffset);
-		PacketUtil.writeIntArray(output, lightSourceZOffset);
+		buf.putUTF8(textureURL);
+		buf.putUTF8(texturePlugin);
+		buf.put2DFloats(xPos, 4);
+		buf.put2DFloats(yPos, 4);
+		buf.put2DFloats(zPos, 4);
+		buf.put2DFloats(textXPos, 4);
+		buf.put2DFloats(textYPos, 4);
+		buf.putFloat(lowXBound);
+		buf.putFloat(lowYBound);
+		buf.putFloat(lowZBound);
+		buf.putFloat(highXBound);
+		buf.putFloat(highYBound);
+		buf.putFloat(highZBound);
+		buf.putFloat(maxBrightness);
+		buf.putFloat(minBrightness);
+		buf.putInt(renderPass);
+		buf.putInts(lightSourceXOffset);
+		buf.putInts(lightSourceYOffset);
+		buf.putInts(lightSourceZOffset);
 	}
 
 	public BlockDesign setTexture(Plugin plugin, String textureURL) {

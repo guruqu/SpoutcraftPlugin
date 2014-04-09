@@ -20,63 +20,66 @@
 package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
-import java.util.Map;
 
-import org.getspout.spoutapi.SpoutManager;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
+public class PacketDownloadTextureHTTP implements SpoutPacket {
+	public int entityId;
+	public String skinURL;
+	public String cloakURL;
+	public boolean release = true;
 
-public class PacketClientAddons implements SpoutPacket {
-	private String[] addons;
-	private String[] versions;
-
-	public PacketClientAddons() {
+	public PacketDownloadTextureHTTP() {
 	}
 
-	public PacketClientAddons(Map<String, String> addons) {
-		this.addons = addons.keySet().toArray(new String[0]);
-		this.versions = new String[this.addons.length];
-		for (int i = 0; i < this.addons.length; i++) {
-			this.versions[i] = addons.get(this.addons[i]);
-		}
+	public PacketDownloadTextureHTTP(int id, String skinURL, String cloakURL) {
+		this.entityId = id;
+		this.skinURL = skinURL;
+		this.cloakURL = cloakURL;
+		release = false;
+	}
+
+	public PacketDownloadTextureHTTP(int id, String skinURL) {
+		this.entityId = id;
+		this.skinURL = skinURL;
+		this.cloakURL = "none";
+	}
+
+	public PacketDownloadTextureHTTP(String cloakURL, int id) {
+		this.entityId = id;
+		this.skinURL = "none";
+		this.cloakURL = cloakURL;
 	}
 
 	@Override
 	public void readData(SpoutInputStream input) throws IOException {
-		int size = input.readShort();
-		addons = new String[size];
-		versions = new String[size];
-		for (int i = 0; i < size; i++) {
-			addons[i] = input.readString();
-			versions[i] = input.readString();
-		}
+		entityId = input.readInt();
+		skinURL = input.readString();
+		cloakURL = input.readString();
+		release = input.readBoolean();
 	}
 
 	@Override
 	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeShort((short) addons.length);
-		for (int i = 0; i < addons.length; i++) {
-			output.writeString(addons[i]);
-			output.writeString(versions[i]);
-		}
+		output.writeInt(entityId);
+		output.writeString(skinURL);
+		output.writeString(cloakURL);
+		output.writeBoolean(release);
 	}
 
 	@Override
-	public void run(int playerId) {
-		SpoutManager.getPlayerFromId(playerId).setAddons(addons, versions);
+	public void run(int PlayerId) {
 	}
 
 	@Override
-	public void failure(int playerId) {
+	public void failure(int id) {
 	}
 
 	@Override
 	public PacketType getPacketType() {
-		return PacketType.PacketClientAddons;
+		return PacketType.PacketSkinURL;
 	}
 
 	@Override
 	public int getVersion() {
-		return 0;
+		return 1;
 	}
 }

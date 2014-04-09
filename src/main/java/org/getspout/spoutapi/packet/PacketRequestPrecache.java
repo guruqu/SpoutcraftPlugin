@@ -24,11 +24,8 @@ import java.io.IOException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
-import org.getspout.spout.Spout;
 import org.getspout.spout.precache.PrecacheManager;
 import org.getspout.spoutapi.SpoutManager;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketRequestPrecache implements SpoutPacket {

@@ -24,8 +24,7 @@ import java.io.IOException;
 
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.BlockVector;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 
 public interface BlockDesign {
 	/**
@@ -61,13 +60,9 @@ public interface BlockDesign {
 
 	public int getVersion();
 
-	public void read(SpoutInputStream input) throws IOException;
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException;
 
-	public void writeReset(SpoutOutputStream output) throws IOException;
-
-	public void write(SpoutOutputStream output) throws IOException;
-
-	public void write(DataOutputStream output) throws IOException;
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException;
 
 	/**
 	 * Sets the specified Texture for this BlockDesign

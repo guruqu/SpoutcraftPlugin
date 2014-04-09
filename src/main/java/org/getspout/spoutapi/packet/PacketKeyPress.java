@@ -22,13 +22,10 @@ package org.getspout.spoutapi.packet;
 import java.io.IOException;
 
 import org.bukkit.Bukkit;
-
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.event.input.KeyPressedEvent;
 import org.getspout.spoutapi.event.input.KeyReleasedEvent;
 import org.getspout.spoutapi.gui.ScreenType;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketKeyPress implements SpoutPacket {

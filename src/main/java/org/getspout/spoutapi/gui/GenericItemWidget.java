@@ -23,9 +23,6 @@ import java.io.IOException;
 
 import org.bukkit.inventory.ItemStack;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
-
 public class GenericItemWidget extends GenericWidget implements ItemWidget {
 	protected int material = -1;
 	protected short data = -1;

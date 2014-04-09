@@ -53,6 +53,11 @@ public class PacketShowAchievement implements SpoutPacket {
 	}
 
 	@Override
+	public int getVersion() {
+		return 0;
+	}
+
+	@Override
 	public void handle(EntityPlayer player) {
 	}
 
@@ -63,10 +68,5 @@ public class PacketShowAchievement implements SpoutPacket {
 	@Override
 	public PacketType getPacketType() {
 		return PacketType.PacketShowAchievement;
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
 	}
 }

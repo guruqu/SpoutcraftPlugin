@@ -21,10 +21,10 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
+import net.minecraft.server.v1_6_R3.EntityPlayer;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 
-public class PacketAllowVisualCheats implements SpoutPacket {
+public class PacketToggleCheats implements SpoutPacket {
 	private boolean cheatsky = false;
 	private boolean forcesky = false;
 	private boolean showsky = false;
@@ -45,10 +45,10 @@ public class PacketAllowVisualCheats implements SpoutPacket {
 	private boolean showvoidfog = false;
 	private boolean flightspeed = false;
 
-	public PacketAllowVisualCheats() {
+	public PacketToggleCheats() {
 	}
 
-	public PacketAllowVisualCheats(boolean tsky, boolean fsky, boolean ssky, boolean tclearwater, boolean fclearwater, boolean sclearwater, boolean tstars, boolean fstars, boolean sstars, boolean tweather, boolean fweather, boolean sweather, boolean ttime, boolean tcoords, boolean tentitylabel, boolean tvoidfog, boolean fvoidfog, boolean svoidfog, boolean tflightspeed) {
+	public PacketToggleCheats(boolean tsky, boolean fsky, boolean ssky, boolean tclearwater, boolean fclearwater, boolean sclearwater, boolean tstars, boolean fstars, boolean sstars, boolean tweather, boolean fweather, boolean sweather, boolean ttime, boolean tcoords, boolean tentitylabel, boolean tvoidfog, boolean fvoidfog, boolean svoidfog, boolean tflightspeed) {
 		this.cheatsky = tsky;
 		this.forcesky = fsky;
 		this.showsky = ssky;
@@ -71,66 +71,48 @@ public class PacketAllowVisualCheats implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		cheatsky = input.readBoolean();
-		forcesky = input.readBoolean();
-		showsky = input.readBoolean();
-		cheatclearwater = input.readBoolean();
-		forceclearwater = input.readBoolean();
-		showclearwater = input.readBoolean();
-		cheatstars = input.readBoolean();
-		forcestars = input.readBoolean();
-		showstars = input.readBoolean();
-		cheatweather = input.readBoolean();
-		forceweather = input.readBoolean();
-		showweather = input.readBoolean();
-		time = input.readBoolean();
-		coords = input.readBoolean();
-		entitylabel = input.readBoolean();
-		cheatvoidfog = input.readBoolean();
-		forcevoidfog = input.readBoolean();
-		showvoidfog = input.readBoolean();
-		flightspeed = input.readBoolean();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		throw new IOException("The server should not receive a PacketToggleCheats from the client (hack?)!");
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeBoolean(cheatsky);
-		output.writeBoolean(forcesky);
-		output.writeBoolean(showsky);
-		output.writeBoolean(cheatclearwater);
-		output.writeBoolean(forceclearwater);
-		output.writeBoolean(showclearwater);
-		output.writeBoolean(cheatstars);
-		output.writeBoolean(forcestars);
-		output.writeBoolean(showstars);
-		output.writeBoolean(cheatweather);
-		output.writeBoolean(forceweather);
-		output.writeBoolean(showweather);
-		output.writeBoolean(time);
-		output.writeBoolean(coords);
-		output.writeBoolean(entitylabel);
-		output.writeBoolean(cheatvoidfog);
-		output.writeBoolean(forcevoidfog);
-		output.writeBoolean(showvoidfog);
-		output.writeBoolean(flightspeed);
-	}
-
-	@Override
-	public void run(int playerId) {
-	}
-
-	@Override
-	public void failure(int id) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketAllowVisualCheats;
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putBoolean(cheatsky);
+		buf.putBoolean(forcesky);
+		buf.putBoolean(showsky);
+		buf.putBoolean(cheatclearwater);
+		buf.putBoolean(forceclearwater);
+		buf.putBoolean(showclearwater);
+		buf.putBoolean(cheatstars);
+		buf.putBoolean(forcestars);
+		buf.putBoolean(showstars);
+		buf.putBoolean(cheatweather);
+		buf.putBoolean(forceweather);
+		buf.putBoolean(showweather);
+		buf.putBoolean(time);
+		buf.putBoolean(coords);
+		buf.putBoolean(entitylabel);
+		buf.putBoolean(cheatvoidfog);
+		buf.putBoolean(forcevoidfog);
+		buf.putBoolean(showvoidfog);
+		buf.putBoolean(flightspeed);
 	}
 
 	@Override
 	public int getVersion() {
 		return 4;
+	}
+
+	@Override
+	public void handle(EntityPlayer player) {
+	}
+
+	@Override
+	public void failure(EntityPlayer player) {
+	}
+
+	@Override
+	public PacketType getPacketType() {
+		return PacketType.PacketAllowVisualCheats;
 	}
 }

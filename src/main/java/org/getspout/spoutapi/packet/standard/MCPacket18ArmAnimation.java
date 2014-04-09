@@ -31,13 +31,8 @@ public interface MCPacket18ArmAnimation extends MCPacket {
 	public void setEntityId(int entityId);
 
 	/**
-	 * 0: None
-	 * 1: Swing Arm
-	 * 2: Damage
-	 * 3: Leave bed
-	 * 102: ?
-	 * 104: Crouch
-	 * 105: Uncrouch
+	 * 0: None 1: Swing Arm 2: Damage 3: Leave bed 102: ? 104: Crouch 105: Uncrouch
+	 *
 	 * @return the animate field
 	 */
 	public int getAnimate();

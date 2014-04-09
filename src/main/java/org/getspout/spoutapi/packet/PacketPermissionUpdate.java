@@ -23,9 +23,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
-
 public class PacketPermissionUpdate implements SpoutPacket {
 	private Map<String, Boolean> permissions;
 

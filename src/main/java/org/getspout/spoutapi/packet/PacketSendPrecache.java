@@ -28,8 +28,6 @@ import java.util.zip.Inflater;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.bukkit.plugin.Plugin;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
 
 public class PacketSendPrecache implements CompressablePacket {
 	private byte[] fileData;
@@ -77,8 +75,8 @@ public class PacketSendPrecache implements CompressablePacket {
 		if (compressed) {
 			Inflater decompressor = new Inflater();
 			decompressor.setInput(fileData);
-				ByteArrayOutputStream bos = new ByteArrayOutputStream(fileData.length);
-				byte[] buf = new byte[1024];
+			ByteArrayOutputStream bos = new ByteArrayOutputStream(fileData.length);
+			byte[] buf = new byte[1024];
 			while (!decompressor.finished()) {
 				try {
 					int count = decompressor.inflate(buf);
@@ -90,7 +88,7 @@ public class PacketSendPrecache implements CompressablePacket {
 				bos.close();
 			} catch (IOException e) {
 			}
-				fileData = bos.toByteArray();
+			fileData = bos.toByteArray();
 		}
 	}
 

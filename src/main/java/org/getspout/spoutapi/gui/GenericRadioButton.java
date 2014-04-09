@@ -23,9 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
-
 public class GenericRadioButton extends GenericButton implements RadioButton {
 	boolean selected = false;
 	int group = 0;

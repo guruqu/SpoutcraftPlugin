@@ -20,7 +20,6 @@
 package org.getspout.spoutapi.packet.listener;
 
 import org.bukkit.entity.Player;
-
 import org.getspout.spoutapi.packet.standard.MCPacket;
 
 public interface PacketListener {

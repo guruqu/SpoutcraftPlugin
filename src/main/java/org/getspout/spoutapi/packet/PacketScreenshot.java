@@ -23,16 +23,12 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.event.screen.ScreenshotReceivedEvent;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketScreenshot implements SpoutPacket {

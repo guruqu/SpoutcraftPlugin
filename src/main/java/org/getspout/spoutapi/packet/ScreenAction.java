@@ -29,10 +29,6 @@ public enum ScreenAction {
 		this.id = (byte) id;
 	}
 
-	public int getId() {
-		return id;
-	}
-
 	public static ScreenAction getScreenActionFromId(int id) {
 		for (ScreenAction action : values()) {
 			if (action.getId() == id) {
@@ -40,5 +36,9 @@ public enum ScreenAction {
 			}
 		}
 		return null;
+	}
+
+	public int getId() {
+		return id;
 	}
 }

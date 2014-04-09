@@ -24,7 +24,6 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
-
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.event.slot.SlotEvent;
 import org.getspout.spoutapi.event.slot.SlotExchangeEvent;
@@ -35,8 +34,6 @@ import org.getspout.spoutapi.gui.InGameHUD;
 import org.getspout.spoutapi.gui.PopupScreen;
 import org.getspout.spoutapi.gui.Screen;
 import org.getspout.spoutapi.gui.Slot;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketSlotClick implements SpoutPacket {

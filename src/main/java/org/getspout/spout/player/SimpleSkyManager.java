@@ -25,7 +25,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import org.getspout.spoutapi.gui.Color;
-import org.getspout.spoutapi.packet.PacketSky;
+import org.getspout.spoutapi.packet.PacketChangeSkybox;
 import org.getspout.spoutapi.player.SkyManager;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
@@ -52,7 +52,7 @@ public class SimpleSkyManager implements SkyManager {
 	public void setCloudHeight(SpoutPlayer player, int y) {
 		cloudHeight.put(player.getName(), y);
 		if (player.isSpoutCraftEnabled()) {
-			player.sendPacket(new PacketSky(y, 0, 0 ,0));
+			player.sendPacket(new PacketChangeSkybox(y, 0, 0 ,0));
 		}
 	}
 
@@ -83,7 +83,7 @@ public class SimpleSkyManager implements SkyManager {
 	public void setStarFrequency(SpoutPlayer player, int frequency) {
 		starFrequency.put(player.getName(), frequency);
 		if (player.isSpoutCraftEnabled()) {
-			player.sendPacket(new PacketSky(0, frequency, 0 ,0));
+			player.sendPacket(new PacketChangeSkybox(0, frequency, 0 ,0));
 		}
 	}
 
@@ -114,7 +114,7 @@ public class SimpleSkyManager implements SkyManager {
 	public void setSunSizePercent(SpoutPlayer player, int percent) {
 		sunPercent.put(player.getName(), percent);
 		if (player.isSpoutCraftEnabled()) {
-			player.sendPacket(new PacketSky(0, 0, percent, 0));
+			player.sendPacket(new PacketChangeSkybox(0, 0, percent, 0));
 		}
 	}
 
@@ -146,14 +146,14 @@ public class SimpleSkyManager implements SkyManager {
 		if (Url == null) {
 			sunUrl.remove(player.getName());
 			if (player.isSpoutCraftEnabled()) {
-				player.sendPacket(new PacketSky("[reset]", ""));
+				player.sendPacket(new PacketChangeSkybox("[reset]", ""));
 			}
 		}
 		else {
 			checkUrl(Url);
 			sunUrl.put(player.getName(), Url);
 			if (player.isSpoutCraftEnabled()) {
-				player.sendPacket(new PacketSky(Url, ""));
+				player.sendPacket(new PacketChangeSkybox(Url, ""));
 			}
 		}
 	}
@@ -170,7 +170,7 @@ public class SimpleSkyManager implements SkyManager {
 	public void setMoonSizePercent(SpoutPlayer player, int percent) {
 		moonPercent.put(player.getName(), percent);
 		if (player.isSpoutCraftEnabled()) {
-			player.sendPacket(new PacketSky(0, 0, 0, percent));
+			player.sendPacket(new PacketChangeSkybox(0, 0, 0, percent));
 		}
 	}
 
@@ -202,14 +202,14 @@ public class SimpleSkyManager implements SkyManager {
 		if (Url == null) {
 			moonUrl.remove(player.getName());
 			if (player.isSpoutCraftEnabled()) {
-				player.sendPacket(new PacketSky("", "[reset]"));
+				player.sendPacket(new PacketChangeSkybox("", "[reset]"));
 			}
 		}
 		else {
 			checkUrl(Url);
 			moonUrl.put(player.getName(), Url);
 			if (player.isSpoutCraftEnabled()) {
-				player.sendPacket(new PacketSky("", Url));
+				player.sendPacket(new PacketChangeSkybox("", Url));
 			}
 		}
 	}
@@ -218,7 +218,7 @@ public class SimpleSkyManager implements SkyManager {
 	public void setSkyColor(SpoutPlayer player, Color skycolor) {
 		skyColor.put(player.getName(), skycolor);
 		if (player.isSpoutCraftEnabled()) {
-			player.sendPacket(new PacketSky(skycolor, null, null));
+			player.sendPacket(new PacketChangeSkybox(skycolor, null, null));
 		}
 	}
 
@@ -231,7 +231,7 @@ public class SimpleSkyManager implements SkyManager {
 	public void setFogColor(SpoutPlayer player, Color fogColor) {
 		this.fogColor.put(player.getName(), fogColor);
 		if (player.isSpoutCraftEnabled()) {
-			player.sendPacket(new PacketSky(null, fogColor, null));
+			player.sendPacket(new PacketChangeSkybox(null, fogColor, null));
 		}
 	}
 
@@ -244,7 +244,7 @@ public class SimpleSkyManager implements SkyManager {
 	public void setCloudColor(SpoutPlayer player, Color cloudColor) {
 		this.cloudColor.put(player.getName(), cloudColor);
 		if (player.isSpoutCraftEnabled()) {
-			player.sendPacket(new PacketSky(null, null, cloudColor));
+			player.sendPacket(new PacketChangeSkybox(null, null, cloudColor));
 		}
 	}
 
@@ -259,7 +259,7 @@ public class SimpleSkyManager implements SkyManager {
 			moon = moon == null ? "" : moon;
 			String sun = getSunTextureUrl(player);
 			sun = sun == null ? "" : sun;
-			player.sendPacket(new PacketSky(getRealCloudHeight(player), getStarFrequency(player), getSunSizePercent(player), getMoonSizePercent(player), getSkyColor(player), getFogColor(player), getCloudColor(player), sun, moon));
+			player.sendPacket(new PacketChangeSkybox(getRealCloudHeight(player), getStarFrequency(player), getSunSizePercent(player), getMoonSizePercent(player), getSkyColor(player), getFogColor(player), getCloudColor(player), sun, moon));
 		}
 	}
 
@@ -276,7 +276,7 @@ public class SimpleSkyManager implements SkyManager {
 		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 			if (player instanceof SpoutPlayer) {
 				if (((SpoutPlayer)player).isSpoutCraftEnabled()) {
-					((SpoutPlayer)player).sendPacket(new PacketSky(108, 1500, 100, 100, Color.remove(), Color.remove(), Color.remove(), "[reset]", "[reset]"));
+					((SpoutPlayer)player).sendPacket(new PacketChangeSkybox(108, 1500, 100, 100, Color.remove(), Color.remove(), Color.remove(), "[reset]", "[reset]"));
 				}
 			}
 		}

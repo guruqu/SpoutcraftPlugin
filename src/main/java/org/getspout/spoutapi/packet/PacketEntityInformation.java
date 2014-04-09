@@ -28,13 +28,9 @@ import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
-
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-
 import org.getspout.spoutapi.SpoutManager;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketEntityInformation implements CompressablePacket {

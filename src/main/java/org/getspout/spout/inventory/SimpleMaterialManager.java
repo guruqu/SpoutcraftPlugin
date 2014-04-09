@@ -51,9 +51,9 @@ import org.getspout.spoutapi.material.CustomBlock;
 import org.getspout.spoutapi.material.CustomItem;
 import org.getspout.spoutapi.material.Material;
 import org.getspout.spoutapi.material.MaterialData;
-import org.getspout.spoutapi.packet.PacketCustomBlockChunkOverride;
-import org.getspout.spoutapi.packet.PacketCustomBlockOverride;
-import org.getspout.spoutapi.packet.PacketCustomMultiBlockOverride;
+import org.getspout.spoutapi.packet.PacketOverrideBlock;
+import org.getspout.spoutapi.packet.PacketOverrideChunk;
+import org.getspout.spoutapi.packet.PacketOverrideMultiBlock;
 import org.getspout.spoutapi.packet.SpoutPacket;
 import org.getspout.spoutapi.player.SpoutPlayer;
 import org.getspout.spoutapi.util.map.TIntPairObjectHashMap;
@@ -248,9 +248,9 @@ public class SimpleMaterialManager extends AbstractBlockManager implements Mater
 				if (xCoords.size() > 128) {
 					int chunkX = xCoords.get(0) >> 4;
 					int chunkZ = zCoords.get(0) >> 4;
-					packet = new PacketCustomBlockChunkOverride(SpoutManager.getChunkDataManager().getCustomBlockIds(world, chunkX, chunkZ), SpoutManager.getChunkDataManager().getCustomBlockData(world, chunkX, chunkZ),chunkX, chunkZ);
+					packet = new PacketOverrideChunk(SpoutManager.getChunkDataManager().getCustomBlockIds(world, chunkX, chunkZ), SpoutManager.getChunkDataManager().getCustomBlockData(world, chunkX, chunkZ),chunkX, chunkZ);
 				} else {
-					packet = new PacketCustomMultiBlockOverride(xCoords, yCoords, zCoords, typeIds, data);
+					packet = new PacketOverrideMultiBlock(xCoords, yCoords, zCoords, typeIds, data);
 				}
 
 				for (Player player : players) {
@@ -263,7 +263,7 @@ public class SimpleMaterialManager extends AbstractBlockManager implements Mater
 				}
 			} else {
 				for (int i = 0; i < xCoords.size(); i++) {
-					SpoutPacket packet = new PacketCustomBlockOverride(xCoords.get(i), yCoords.get(i), zCoords.get(i), typeIds.get(i), data.get(i));
+					SpoutPacket packet = new PacketOverrideBlock(xCoords.get(i), yCoords.get(i), zCoords.get(i), typeIds.get(i), data.get(i));
 					for (Player player : players) {
 						if (player instanceof SpoutCraftPlayer) {
 							SpoutCraftPlayer spc = (SpoutCraftPlayer) player;

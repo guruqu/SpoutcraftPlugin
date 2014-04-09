@@ -42,11 +42,10 @@ import org.bukkit.plugin.Plugin;
 import org.getspout.spout.Spout;
 import org.getspout.spout.config.ConfigReader;
 import org.getspout.spoutapi.SpoutManager;
-import org.getspout.spoutapi.io.CRCStore;
 import org.getspout.spoutapi.io.CRCStore.URLCheck;
 import org.getspout.spoutapi.io.CRCStoreRunnable;
 import org.getspout.spoutapi.io.FileUtil;
-import org.getspout.spoutapi.packet.PacketCacheDeleteFile;
+import org.getspout.spoutapi.packet.PacketDeleteFile;
 import org.getspout.spoutapi.packet.PacketPreCacheCompleted;
 import org.getspout.spoutapi.packet.PacketPreCacheFile;
 import org.getspout.spoutapi.player.FileManager;
@@ -384,7 +383,7 @@ public class SimpleFileManager implements FileManager {
 		}
 		for (SpoutPlayer player : SpoutManager.getOnlinePlayers()) {
 			if (player.isSpoutCraftEnabled()) {
-				player.sendPacket(new PacketCacheDeleteFile(plugin.getDescription().getName(), file));
+				player.sendPacket(new PacketDeleteFile(plugin.getDescription().getName(), file));
 			}
 		}
 	}

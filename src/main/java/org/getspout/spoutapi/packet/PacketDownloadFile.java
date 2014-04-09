@@ -27,31 +27,54 @@ import java.util.zip.Inflater;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
-
 import org.getspout.spoutapi.io.FileUtil;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketCacheFile implements CompressablePacket {
+public class PacketDownloadFile implements CompressiblePacket {
 	private String plugin;
-	private byte[] fileData;
 	private String fileName;
+	private byte[] fileData;
 	private boolean compressed = false;
 
-	public PacketCacheFile() {
+	public PacketDownloadFile() {
 	}
 
-	public PacketCacheFile(String plugin, File file) {
+	public PacketDownloadFile(String plugin, File file) {
 		this.plugin = plugin;
+		this.fileName = FileUtil.getFileName(file.getPath());
 		try {
 			this.fileData = FileUtils.readFileToByteArray(file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		this.fileName = FileUtil.getFileName(file.getPath());
+	}
+
+	@Override
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		throw new IOException("The server should not receive a PacketDownloadFile from the client (hack?)!");
+	}
+
+	@Override
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putUTF8(fileName);
+		buf.putUTF8(plugin);
+		buf.putBoolean(compressed);
+		buf.putInt(fileData.length);
+		buf.put(fileData);
+	}
+
+	@Override
+	public void handle(SpoutPlayer player) {
+	}
+
+	@Override
+	public int getVersion() {
+		return 0;
 	}
 
 	// TODO Move to separate thread?
+	@Override
 	public void compress() {
 		if (!compressed) {
 			Deflater deflater = new Deflater();
@@ -74,6 +97,7 @@ public class PacketCacheFile implements CompressablePacket {
 		}
 	}
 
+	@Override
 	public void decompress() {
 		if (compressed) {
 			Inflater decompressor = new Inflater();
@@ -86,58 +110,20 @@ public class PacketCacheFile implements CompressablePacket {
 				try {
 					int count = decompressor.inflate(buf);
 					bos.write(buf, 0, count);
-				} catch (DataFormatException e) {
+				} catch (DataFormatException ignored) {
 				}
 			}
 			try {
 				bos.close();
-			} catch (IOException e) {
+			} catch (IOException ignored) {
 			}
 
 			fileData = bos.toByteArray();
 		}
 	}
 
+	@Override
 	public boolean isCompressed() {
 		return compressed;
-	}
-
-	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		this.fileName = input.readString();
-		this.plugin = input.readString();
-		compressed = input.readBoolean();
-		int size = input.readInt();
-		this.fileData = new byte[size];
-		input.read(fileData);
-	}
-
-	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeString(fileName);
-		output.writeString(plugin);
-		output.writeBoolean(compressed);
-		output.writeInt(fileData.length);
-		output.write(fileData);
-	}
-
-	@Override
-	public void run(int playerId) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void failure(int playerId) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketCacheFile;
-	}
-
-	@Override
-	public int getVersion() {
-		return 1;
 	}
 }

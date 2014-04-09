@@ -34,8 +34,6 @@ import org.bukkit.plugin.Plugin;
 
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.event.screen.ScreenCloseEvent;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
 import org.getspout.spoutapi.packet.PacketWidget;
 import org.getspout.spoutapi.packet.PacketWidgetRemove;
 import org.getspout.spoutapi.player.SpoutPlayer;

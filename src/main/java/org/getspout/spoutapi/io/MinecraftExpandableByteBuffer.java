@@ -23,10 +23,15 @@ import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+import org.getspout.spoutapi.block.design.BlockDesign;
+import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.material.Material;
 import org.getspout.spoutapi.material.MaterialData;
 
 public class MinecraftExpandableByteBuffer extends ExpandableByteBuffer {
+	public static final byte FLAG_COLORINVALID = 1;
+	public static final byte FLAG_COLOROVERRIDE = 2;
+
 	public void putLocation(Location loc) {
 		putUUID(loc.getWorld().getUID());
 		putDouble(loc.getX());
@@ -121,6 +126,31 @@ public class MinecraftExpandableByteBuffer extends ExpandableByteBuffer {
 
 	public Material getSpoutMaterial() {
 		return MaterialData.getMaterial(getInt(), getShort());
+	}
+
+	public Color getColor() {
+		byte flags = get();
+		int argb = getInt();
+		if ((flags & FLAG_COLORINVALID) > 0) {
+			return Color.ignore();
+		}
+		if ((flags & FLAG_COLOROVERRIDE) > 0) {
+			return Color.remove();
+		}
+		return new Color(argb);
+	}
+
+	public void putColor(Color c) {
+		byte flags = 0x0;
+
+		if (c.getRedF() == -1F) {
+			flags |= FLAG_COLORINVALID;
+		} else if (c.getRedF() == -2F) {
+			flags |= FLAG_COLOROVERRIDE;
+		}
+
+		put(flags);
+		putInt(c.toInt());
 	}
 
 	private byte[] compress(NBTBase base) throws IOException {

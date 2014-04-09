@@ -22,11 +22,9 @@ package org.getspout.spoutapi.packet;
 import java.io.IOException;
 import java.util.UUID;
 
-import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.gui.GenericComboBox;
 import org.getspout.spoutapi.gui.Widget;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketComboBox implements SpoutPacket {
@@ -46,24 +44,21 @@ public class PacketComboBox implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		uuid = new UUID(input.readLong(), input.readLong());
-		open = input.readBoolean();
-		selection = input.readInt();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		uuid = buf.getUUID();
+		open = buf.getBoolean();
+		selection = buf.getInt();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeLong(uuid.getMostSignificantBits());
-		output.writeLong(uuid.getLeastSignificantBits());
-		output.writeBoolean(open);
-		output.writeInt(selection);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putUUID(uuid);
+		buf.putBoolean(open);
+		buf.putInt(selection);
 	}
 
 	@Override
-	public void run(int playerId) {
-		SpoutPlayer player = SpoutManager.getPlayerFromId(playerId);
-
+	public void handle(SpoutPlayer player) {
 		Widget w = null;
 		if (player.getCurrentScreen() != null) {
 			w = player.getCurrentScreen().getWidget(uuid);
@@ -80,15 +75,6 @@ public class PacketComboBox implements SpoutPacket {
 			box.setOpen(open, false);
 			box.setSelection(selection);
 		}
-	}
-
-	@Override
-	public void failure(int playerId) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketComboBox;
 	}
 
 	@Override

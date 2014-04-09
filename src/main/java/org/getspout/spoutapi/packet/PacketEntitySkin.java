@@ -23,9 +23,6 @@ import java.io.IOException;
 
 import org.bukkit.entity.Entity;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
-
 public class PacketEntitySkin implements SpoutPacket {
 	protected String texture = "";
 	protected int entityId;

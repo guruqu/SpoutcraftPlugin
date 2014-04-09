@@ -17,41 +17,45 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.getspout.spoutapi.material.item;
+package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
-import org.bukkit.plugin.Plugin;
-import org.getspout.spoutapi.material.Food;
-import org.getspout.spoutapi.packet.PacketType;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class GenericCustomFood extends GenericCustomItem implements Food {
-	private int hunger;
+public class PacketChangeItemDisplayName implements SpoutPacket {
+	private int id;
+	private short data;
+	private String name;
 
-	public GenericCustomFood(Plugin plugin, String name, String texture, int hungerRestored) {
-		super(plugin, name, texture);
-		hunger = hungerRestored;
+	public PacketChangeItemDisplayName() {
+	}
+
+	public PacketChangeItemDisplayName(int id, short data, String name) {
+		this.id = id;
+		this.data = data;
+		this.name = name;
 	}
 
 	@Override
-	public int getHungerRestored() {
-		return hunger;
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		throw new IOException("The server should not receive a PacketChangeItemDisplayName from the client (hack?)!");
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		hunger = input.read();
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putInt(id);
+		buf.putShort(data);
+		buf.putUTF8(name);
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.write(getHungerRestored());
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketCustomFood;
+	public int getVersion() {
+		return 0;
 	}
 }

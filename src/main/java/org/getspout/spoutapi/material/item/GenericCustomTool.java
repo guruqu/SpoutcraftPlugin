@@ -27,8 +27,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import org.getspout.spoutapi.inventory.SpoutEnchantment;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
 import org.getspout.spoutapi.material.Block;
 import org.getspout.spoutapi.material.CustomBlock;
 import org.getspout.spoutapi.material.Material;

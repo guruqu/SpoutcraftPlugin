@@ -22,8 +22,6 @@ package org.getspout.spoutapi.packet;
 import java.io.IOException;
 
 import org.getspout.spoutapi.SpoutManager;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
 
 public class PacketFullVersion implements SpoutPacket {
 	private String versionString;

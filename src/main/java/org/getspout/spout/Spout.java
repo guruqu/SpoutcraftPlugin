@@ -30,9 +30,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import org.getspout.spout.block.SpoutCraftChunk;
@@ -65,7 +62,7 @@ import org.getspout.spoutapi.chunkstore.SimpleChunkDataManager;
 import org.getspout.spoutapi.inventory.ItemMap;
 import org.getspout.spoutapi.io.CRCStore;
 import org.getspout.spoutapi.io.store.FlatFileStore;
-import org.getspout.spoutapi.packet.PacketRenderDistance;
+import org.getspout.spoutapi.packet.PacketChangeRenderDistance;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class Spout extends JavaPlugin {
@@ -120,7 +117,7 @@ public class Spout extends JavaPlugin {
 				SpoutCraftPlayer scp = (SpoutCraftPlayer) SpoutCraftPlayer.getPlayer(player);
 				scp.resetMovement();
 				if (scp.isSpoutCraftEnabled()) {
-					scp.sendPacket(new PacketRenderDistance(true, true));
+					scp.sendPacket(new PacketChangeRenderDistance(true, true));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

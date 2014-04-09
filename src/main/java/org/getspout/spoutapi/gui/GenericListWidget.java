@@ -23,9 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
-
 public class GenericListWidget extends GenericScrollable implements ListWidget {
 	private List<ListWidgetItem> items = new ArrayList<ListWidgetItem>();
 	private int selected = -1;

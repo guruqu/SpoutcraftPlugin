@@ -273,7 +273,7 @@ public class SpoutCraftPlayer extends CraftPlayer implements SpoutPlayer {
 			throw new IllegalArgumentException("The Maximum Air can not be below 1");
 		}
 		if (isSpoutCraftEnabled()) {
-			sendPacket(new PacketAirTime(time, this.getRemainingAir()));
+			sendPacket(new PacketAirCapacity(time, this.getRemainingAir()));
 		}
 		super.setMaximumAir(time);
 	}
@@ -299,7 +299,7 @@ public class SpoutCraftPlayer extends CraftPlayer implements SpoutPlayer {
 			throw new IllegalArgumentException("The Remaining Air can not be below 0");
 		}
 		if (isSpoutCraftEnabled()) {
-			sendPacket(new PacketAirTime(this.getMaximumAir(), time));
+			sendPacket(new PacketAirCapacity(this.getMaximumAir(), time));
 		}
 		super.setRemainingAir(time);
 	}
@@ -437,7 +437,7 @@ public class SpoutCraftPlayer extends CraftPlayer implements SpoutPlayer {
 	public void setRenderDistance(RenderDistance distance) {
 		if (isSpoutCraftEnabled()) {
 			currentRender = distance;
-			sendPacket(new PacketRenderDistance(distance, null, null));
+			sendPacket(new PacketChangeRenderDistance(distance, null, null));
 		}
 	}
 
@@ -459,7 +459,7 @@ public class SpoutCraftPlayer extends CraftPlayer implements SpoutPlayer {
 	public void setMaximumRenderDistance(RenderDistance maximum) {
 		if (isSpoutCraftEnabled()) {
 			maximumRender = maximum;
-			sendPacket(new PacketRenderDistance(null, maximum, null));
+			sendPacket(new PacketChangeRenderDistance(null, maximum, null));
 		}
 	}
 
@@ -467,7 +467,7 @@ public class SpoutCraftPlayer extends CraftPlayer implements SpoutPlayer {
 	public void resetMaximumRenderDistance() {
 		if (isSpoutCraftEnabled()) {
 			maximumRender = null;
-			sendPacket(new PacketRenderDistance(true, false));
+			sendPacket(new PacketChangeRenderDistance(true, false));
 		}
 	}
 
@@ -480,7 +480,7 @@ public class SpoutCraftPlayer extends CraftPlayer implements SpoutPlayer {
 	public void setMinimumRenderDistance(RenderDistance minimum) {
 		if (isSpoutCraftEnabled()) {
 			minimumRender = minimum;
-			sendPacket(new PacketRenderDistance(null, null, minimum));
+			sendPacket(new PacketChangeRenderDistance(null, null, minimum));
 		}
 	}
 
@@ -488,7 +488,7 @@ public class SpoutCraftPlayer extends CraftPlayer implements SpoutPlayer {
 	public void resetMinimumRenderDistance() {
 		if (isSpoutCraftEnabled()) {
 			minimumRender = null;
-			sendPacket(new PacketRenderDistance(false, true));
+			sendPacket(new PacketChangeRenderDistance(false, true));
 		}
 	}
 
@@ -909,7 +909,7 @@ public class SpoutCraftPlayer extends CraftPlayer implements SpoutPlayer {
 			}
 			String title = org.getspout.spoutapi.Spout.getServer().getTitle(le);
 			if (title != null) {
-				sendDelayedPacket(new PacketEntityTitle(le.getEntityId(), title));
+				sendDelayedPacket(new PacketEntityNameplate(le.getEntityId(), title));
 			}
 		}
 	}
@@ -933,7 +933,7 @@ public class SpoutCraftPlayer extends CraftPlayer implements SpoutPlayer {
 		}
 		String title = org.getspout.spoutapi.Spout.getServer().getTitle(entity);
 		if (title != null) {
-			sendDelayedPacket(new PacketEntityTitle(entity.getEntityId(), title));
+			sendDelayedPacket(new PacketEntityNameplate(entity.getEntityId(), title));
 		}
 	}
 
@@ -941,9 +941,9 @@ public class SpoutCraftPlayer extends CraftPlayer implements SpoutPlayer {
 		if (!isSpoutCraftEnabled()) {
 			return;
 		}
-		viewer.sendDelayedPacket(new PacketSkinURL(getEntityId(),
+		viewer.sendDelayedPacket(new PacketDownloadTextureHTTP(getEntityId(),
 				getSkin(viewer), getCape(viewer)));
-		viewer.sendDelayedPacket(new PacketEntityTitle(getEntityId(),
+		viewer.sendDelayedPacket(new PacketEntityNameplate(getEntityId(),
 				getTitleFor(viewer)));
 		for (AccessoryType type : AccessoryType.values()) {
 			if (hasAccessory(type)) {
@@ -960,7 +960,7 @@ public class SpoutCraftPlayer extends CraftPlayer implements SpoutPlayer {
 
 		for (Player p : getWorld().getPlayers()) {
 			if (p instanceof SpoutPlayer) {
-				((SpoutPlayer) p).sendPacket(new PacketSkinURL(getEntityId(), getSkin((SpoutPlayer) p)));
+				((SpoutPlayer) p).sendPacket(new PacketDownloadTextureHTTP(getEntityId(), getSkin((SpoutPlayer) p)));
 			}
 		}
 	}
@@ -969,7 +969,7 @@ public class SpoutCraftPlayer extends CraftPlayer implements SpoutPlayer {
 	public void setSkinFor(SpoutPlayer viewingPlayer, String url) {
 		checkUrl(url);
 		skinsFor.put(viewingPlayer.getName(), url);
-		viewingPlayer.sendPacket(new PacketSkinURL(getEntityId(), url));
+		viewingPlayer.sendPacket(new PacketDownloadTextureHTTP(getEntityId(), url));
 	}
 
 	@Override
@@ -1002,7 +1002,7 @@ public class SpoutCraftPlayer extends CraftPlayer implements SpoutPlayer {
 
 		for (Player p : getWorld().getPlayers()) {
 			if (p instanceof SpoutPlayer) {
-				((SpoutPlayer) p).sendPacket(new PacketSkinURL(getCape((SpoutPlayer) p), getEntityId()));
+				((SpoutPlayer) p).sendPacket(new PacketDownloadTextureHTTP(getCape((SpoutPlayer) p), getEntityId()));
 			}
 		}
 	}
@@ -1011,7 +1011,7 @@ public class SpoutCraftPlayer extends CraftPlayer implements SpoutPlayer {
 	public void setCapeFor(SpoutPlayer viewingPlayer, String url) {
 		checkUrl(url);
 		capesFor.put(viewingPlayer.getName(), url);
-		viewingPlayer.sendPacket(new PacketSkinURL(url, getEntityId()));
+		viewingPlayer.sendPacket(new PacketDownloadTextureHTTP(url, getEntityId()));
 	}
 
 	@Override
@@ -1043,7 +1043,7 @@ public class SpoutCraftPlayer extends CraftPlayer implements SpoutPlayer {
 
 		for (Player p : getWorld().getPlayers()) {
 			if (p instanceof SpoutPlayer) {
-				((SpoutPlayer) p).sendPacket(new PacketEntityTitle(getEntityId(), getTitleFor((SpoutPlayer) p)));
+				((SpoutPlayer) p).sendPacket(new PacketEntityNameplate(getEntityId(), getTitleFor((SpoutPlayer) p)));
 			}
 		}
 	}
@@ -1051,7 +1051,7 @@ public class SpoutCraftPlayer extends CraftPlayer implements SpoutPlayer {
 	@Override
 	public void setTitleFor(SpoutPlayer viewingPlayer, String title) {
 		titlesFor.put(viewingPlayer.getName(), title);
-		viewingPlayer.sendPacket(new PacketEntityTitle(getEntityId(), title));
+		viewingPlayer.sendPacket(new PacketEntityNameplate(getEntityId(), title));
 	}
 
 	@Override

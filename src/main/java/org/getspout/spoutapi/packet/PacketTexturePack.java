@@ -21,9 +21,6 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
-
 public class PacketTexturePack implements SpoutPacket {
 	private String url;
 	private long expectedCRC;

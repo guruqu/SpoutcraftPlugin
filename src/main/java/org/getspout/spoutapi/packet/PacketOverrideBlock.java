@@ -21,44 +21,48 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketEntityTitle implements SpoutPacket {
-	public String title;
-	public int entityId;
+public class PacketOverrideBlock implements SpoutPacket {
+	private int x;
+	private int y;
+	private int z;
+	private short blockId;
+	private byte data;
 
-	public PacketEntityTitle() {
+	protected PacketOverrideBlock() {
 	}
 
-	public PacketEntityTitle(int entityId, String title) {
-		this.entityId = entityId;
-		this.title = title;
-	}
-
-	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		entityId = input.readInt();
-		title = input.readString();
-	}
-
-	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeInt(entityId);
-		output.writeString(title);
+	public PacketOverrideBlock(int x, int y, int z, short blockId, byte data) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.blockId = blockId;
+		this.data = data;
 	}
 
 	@Override
-	public void run(int id) {
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		//TODO: Should the server receive this?
+		x = buf.getInt();
+		y = buf.getInt();
+		z = buf.getInt();
+		blockId = buf.getShort();
+		data = buf.get();
 	}
 
 	@Override
-	public void failure(int id) {
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putInt(x);
+		buf.putInt(y);
+		buf.putInt(z);
+		buf.putShort(blockId);
+		buf.put(data);
 	}
 
 	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketEntityTitle;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override

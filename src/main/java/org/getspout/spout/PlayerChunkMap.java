@@ -35,12 +35,8 @@ import org.getspout.spout.precache.PrecacheManager;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.event.spout.SpoutCraftEnableEvent;
 import org.getspout.spoutapi.event.spout.SpoutcraftFailedEvent;
-import org.getspout.spoutapi.material.CustomBlock;
-import org.getspout.spoutapi.material.MaterialData;
-import org.getspout.spoutapi.packet.PacketAllowVisualCheats;
+import org.getspout.spoutapi.packet.PacketToggleCheats;
 import org.getspout.spoutapi.packet.PacketBlockData;
-import org.getspout.spoutapi.packet.PacketCustomBlockDesign;
-import org.getspout.spoutapi.packet.PacketServerPlugins;
 import org.getspout.spoutapi.player.PlayerInformation;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
@@ -89,7 +85,7 @@ public class PlayerChunkMap {
 		((SimpleSkyManager)SpoutManager.getSkyManager()).onPlayerJoin(player);
 		((SimpleBiomeManager)SpoutManager.getBiomeManager()).onPlayerJoin(player);
 		((SimpleKeyBindingManager)SpoutManager.getKeyBindingManager()).onPlayerJoin(player);
-		player.sendPacket(new PacketAllowVisualCheats(PermHandler.allowSkyCheat(player),PermHandler.forceSkyCheat(player),PermHandler.showSkyCheat(player),PermHandler.allowClearWaterCheat(player),PermHandler.forceClearWaterCheat(player),PermHandler.showClearWaterCheat(player),PermHandler.allowStarsCheat(player),PermHandler.forceStarsCheat(player),PermHandler.showStarsCheat(player),PermHandler.allowWeatherCheat(player),PermHandler.forceWeatherCheat(player),PermHandler.showWeatherCheat(player),PermHandler.allowTimeCheat(player),PermHandler.allowCoordsCheat(player),PermHandler.allowEntityLabelCheat(player),PermHandler.allowVoidFogCheat(player),PermHandler.forceVoidFogCheat(player),PermHandler.showVoidFogCheat(player),PermHandler.allowFlightSpeedCheat(player)));
+		player.sendPacket(new PacketToggleCheats(PermHandler.allowSkyCheat(player),PermHandler.forceSkyCheat(player),PermHandler.showSkyCheat(player),PermHandler.allowClearWaterCheat(player),PermHandler.forceClearWaterCheat(player),PermHandler.showClearWaterCheat(player),PermHandler.allowStarsCheat(player),PermHandler.forceStarsCheat(player),PermHandler.showStarsCheat(player),PermHandler.allowWeatherCheat(player),PermHandler.forceWeatherCheat(player),PermHandler.showWeatherCheat(player),PermHandler.allowTimeCheat(player),PermHandler.allowCoordsCheat(player),PermHandler.allowEntityLabelCheat(player),PermHandler.allowVoidFogCheat(player),PermHandler.forceVoidFogCheat(player),PermHandler.showVoidFogCheat(player),PermHandler.allowFlightSpeedCheat(player)));
 		player.updatePermissions();
 		PrecacheManager.onPlayerJoin(player);
 		player.sendPacket(new PacketBlockData(SpoutManager.getMaterialManager().getModifiedBlocks()));

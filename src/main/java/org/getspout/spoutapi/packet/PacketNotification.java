@@ -21,9 +21,6 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
-
 public class PacketNotification extends PacketShowAchievement {
 	protected int time;
 	protected short data;
@@ -52,12 +49,12 @@ public class PacketNotification extends PacketShowAchievement {
 	}
 
 	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketNotification;
+	public int getVersion() {
+		return 0;
 	}
 
 	@Override
-	public int getVersion() {
-		return 0;
+	public PacketType getPacketType() {
+		return PacketType.PacketNotification;
 	}
 }

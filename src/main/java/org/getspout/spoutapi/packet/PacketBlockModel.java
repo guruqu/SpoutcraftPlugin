@@ -21,50 +21,57 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
-import net.minecraft.server.v1_6_R3.EntityPlayer;
+import org.getspout.spoutapi.block.design.BlockDesign;
+import org.getspout.spoutapi.block.design.GenericBlockDesign;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketAirTime implements SpoutPacket {
-	public int airTime;
-	public int air;
+public class PacketBlockModel implements SpoutPacket {
+	private short customId;
+	private byte data;
+	private BlockDesign design;
 
-	public PacketAirTime() {
+	public PacketBlockModel() {
 	}
 
-	public PacketAirTime(int maxTime, int time) {
-		this.airTime = maxTime;
-		this.air = time;
+	public PacketBlockModel(short customId, BlockDesign design, byte data) {
+		this.design = design;
+		this.customId = customId;
+		this.data = data;
 	}
 
 	@Override
 	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
-		this.airTime = buf.getInt();
-		this.air = buf.getInt();
+		customId = buf.getShort();
+		data = buf.get();
+		design = new GenericBlockDesign();
+		design.decode(buf);
+		if (design.getReset()) {
+			design = null;
+		}
 	}
 
 	@Override
 	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
-		buf.putInt(this.airTime);
-		buf.putInt(this.air);
+		buf.putShort(customId);
+		buf.put(data);
+		if (design != null) {
+			design.encode(buf);
+		} else {
+			buf.putUTF8(GenericBlockDesign.RESET_STRING);
+		}
 	}
 
 	@Override
-	public void handle(EntityPlayer player) {
-	}
-
-	@Override
-	public void failure(EntityPlayer player) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketAirTime;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override
 	public int getVersion() {
-		return 0;
+		return design.getVersion() + 3;
+	}
+
+	public PacketType getPacketType() {
+		return PacketType.PacketCustomBlockDesign;
 	}
 }

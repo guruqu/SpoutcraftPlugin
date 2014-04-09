@@ -22,9 +22,6 @@ package org.getspout.spoutapi.packet;
 import java.io.IOException;
 
 import org.bukkit.Location;
-
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
 import org.getspout.spoutapi.sound.Music;
 import org.getspout.spoutapi.sound.SoundEffect;
 
