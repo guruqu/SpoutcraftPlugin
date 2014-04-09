@@ -22,6 +22,8 @@ package org.getspout.spoutapi.packet;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import net.minecraft.server.v1_6_R3.EntityPlayer;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.io.SpoutInputStream;
 import org.getspout.spoutapi.io.SpoutOutputStream;
 import org.getspout.spoutapi.player.accessories.AccessoryType;
@@ -46,27 +48,27 @@ public class PacketAccessory implements SpoutPacket{
 	}
 
 	@Override
-	public void decode(ByteBuffer buf) throws IOException {
-		who = buf.();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		who = buf.getUTF8();
 		type = AccessoryType.get(buf.getInt());
-		url = buf.get();
-		add = buf.get();
+		url = buf.getUTF8();
+		add = buf.getBoolean();
 	}
 
 	@Override
-	public void encode(ByteBuffer buf) throws IOException {
-		output.writeString(who);
-		output.writeInt(type.getId());
-		output.writeString(url);
-		output.writeBoolean(add);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putUTF8(who);
+		buf.putInt(type.getId());
+		buf.putUTF8(url);
+		buf.putBoolean(add);
 	}
 
 	@Override
-	public void run(int playerId) {
+	public void handle(EntityPlayer player) {
 	}
 
 	@Override
-	public void failure(int playerId) {
+	public void failure(EntityPlayer player) {
 	}
 
 	@Override
@@ -76,6 +78,6 @@ public class PacketAccessory implements SpoutPacket{
 
 	@Override
 	public int getVersion() {
-		return 2;
+		return 0;
 	}
 }

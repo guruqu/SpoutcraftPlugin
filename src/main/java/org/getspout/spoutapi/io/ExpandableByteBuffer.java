@@ -61,6 +61,15 @@ public class ExpandableByteBuffer {
 		buf.put(from);
 	}
 
+	public void putBoolean(boolean b) {
+		expandIfNeeded(1);
+		buf.put(b ? (byte) 1 : 0);
+	}
+
+	public boolean getBoolean() {
+		return buf.get() == 1;
+	}
+
 	public void putChar(char c) {
 		expandIfNeeded(2);
 		buf.putChar(c);

@@ -21,6 +21,8 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
+import net.minecraft.server.v1_6_R3.EntityPlayer;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.io.SpoutInputStream;
 import org.getspout.spoutapi.io.SpoutOutputStream;
 
@@ -37,23 +39,23 @@ public class PacketAirTime implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		this.airTime = input.readInt();
-		this.air = input.readInt();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		this.airTime = buf.getInt();
+		this.air = buf.getInt();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeInt(this.airTime);
-		output.writeInt(this.air);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putInt(this.airTime);
+		buf.putInt(this.air);
 	}
 
 	@Override
-	public void run(int id) {
+	public void handle(EntityPlayer player) {
 	}
 
 	@Override
-	public void failure(int id) {
+	public void failure(EntityPlayer player) {
 	}
 
 	@Override

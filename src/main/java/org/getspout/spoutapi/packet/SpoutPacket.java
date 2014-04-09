@@ -20,32 +20,36 @@
 package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 import net.minecraft.server.v1_6_R3.EntityPlayer;
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 
 public interface SpoutPacket {
 	/**
 	 * Reads the incoming data from the client.
-	 * <p/>
+	 * <p>
 	 * Note: Data should be read in exactly the same order as it was written.
 	 * @param buf The byte buffer to read data from
 	 */
-	public void decode(ByteBuffer buf) throws IOException;
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException;
 
 	/**
 	 * Writes the outgoing data to the output stream.
 	 * @param buf The buffer to write data to
 	 */
-	public void encode(ByteBuffer buf) throws IOException;
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException;
 
 	/**
 	 * Performs any tasks for the packet after data has been successfully read into the packet.
 	 * @param player The player of this packet
 	 */
 	public void handle(EntityPlayer player);
+
+	/**
+	 * Called on packet version mismatch
+	 * @param player The player of this packet
+	 */
+	public void failure(EntityPlayer player);
 
 	/**
 	 * The type of packet represented. Used to rebuild the correct packet on the client.
@@ -56,7 +60,7 @@ public interface SpoutPacket {
 	/**
 	 * Version of the packet this represents. Version numbers should start with 0.
 	 * Versions should be incremented any time the member variables or serialization of the packet changes, to prevent crashing.
-	 * Mismatched packet versions are discarded, and {@link #failure(int)} is called.
+	 * Mismatched packet versions are discarded, and {@link #failure(net.minecraft.server.v1_6_R3.EntityPlayer)} is called.
 	 * @return version
 	 */
 	public int getVersion();
