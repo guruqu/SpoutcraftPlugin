@@ -21,52 +21,52 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
-import org.getspout.spoutapi.io.SpoutInputStream;
-import org.getspout.spoutapi.io.SpoutOutputStream;
+import net.minecraft.server.v1_6_R3.EntityPlayer;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 
-public class PacketAlert implements SpoutPacket {
-	public PacketAlert() {
+public class PacketShowAchievement implements SpoutPacket {
+	private String message;
+	private String title;
+	private int itemId;
+
+	public PacketShowAchievement() {
 	}
 
-	public PacketAlert(String title, String message, int itemId) {
+	public PacketShowAchievement(String title, String message, int itemId) {
 		this.title = title;
 		this.message = message;
 		this.itemId = itemId;
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		title = input.readString();
-		message = input.readString();
-		itemId = input.readInt();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		title = buf.getUTF8();
+		message = buf.getUTF8();
+		itemId = buf.getInt();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeString(title);
-		output.writeString(message);
-		output.writeInt(itemId);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putUTF8(title);
+		buf.putUTF8(message);
+		buf.putInt(itemId);
 	}
 
 	@Override
-	public void run(int PlayerId) {
+	public void handle(EntityPlayer player) {
 	}
 
 	@Override
-	public void failure(int id) {
+	public void failure(EntityPlayer player) {
 	}
 
 	@Override
 	public PacketType getPacketType() {
-		return PacketType.PacketAlert;
+		return PacketType.PacketShowAchievement;
 	}
 
 	@Override
 	public int getVersion() {
-		return 1;
+		return 0;
 	}
-
-	String message;
-	String title;
-	int itemId;
 }

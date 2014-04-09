@@ -504,7 +504,7 @@ public class SpoutCraftPlayer extends CraftPlayer implements SpoutPlayer {
 			if (ChatColor.stripColor(message).length() > 26 || message.length() > 78) {
 				throw new UnsupportedOperationException("Notification messages can not be greater than 26 chars + 26 colors");
 			}
-			sendPacket(new PacketAlert(title, message, toRender.getId()));
+			sendPacket(new PacketShowAchievement(title, message, toRender.getId()));
 		}
 	}
 

@@ -24,7 +24,7 @@ import java.io.IOException;
 import org.getspout.spoutapi.io.SpoutInputStream;
 import org.getspout.spoutapi.io.SpoutOutputStream;
 
-public class PacketNotification extends PacketAlert {
+public class PacketNotification extends PacketShowAchievement {
 	protected int time;
 	protected short data;
 

@@ -33,7 +33,7 @@ public enum PacketType {
 	PacketEntityTitle(3, PacketEntityTitle.class),
 	//PacketPluginReload(4, PacketPluginReload.class),
 	PacketRenderDistance(5, PacketRenderDistance.class),
-	PacketAlert(6, PacketAlert.class),
+	PacketShowAchievement(6, PacketShowAchievement.class),
 	PacketPlaySound(7, PacketPlaySound.class),
 	PacketDownloadMusic(8, PacketDownloadMusic.class),
 	PacketClipboardText(9, PacketClipboardText.class),
