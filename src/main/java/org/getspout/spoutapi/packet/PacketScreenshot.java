@@ -27,8 +27,8 @@ import javax.imageio.ImageIO;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.event.screen.ScreenshotReceivedEvent;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketScreenshot implements SpoutPacket {
@@ -54,49 +54,44 @@ public class PacketScreenshot implements SpoutPacket {
 		return ssAsPng.length + 5;
 	}
 
-	public void readData(SpoutInputStream input) throws IOException {
-		isRequest = input.readBoolean();
+	@Override
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		isRequest = buf.getBoolean();
 		if (!isRequest) {
-			int ssLen = input.readInt();
+			int ssLen = buf.getInt();
 			ssAsPng = new byte[ssLen];
-			input.read(ssAsPng);
+			buf.get(ssAsPng);
 		}
 	}
 
-	public void writeData(SpoutOutputStream output) throws IOException {
+	@Override
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
 		if (ssAsPng == null) {
-			output.writeBoolean(true);
+			buf.putBoolean(true);
 		} else {
-			output.writeBoolean(false);
-			output.writeInt(ssAsPng.length);
-			output.write(ssAsPng);
+			buf.putBoolean(false);
+			buf.putInt(ssAsPng.length);
+			buf.put(ssAsPng);
 		}
 	}
 
-	public void run(int playerId) {
+	@Override
+	public void handle(SpoutPlayer player) {
 		if (isRequest) {
 			return; // We can't do anything!
 		}
 		try {
 			ByteArrayInputStream bais = new ByteArrayInputStream(ssAsPng);
 			BufferedImage ss = ImageIO.read(bais);
-			SpoutPlayer sp = SpoutManager.getPlayerFromId(playerId);
-			ScreenshotReceivedEvent sre = new ScreenshotReceivedEvent(sp, ss);
+			ScreenshotReceivedEvent sre = new ScreenshotReceivedEvent(player, ss);
 			Bukkit.getServer().getPluginManager().callEvent(sre);
-			sp.sendNotification("Sending screenshot...", "Screenshot received", Material.PAINTING);
+			player.sendNotification("Sending screenshot...", "Screenshot received", Material.PAINTING);
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
 	}
 
-	public void failure(int playerId) {
-	}
-
-	public PacketType getPacketType() {
-		return PacketType.PacketScreenshot;
-	}
-
 	public int getVersion() {
-		return 1;
+		return 0;
 	}
 }

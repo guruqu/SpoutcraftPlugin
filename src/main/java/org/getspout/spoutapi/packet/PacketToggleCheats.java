@@ -21,8 +21,8 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
-import net.minecraft.server.v1_6_R3.EntityPlayer;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketToggleCheats implements SpoutPacket {
 	private boolean cheatsky = false;
@@ -45,7 +45,7 @@ public class PacketToggleCheats implements SpoutPacket {
 	private boolean showvoidfog = false;
 	private boolean flightspeed = false;
 
-	public PacketToggleCheats() {
+	protected PacketToggleCheats() {
 	}
 
 	public PacketToggleCheats(boolean tsky, boolean fsky, boolean ssky, boolean tclearwater, boolean fclearwater, boolean sclearwater, boolean tstars, boolean fstars, boolean sstars, boolean tweather, boolean fweather, boolean sweather, boolean ttime, boolean tcoords, boolean tentitylabel, boolean tvoidfog, boolean fvoidfog, boolean svoidfog, boolean tflightspeed) {
@@ -99,20 +99,11 @@ public class PacketToggleCheats implements SpoutPacket {
 	}
 
 	@Override
+	public void handle(SpoutPlayer player) {
+	}
+
+	@Override
 	public int getVersion() {
-		return 4;
-	}
-
-	@Override
-	public void handle(EntityPlayer player) {
-	}
-
-	@Override
-	public void failure(EntityPlayer player) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketAllowVisualCheats;
+		return 0;
 	}
 }

@@ -21,13 +21,16 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
+
 public class PacketSetVelocity implements SpoutPacket {
 	private double motX = 0;
 	private double motY = 0;
 	private double motZ = 0;
 	private int entityId = 0;
 
-	public PacketSetVelocity() {
+	protected PacketSetVelocity() {
 	}
 
 	public PacketSetVelocity(int entityId, double motX, double motY, double motZ) {
@@ -38,36 +41,27 @@ public class PacketSetVelocity implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		entityId = input.readInt();
-		motX = input.readDouble();
-		motY = input.readDouble();
-		motZ = input.readDouble();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		entityId = buf.getInt();
+		motX = buf.getDouble();
+		motY = buf.getDouble();
+		motZ = buf.getDouble();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeInt(entityId);
-		output.writeDouble(motX);
-		output.writeDouble(motY);
-		output.writeDouble(motZ);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putInt(entityId);
+		buf.putDouble(motX);
+		buf.putDouble(motY);
+		buf.putDouble(motZ);
 	}
 
 	@Override
-	public void run(int playerId) {
-	}
-
-	@Override
-	public void failure(int playerId) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketSetVelocity;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override
 	public int getVersion() {
-		return 1;
+		return 0;
 	}
 }

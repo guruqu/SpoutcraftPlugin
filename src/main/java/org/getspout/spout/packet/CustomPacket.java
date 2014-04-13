@@ -29,10 +29,8 @@ import java.util.Map;
 
 import net.minecraft.server.v1_6_R3.Connection;
 import net.minecraft.server.v1_6_R3.Packet;
-
 import org.getspout.spout.SpoutPlayerConnection;
 import org.getspout.spoutapi.SpoutManager;
-import org.getspout.spoutapi.packet.PacketType;
 import org.getspout.spoutapi.packet.SpoutPacket;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
@@ -91,7 +89,7 @@ public class CustomPacket extends Packet {
 				input.readFully(data);
 
 				SpoutInputStream stream = new SpoutInputStream(ByteBuffer.wrap(data));
-				packet.readData(stream);
+				packet.decode(stream);
 
 				success = true;
 			}
@@ -105,6 +103,7 @@ public class CustomPacket extends Packet {
 	}
 
 	SpoutOutputStream stream = new SpoutOutputStream();
+
 	@Override
 	public void a(DataOutput output) throws IOException {
 		if (packet == null) {
@@ -118,7 +117,7 @@ public class CustomPacket extends Packet {
 		output.writeShort(packet.getVersion());
 
 		stream.getRawBuffer().clear();
-		packet.writeData(stream);
+		packet.encode(stream);
 		ByteBuffer buffer = stream.getRawBuffer();
 		byte[] data = new byte[buffer.capacity() - buffer.remaining()];
 		System.arraycopy(buffer.array(), 0, data, 0, data.length);
@@ -134,9 +133,7 @@ public class CustomPacket extends Packet {
 			SpoutPlayer player = SpoutManager.getPlayerFromId(handler.getPlayer().getEntityId());
 			if (player != null) {
 				if (success) {
-					packet.run(player.getEntityId());
-				} else if (packet != null) {
-					packet.failure(player.getEntityId());
+					packet.handle(player);
 				}
 			}
 		}
@@ -153,7 +150,7 @@ public class CustomPacket extends Packet {
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings ("rawtypes")
 	public static void removeClassMapping() {
 		try {
 			Packet.l.d(195);

@@ -21,15 +21,15 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
-import net.minecraft.server.v1_6_R3.EntityPlayer;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketShowAchievement implements SpoutPacket {
 	private String message;
 	private String title;
 	private int itemId;
 
-	public PacketShowAchievement() {
+	protected PacketShowAchievement() {
 	}
 
 	public PacketShowAchievement(String title, String message, int itemId) {
@@ -53,20 +53,11 @@ public class PacketShowAchievement implements SpoutPacket {
 	}
 
 	@Override
+	public void handle(SpoutPlayer player) {
+	}
+
+	@Override
 	public int getVersion() {
 		return 0;
-	}
-
-	@Override
-	public void handle(EntityPlayer player) {
-	}
-
-	@Override
-	public void failure(EntityPlayer player) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketShowAchievement;
 	}
 }

@@ -25,9 +25,7 @@ import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketOverrideBlock implements SpoutPacket {
-	private int x;
-	private int y;
-	private int z;
+	private int x, y, z;
 	private short blockId;
 	private byte data;
 

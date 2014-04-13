@@ -31,13 +31,14 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.getspout.spoutapi.SpoutManager;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketEntityInformation implements CompressablePacket {
+public class PacketEntityInformation implements CompressiblePacket {
 	private boolean compressed = false;
 	private byte[] data = null;
 
-	public PacketEntityInformation() {
+	protected PacketEntityInformation() {
 	}
 
 	public PacketEntityInformation(List<LivingEntity> entities) {
@@ -51,29 +52,28 @@ public class PacketEntityInformation implements CompressablePacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		int size = input.readInt();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		int size = buf.getInt();
 		if (size > 0) {
 			data = new byte[size];
-			input.read(data);
+			buf.get(data);
 		}
-		compressed = input.readBoolean();
+		compressed = buf.getBoolean();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
 		if (data != null) {
-			output.writeInt(data.length);
-			output.write(data);
+			buf.putInt(data.length);
+			buf.put(data);
 		} else {
-			output.writeInt(0);
+			buf.putInt(0);
 		}
-		output.writeBoolean(compressed);
+		buf.putBoolean(compressed);
 	}
 
 	@Override
-	public void run(int playerId) {
-		SpoutPlayer player = SpoutManager.getPlayerFromId(playerId);
+	public void handle(SpoutPlayer player) {
 		if (player != null) {
 			ByteBuffer rawData = ByteBuffer.allocate(data.length);
 			rawData.put(data);
@@ -91,15 +91,6 @@ public class PacketEntityInformation implements CompressablePacket {
 				player.updateEntitySkins(entities);
 			}
 		}
-	}
-
-	@Override
-	public void failure(int playerId) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketEntityInformation;
 	}
 
 	@Override

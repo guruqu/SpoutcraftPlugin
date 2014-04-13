@@ -39,7 +39,7 @@ public class PacketOverrideChunk implements CompressiblePacket {
 	private byte[] data;
 	private boolean compressed = false;
 
-	public PacketOverrideChunk() {
+	protected PacketOverrideChunk() {
 	}
 
 	public PacketOverrideChunk(short[] customIds, byte[] customData, int x, int z) {

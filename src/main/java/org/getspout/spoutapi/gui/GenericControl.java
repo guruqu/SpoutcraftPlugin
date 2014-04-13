@@ -21,6 +21,8 @@ package org.getspout.spoutapi.gui;
 
 import java.io.IOException;
 
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+
 public abstract class GenericControl extends GenericWidget implements Control {
 	protected boolean focus = false;
 	protected boolean enabled = true;
@@ -32,25 +34,25 @@ public abstract class GenericControl extends GenericWidget implements Control {
 
 	@Override
 	public int getVersion() {
-		return super.getVersion() + 3;
+		return super.getVersion();
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		setEnabled(input.readBoolean());
-		setColor(input.readColor());
-		setDisabledColor(input.readColor());
-		setFocus(input.readBoolean());
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		setEnabled(buf.getBoolean());
+		setColor(buf.getColor());
+		setDisabledColor(buf.getColor());
+		setFocus(buf.getBoolean());
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeBoolean(isEnabled());
-		output.writeColor(getColor());
-		output.writeColor(getDisabledColor());
-		output.writeBoolean(isFocus());
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		buf.putBoolean(isEnabled());
+		buf.putColor(getColor());
+		buf.putColor(getDisabledColor());
+		buf.putBoolean(isFocus());
 	}
 
 	@Override

@@ -22,6 +22,8 @@ package org.getspout.spoutapi.packet;
 import java.io.IOException;
 
 import org.getspout.spoutapi.gui.ScreenType;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketOpenScreen implements SpoutPacket {
 	ScreenType type = null;
@@ -31,26 +33,17 @@ public class PacketOpenScreen implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		type = ScreenType.getType(input.readInt());
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		type = ScreenType.getType(buf.getInt());
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeInt(type.getCode());
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putInt(type.getCode());
 	}
 
 	@Override
-	public void run(int playerId) {
-	}
-
-	@Override
-	public void failure(int playerId) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketOpenScreen;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override

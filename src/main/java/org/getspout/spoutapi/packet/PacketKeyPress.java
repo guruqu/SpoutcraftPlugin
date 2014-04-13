@@ -22,10 +22,10 @@ package org.getspout.spoutapi.packet;
 import java.io.IOException;
 
 import org.bukkit.Bukkit;
-import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.event.input.KeyPressedEvent;
 import org.getspout.spoutapi.event.input.KeyReleasedEvent;
 import org.getspout.spoutapi.gui.ScreenType;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketKeyPress implements SpoutPacket {
@@ -34,7 +34,7 @@ public class PacketKeyPress implements SpoutPacket {
 	public byte settingKeys[] = new byte[10];
 	public int screenType = -1;
 
-	public PacketKeyPress() {
+	protected PacketKeyPress() {
 	}
 
 	public PacketKeyPress(int key, boolean pressDown) {
@@ -42,47 +42,40 @@ public class PacketKeyPress implements SpoutPacket {
 		this.pressDown = pressDown;
 	}
 
-	public void readData(SpoutInputStream datainputstream) throws IOException {
-		this.key = datainputstream.readInt();
-		this.pressDown = datainputstream.readBoolean();
-		this.screenType = datainputstream.readInt();
+	@Override
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		key = buf.getInt();
+		pressDown = buf.getBoolean();
+		screenType = buf.getInt();
 		for (int i = 0; i < 10; i++) {
-			this.settingKeys[i] = (byte) datainputstream.read();
+			settingKeys[i] = buf.get();
 		}
 	}
 
-	public void writeData(SpoutOutputStream dataoutputstream) throws IOException {
-		dataoutputstream.writeInt(this.key);
-		dataoutputstream.writeBoolean(this.pressDown);
-		dataoutputstream.writeInt(this.screenType);
+	@Override
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putInt(key);
+		buf.putBoolean(pressDown);
+		buf.putInt(screenType);
 		for (int i = 0; i < 10; i++) {
-			dataoutputstream.write(this.settingKeys[i]);
+			buf.put(settingKeys[i]);
 		}
 	}
 
-	public void run(int id) {
-		SpoutPlayer player = SpoutManager.getPlayerFromId(id);
+	@Override
+	public void handle(SpoutPlayer player) {
 		if (player != null) {
 			player.updateKeys(settingKeys);
 			if (pressDown) {
-				Bukkit.getServer().getPluginManager().callEvent(new KeyPressedEvent(this.key, player, ScreenType.getType(screenType)));
+				Bukkit.getServer().getPluginManager().callEvent(new KeyPressedEvent(key, player, ScreenType.getType(screenType)));
 			} else {
-				Bukkit.getServer().getPluginManager().callEvent(new KeyReleasedEvent(this.key, player, ScreenType.getType(screenType)));
+				Bukkit.getServer().getPluginManager().callEvent(new KeyReleasedEvent(key, player, ScreenType.getType(screenType)));
 			}
 		}
 	}
 
 	@Override
-	public void failure(int id) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketKeyPress;
-	}
-
-	@Override
 	public int getVersion() {
-		return 1;
+		return 0;
 	}
 }

@@ -22,6 +22,7 @@ package org.getspout.spoutapi.gui;
 import java.io.IOException;
 
 import org.bukkit.inventory.ItemStack;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 
 public class GenericItemWidget extends GenericWidget implements ItemWidget {
 	protected int material = -1;
@@ -38,23 +39,23 @@ public class GenericItemWidget extends GenericWidget implements ItemWidget {
 
 	@Override
 	public int getVersion() {
-		return super.getVersion() + 0;
+		return super.getVersion();
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		this.setTypeId(input.readInt());
-		this.setData(input.readShort());
-		this.setDepth(input.readInt());
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		this.setTypeId(buf.getInt());
+		this.setData(buf.getShort());
+		this.setDepth(buf.getInt());
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeInt(getTypeId());
-		output.writeShort(getData());
-		output.writeInt(getDepth());
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		buf.putInt(getTypeId());
+		buf.putShort(getData());
+		buf.putInt(getDepth());
 	}
 
 	@Override

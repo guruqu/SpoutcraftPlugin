@@ -21,11 +21,14 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
+
 public class PacketTexturePack implements SpoutPacket {
 	private String url;
 	private long expectedCRC;
 
-	public PacketTexturePack() {
+	protected PacketTexturePack() {
 	}
 
 	public PacketTexturePack(String url, long expectedCRC) {
@@ -34,32 +37,23 @@ public class PacketTexturePack implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		url = input.readString();
-		expectedCRC = input.readLong();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		url = buf.getUTF8();
+		expectedCRC = buf.getLong();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeString(url);
-		output.writeLong(expectedCRC);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putUTF8(url);
+		buf.putLong(expectedCRC);
 	}
 
 	@Override
-	public void run(int PlayerId) {
-	}
-
-	@Override
-	public void failure(int id) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketTexturePack;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override
 	public int getVersion() {
-		return 2;
+		return 0;
 	}
 }

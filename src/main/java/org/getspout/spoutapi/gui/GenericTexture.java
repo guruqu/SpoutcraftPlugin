@@ -21,18 +21,15 @@ package org.getspout.spoutapi.gui;
 
 import java.io.IOException;
 
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+
 public class GenericTexture extends GenericWidget implements Texture {
 	protected String url = null;
 	protected boolean drawAlpha = false;
 	protected int top = -1;
 	protected int left = -1;
 
-	public GenericTexture() {
-	}
-
-	@Override
-	public int getVersion() {
-		return super.getVersion() + 3;
+	protected GenericTexture() {
 	}
 
 	public GenericTexture(String url) {
@@ -45,21 +42,26 @@ public class GenericTexture extends GenericWidget implements Texture {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		this.setUrl(input.readString());
-		this.setDrawAlphaChannel(input.readBoolean());
-		setTop(input.readShort());
-		setLeft(input.readShort());
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		setUrl(buf.getUTF8());
+		setDrawAlphaChannel(buf.getBoolean());
+		setTop(buf.getShort());
+		setLeft(buf.getShort());
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeString(getUrl());
-		output.writeBoolean(isDrawingAlphaChannel());
-		output.writeShort((short) top);
-		output.writeShort((short) left);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		buf.putUTF8(getUrl());
+		buf.putBoolean(isDrawingAlphaChannel());
+		buf.putShort((short) top);
+		buf.putShort((short) left);
+	}
+
+	@Override
+	public int getVersion() {
+		return super.getVersion();
 	}
 
 	@Override

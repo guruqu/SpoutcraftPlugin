@@ -24,7 +24,6 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
-import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.event.slot.SlotEvent;
 import org.getspout.spoutapi.event.slot.SlotExchangeEvent;
 import org.getspout.spoutapi.event.slot.SlotPutEvent;
@@ -34,6 +33,7 @@ import org.getspout.spoutapi.gui.InGameHUD;
 import org.getspout.spoutapi.gui.PopupScreen;
 import org.getspout.spoutapi.gui.Screen;
 import org.getspout.spoutapi.gui.Slot;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketSlotClick implements SpoutPacket {
@@ -42,7 +42,7 @@ public class PacketSlotClick implements SpoutPacket {
 	private int button;
 	private boolean holdingShift;
 
-	public PacketSlotClick() {
+	protected PacketSlotClick() {
 	}
 
 	public PacketSlotClick(Slot slot, int button, boolean holdingShift) {
@@ -52,35 +52,33 @@ public class PacketSlotClick implements SpoutPacket {
 		this.holdingShift = holdingShift;
 	}
 
-	public void readData(SpoutInputStream input) throws IOException {
-		long msb = input.readLong();
-		long lsb = input.readLong();
+	@Override
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		long msb = buf.getLong();
+		long lsb = buf.getLong();
 		screen = new UUID(msb, lsb);
-		msb = input.readLong();
-		lsb = input.readLong();
+		msb = buf.getLong();
+		lsb = buf.getLong();
 		slot = new UUID(msb, lsb);
-		button = input.read();
-		holdingShift = input.readBoolean();
+		button = buf.getInt();
+		holdingShift = buf.getBoolean();
 	}
 
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeLong(screen.getMostSignificantBits());
-		output.writeLong(screen.getLeastSignificantBits()); // 16
-		output.writeLong(slot.getMostSignificantBits());
-		output.writeLong(slot.getLeastSignificantBits()); // 32
-		output.write(button); // mouseClick will usually be 0 (left) or 1 (right) - so this is safe unless the mouse has... 257 buttons :P
-		output.writeBoolean(holdingShift);//34
+	@Override
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putLong(screen.getMostSignificantBits());
+		buf.putLong(screen.getLeastSignificantBits()); // 16
+		buf.putLong(slot.getMostSignificantBits());
+		buf.putLong(slot.getLeastSignificantBits()); // 32
+		buf.putInt(button); // mouseClick will usually be 0 (left) or 1 (right) - so this is safe unless the mouse has... 257 buttons :P
+		buf.putBoolean(holdingShift);//34
 	}
 
-	public int getNumBytes() {
-		return 34;
-	}
-
-	public void run(int playerId) {
-		SpoutPlayer p = SpoutManager.getPlayerFromId(playerId);
-		InGameHUD mainScreen = p.getMainScreen();
+	@Override
+	public void handle(SpoutPlayer player) {
+		InGameHUD mainScreen = player.getMainScreen();
 		PopupScreen popup = mainScreen.getActivePopup();
-		Screen current = p.getCurrentScreen();
+		Screen current = player.getCurrentScreen();
 
 		Screen in = null;
 		if (mainScreen != null && screen.equals(mainScreen.getId())) {
@@ -102,7 +100,7 @@ public class PacketSlotClick implements SpoutPacket {
 		// Slot handling code goes here.
 		Slot slot = (Slot) in.getWidget(this.slot);
 		try {
-			ItemStack stackOnCursor = p.getItemOnCursor();
+			ItemStack stackOnCursor = player.getItemOnCursor();
 			if (stackOnCursor == null) {
 				stackOnCursor = new ItemStack(0);
 			}
@@ -123,7 +121,7 @@ public class PacketSlotClick implements SpoutPacket {
 				if (amountSlot == 0) {
 					stackInSlot = new ItemStack(0);
 				}
-				SlotEvent s = new SlotTakeEvent(p, slot, stackInSlot, !slot.onItemTake(stackOnCursor));
+				SlotEvent s = new SlotTakeEvent(player, slot, stackInSlot, !slot.onItemTake(stackOnCursor));
 				Bukkit.getPluginManager().callEvent(s);
 				if (!s.isCancelled()) {
 					slot.setItem(stackInSlot);
@@ -151,7 +149,7 @@ public class PacketSlotClick implements SpoutPacket {
 					return;
 				}
 				toPut.setAmount(putAmount);
-				SlotEvent s = new SlotPutEvent(p, slot, stackInSlot, !slot.onItemPut(toPut));
+				SlotEvent s = new SlotPutEvent(player, slot, stackInSlot, !slot.onItemPut(toPut));
 				Bukkit.getPluginManager().callEvent(s);
 				if (!s.isCancelled()) {
 					stackOnCursor.setAmount(stackOnCursor.getAmount() - putAmount);
@@ -167,10 +165,10 @@ public class PacketSlotClick implements SpoutPacket {
 			} else if (stackOnCursor == null || stackOnCursor.getTypeId() == 0) { //Take item or shift click
 				if (holdingShift) {
 					slot.onItemShiftClicked();
-					SlotEvent s = new SlotShiftClickEvent(p, slot);
+					SlotEvent s = new SlotShiftClickEvent(player, slot);
 					Bukkit.getPluginManager().callEvent(s);
 				} else { // Take item
-					SlotEvent s = new SlotTakeEvent(p, slot, stackInSlot, !slot.onItemTake(stackInSlot));
+					SlotEvent s = new SlotTakeEvent(player, slot, stackInSlot, !slot.onItemTake(stackInSlot));
 					Bukkit.getPluginManager().callEvent(s);
 					if (!s.isCancelled()) {
 						stackOnCursor = stackInSlot;
@@ -180,7 +178,7 @@ public class PacketSlotClick implements SpoutPacket {
 					}
 				}
 			} else if (stackOnCursor.getTypeId() != stackInSlot.getTypeId() || stackOnCursor.getDurability() != stackInSlot.getDurability()) { // Exchange slot stack and cursor stack
-				SlotEvent s = new SlotExchangeEvent(p, slot, stackInSlot, stackOnCursor.clone(), !slot.onItemExchange(stackInSlot, stackOnCursor.clone()));
+				SlotEvent s = new SlotExchangeEvent(player, slot, stackInSlot, stackOnCursor.clone(), !slot.onItemExchange(stackInSlot, stackOnCursor.clone()));
 				Bukkit.getPluginManager().callEvent(s);
 				if (!s.isCancelled()) {
 					slot.setItem(stackOnCursor.clone());
@@ -191,23 +189,21 @@ public class PacketSlotClick implements SpoutPacket {
 			}
 
 			if (stackOnCursor == null || stackOnCursor.getTypeId() == 0) {
-				p.setItemOnCursor(null);
+				player.setItemOnCursor(null);
 			} else {
-				p.setItemOnCursor(stackOnCursor);
+				player.setItemOnCursor(stackOnCursor);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void failure(int playerId) {
-	}
-
-	public PacketType getPacketType() {
-		return PacketType.PacketSlotClick;
-	}
-
+	@Override
 	public int getVersion() {
 		return 0;
+	}
+
+	public int getNumBytes() {
+		return 34;
 	}
 }

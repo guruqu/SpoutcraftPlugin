@@ -25,10 +25,15 @@ import java.util.Map.Entry;
 
 import org.bukkit.plugin.Plugin;
 import org.getspout.spout.precache.PrecacheTuple;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketValidatePrecache implements SpoutPacket {
-	int count;
-	PrecacheTuple[] plugins;
+	private int count;
+	private PrecacheTuple[] plugins;
+
+	protected PacketValidatePrecache() {
+	}
 
 	public PacketValidatePrecache(HashMap<Plugin, Long> pluginMap) {
 		count = pluginMap.size();
@@ -46,40 +51,31 @@ public class PacketValidatePrecache implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		count = input.readInt();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		count = buf.getInt();
 		if (count > 0) {
 			plugins = new PrecacheTuple[count];
 			for (int i = 0; i < count; i++) {
-				String plugin = input.readString();
-				String version = input.readString();
-				long crc = input.readLong();
+				String plugin = buf.getUTF8();
+				String version = buf.getUTF8();
+				long crc = buf.getLong();
 				plugins[i] = new PrecacheTuple(plugin, version, crc);
 			}
 		}
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeInt(count);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putInt(count);
 		for (int i = 0; i < count; i++) {
-			output.writeString(plugins[i].getPlugin());
-			output.writeString(plugins[i].getVersion());
-			output.writeLong(plugins[i].getCrc());
+			buf.putUTF8(plugins[i].getPlugin());
+			buf.putUTF8(plugins[i].getVersion());
+			buf.putLong(plugins[i].getCrc());
 		}
 	}
 
 	@Override
-	public void run(int playerId) {
-	}
-
-	@Override
-	public void failure(int playerId) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketValidatePrecache;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override

@@ -33,12 +33,12 @@ import org.getspout.spoutapi.Spout;
 import org.getspout.spoutapi.block.design.Axis;
 import org.getspout.spoutapi.block.design.BlockDesign;
 import org.getspout.spoutapi.inventory.SpoutItemStack;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.material.CustomBlock;
 import org.getspout.spoutapi.material.CustomItem;
 import org.getspout.spoutapi.material.MaterialData;
 import org.getspout.spoutapi.material.item.GenericCustomItem;
 import org.getspout.spoutapi.packet.PacketBlockModel;
-import org.getspout.spoutapi.packet.PacketType;
 import org.getspout.spoutapi.packet.SpoutPacket;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
@@ -546,39 +546,30 @@ public class GenericCustomBlock extends GenericBlock implements CustomBlock, Spo
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		customId = input.readInt();
-		setName(input.readString());
-		plugin = Bukkit.getServer().getPluginManager().getPlugin(input.readString());
-		opaque = input.readBoolean();
-		setFriction(input.readFloat());
-		setHardness(input.readFloat());
-		setLightLevel(input.readInt());
+    public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		customId = buf.getInt();
+		setName(buf.getUTF8());
+		plugin = Bukkit.getServer().getPluginManager().getPlugin(buf.getUTF8());
+		opaque = buf.getBoolean();
+		setFriction(buf.getFloat());
+		setHardness(buf.getFloat());
+		setLightLevel(buf.getInt());
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeInt(customId);
-		output.writeString(getName());
-		output.writeString(getPlugin().getDescription().getName());
-		output.writeBoolean(isOpaque());
-		output.writeFloat(getFriction());
-		output.writeFloat(getHardness());
-		output.writeInt(getLightLevel());
+    public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+        buf.putInt(customId);
+        buf.putUTF8(getName());
+        buf.putUTF8(getPlugin().getDescription().getName());
+        buf.putBoolean(isOpaque());
+        buf.putFloat(getFriction());
+        buf.putFloat(getHardness());
+        buf.putInt(getLightLevel());
 	}
 
-	@Override
-	public void run(int playerId) {
-	}
-
-	@Override
-	public void failure(int playerId) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketCustomBlock;
-	}
+    @Override
+    public void handle(SpoutPlayer player) {
+    }
 
 	@Override
 	public int getVersion() {

@@ -29,7 +29,7 @@ public class PacketChangeItemDisplayName implements SpoutPacket {
 	private short data;
 	private String name;
 
-	public PacketChangeItemDisplayName() {
+	protected PacketChangeItemDisplayName() {
 	}
 
 	public PacketChangeItemDisplayName(int id, short data, String name) {

@@ -22,6 +22,7 @@ package org.getspout.spoutapi.gui;
 import java.io.IOException;
 
 import org.getspout.spoutapi.event.screen.SliderDragEvent;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 
 public class GenericSlider extends GenericControl implements Slider {
 	protected Label label = new GenericLabel();
@@ -32,21 +33,21 @@ public class GenericSlider extends GenericControl implements Slider {
 
 	@Override
 	public int getVersion() {
-		return super.getVersion() + 2;
+		return super.getVersion();
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		setSliderPosition(input.readFloat());
-		label.readData(input);
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		setSliderPosition(buf.getFloat());
+		label.decode(buf);
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeFloat(getSliderPosition());
-		label.writeData(output);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		buf.putFloat(getSliderPosition());
+		label.encode(buf);
 	}
 
 	@Override

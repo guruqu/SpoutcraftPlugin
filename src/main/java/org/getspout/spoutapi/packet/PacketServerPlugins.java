@@ -22,12 +22,14 @@ package org.getspout.spoutapi.packet;
 import java.io.IOException;
 
 import org.bukkit.plugin.Plugin;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketServerPlugins implements SpoutPacket {
 	private String[] plugins;
 	private String[] versions;
 
-	public PacketServerPlugins() {
+	protected PacketServerPlugins() {
 	}
 
 	public PacketServerPlugins(Plugin[] plugins) {
@@ -40,36 +42,27 @@ public class PacketServerPlugins implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		int size = input.readShort();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		final int size = buf.getShort();
 		plugins = new String[size];
 		versions = new String[size];
 		for (int i = 0; i < size; i++) {
-			plugins[i] = input.readString();
-			versions[i] = input.readString();
+			plugins[i] = buf.getUTF8();
+			versions[i] = buf.getUTF8();
 		}
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeShort((short) plugins.length);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putShort((short) plugins.length);
 		for (int i = 0; i < plugins.length; i++) {
-			output.writeString(plugins[i]);
-			output.writeString(versions[i]);
+			buf.putUTF8(plugins[i]);
+			buf.putUTF8(versions[i]);
 		}
 	}
 
 	@Override
-	public void run(int playerId) {
-	}
-
-	@Override
-	public void failure(int playerId) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketServerPlugins;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override

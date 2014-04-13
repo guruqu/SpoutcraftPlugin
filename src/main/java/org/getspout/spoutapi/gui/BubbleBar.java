@@ -22,6 +22,8 @@ package org.getspout.spoutapi.gui;
 import java.io.IOException;
 import java.util.UUID;
 
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+
 /**
  * The Spout implementation of the default Bubble Bar.
  */
@@ -29,7 +31,7 @@ public class BubbleBar extends GenericWidget implements Widget {
 	private int icons = 10;
 	private int iconOffset = 8;
 
-	public BubbleBar() {
+	protected BubbleBar() {
 		super();
 		setDirty(false);
 		setX(427 / 2 + 82); // 295
@@ -39,17 +41,17 @@ public class BubbleBar extends GenericWidget implements Widget {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		setMaxNumBubbles(input.readInt());
-		setIconOffset(input.readInt());
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		setMaxNumBubbles(buf.getInt());
+		setIconOffset(buf.getInt());
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeInt(getMaxNumBubbles());
-		output.writeInt(getIconOffset());
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		buf.putInt(getMaxNumBubbles());
+		buf.putInt(getIconOffset());
 	}
 
 	@Override
@@ -63,9 +65,8 @@ public class BubbleBar extends GenericWidget implements Widget {
 	}
 
 	/**
-	 * Gets the maximum number of bubbles displayed on the HUD.
-	 * <p/>
-	 * Air is scaled to fit the number of bubbles appropriately.
+	 * Gets the maximum number of bubbles displayed on the HUD. <p/> Air is scaled to fit the number of bubbles appropriately.
+	 *
 	 * @return bubbles displayed
 	 */
 	public int getMaxNumBubbles() {
@@ -73,9 +74,8 @@ public class BubbleBar extends GenericWidget implements Widget {
 	}
 
 	/**
-	 * Sets the maximum number of bubbles displayed on the HUD.
-	 * <p/>
-	 * Air is scaled to fit the number of bubbles appropriately.
+	 * Sets the maximum number of bubbles displayed on the HUD. <p/> Air is scaled to fit the number of bubbles appropriately.
+	 *
 	 * @param bubbles to display
 	 * @return this
 	 */
@@ -86,6 +86,7 @@ public class BubbleBar extends GenericWidget implements Widget {
 
 	/**
 	 * Gets the number of pixels each bubbles is offset when drawing the next bubble.
+	 *
 	 * @return pixel offset
 	 */
 	public int getIconOffset() {
@@ -94,6 +95,7 @@ public class BubbleBar extends GenericWidget implements Widget {
 
 	/**
 	 * Sets the number of pixels each bubbles is offset when drawing the next bubble.
+	 *
 	 * @param offset when drawing hearts
 	 * @return this
 	 */
@@ -104,6 +106,6 @@ public class BubbleBar extends GenericWidget implements Widget {
 
 	@Override
 	public int getVersion() {
-		return super.getVersion() + 1;
+		return super.getVersion();
 	}
 }

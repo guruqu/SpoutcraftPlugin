@@ -21,11 +21,14 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
+
 public class PacketStopMusic implements SpoutPacket {
 	private boolean resetTimer = false;
 	private int fadeTime = -1;
 
-	public PacketStopMusic() {
+	protected PacketStopMusic() {
 	}
 
 	public PacketStopMusic(boolean resetTimer, int fadeTime) {
@@ -34,28 +37,19 @@ public class PacketStopMusic implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		resetTimer = input.readBoolean();
-		fadeTime = input.readInt();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		resetTimer = buf.getBoolean();
+		fadeTime = buf.getInt();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeBoolean(resetTimer);
-		output.writeInt(fadeTime);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putBoolean(resetTimer);
+		buf.putInt(fadeTime);
 	}
 
 	@Override
-	public void run(int PlayerId) {
-	}
-
-	@Override
-	public void failure(int id) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketStopMusic;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override

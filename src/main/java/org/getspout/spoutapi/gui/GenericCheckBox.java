@@ -21,10 +21,12 @@ package org.getspout.spoutapi.gui;
 
 import java.io.IOException;
 
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+
 public class GenericCheckBox extends GenericButton implements CheckBox {
 	boolean checked = false;
 
-	public GenericCheckBox() {
+	protected GenericCheckBox() {
 		super();
 	}
 
@@ -33,15 +35,15 @@ public class GenericCheckBox extends GenericButton implements CheckBox {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		checked = input.readBoolean();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		checked = buf.getBoolean();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeBoolean(checked);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		buf.putBoolean(checked);
 	}
 
 	@Override

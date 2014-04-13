@@ -1,3 +1,22 @@
+/*
+ * This file is part of SpoutcraftPlugin.
+ *
+ * Copyright (c) 2011 SpoutcraftDev <http://spoutcraft.org//>
+ * SpoutcraftPlugin is licensed under the GNU Lesser General Public License.
+ *
+ * SpoutcraftPlugin is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * SpoutcraftPlugin is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.getspout.spoutapi.io;
 
 import java.io.IOException;
@@ -207,6 +226,42 @@ public class ExpandableByteBuffer {
 	public ByteBuffer asReadOnlyBuffer() {
 		return buf.asReadOnlyBuffer();
 	}
+
+    public int position() {
+        return buf.position();
+    }
+
+    public ExpandableByteBuffer position(int position) {
+        buf.position(position);
+        return this;
+    }
+
+    public int limit() {
+        return buf.limit();
+    }
+
+    public ExpandableByteBuffer limit(int limit) {
+        buf.limit(limit);
+        return this;
+    }
+
+    public ExpandableByteBuffer mark() {
+        buf.mark();
+        return this;
+    }
+
+    public ExpandableByteBuffer reset() {
+        buf.reset();
+        return this;
+    }
+
+    public int remaining() {
+        return buf.remaining();
+    }
+
+    public byte[] array() {
+        return buf.array();
+    }
 
 	private void expandIfNeeded(int amount) {
 		if (buf.remaining() > amount) {

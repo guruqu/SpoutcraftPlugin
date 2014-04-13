@@ -22,6 +22,8 @@ package org.getspout.spoutapi.packet;
 import java.io.IOException;
 
 import org.bukkit.Location;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketDownloadMusic implements SpoutPacket {
 	int x, y, z;
@@ -29,7 +31,7 @@ public class PacketDownloadMusic implements SpoutPacket {
 	boolean soundEffect, notify;
 	String URL, plugin;
 
-	public PacketDownloadMusic() {
+	protected PacketDownloadMusic() {
 	}
 
 	public PacketDownloadMusic(String plugin, String URL, Location loc, int distance, int volume, boolean soundEffect, boolean notify) {
@@ -49,42 +51,33 @@ public class PacketDownloadMusic implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		URL = input.readString();
-		plugin = input.readString();
-		distance = input.readInt();
-		x = input.readInt();
-		y = input.readInt();
-		z = input.readInt();
-		volume = input.readInt();
-		soundEffect = input.readBoolean();
-		notify = input.readBoolean();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		URL = buf.getUTF8();
+		plugin = buf.getUTF8();
+		distance = buf.getInt();
+		x = buf.getInt();
+		y = buf.getInt();
+		z = buf.getInt();
+		volume = buf.getInt();
+		soundEffect = buf.getBoolean();
+		notify = buf.getBoolean();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeString(URL);
-		output.writeString(plugin);
-		output.writeInt(distance);
-		output.writeInt(x);
-		output.writeInt(y);
-		output.writeInt(z);
-		output.writeInt(volume);
-		output.writeBoolean(soundEffect);
-		output.writeBoolean(notify);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putUTF8(URL);
+		buf.putUTF8(plugin);
+		buf.putInt(distance);
+		buf.putInt(x);
+		buf.putInt(y);
+		buf.putInt(z);
+		buf.putInt(volume);
+		buf.putBoolean(soundEffect);
+		buf.putBoolean(notify);
 	}
 
 	@Override
-	public void run(int PlayerId) {
-	}
-
-	@Override
-	public void failure(int id) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketDownloadMusic;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override

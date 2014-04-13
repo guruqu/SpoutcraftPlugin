@@ -29,7 +29,7 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 public class PacketClipboardText implements SpoutPacket {
 	private String text;
 
-	public PacketClipboardText() {
+	protected PacketClipboardText() {
 	}
 
 	public PacketClipboardText(String text) {

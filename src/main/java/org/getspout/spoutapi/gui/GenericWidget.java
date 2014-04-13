@@ -25,6 +25,7 @@ import javax.xml.bind.TypeConstraintException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 
 public abstract class GenericWidget implements Widget {
 	/**
@@ -65,7 +66,7 @@ public abstract class GenericWidget implements Widget {
 	protected transient int animTick = 0; // Current tick
 	protected transient int animFrame = 0; // Current frame
 
-	public GenericWidget() {
+	protected GenericWidget() {
 	}
 
 	@Override
@@ -75,7 +76,7 @@ public abstract class GenericWidget implements Widget {
 
 	@Override
 	public int getVersion() {
-		return 6;
+		return 0;
 	}
 
 	public GenericWidget(int X, int Y, int width, int height) {
@@ -113,39 +114,39 @@ public abstract class GenericWidget implements Widget {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		setX(input.readInt());
-		setY(input.readInt());
-		setWidth(input.readInt());
-		setHeight(input.readInt());
-		setAnchor(WidgetAnchor.getAnchorFromId(input.read()));
-		setVisible(input.readBoolean());
-		setPriority(RenderPriority.getRenderPriorityFromId(input.readInt()));
-		setTooltip(input.readString());
-		setPlugin(Bukkit.getServer().getPluginManager().getPlugin(input.readString()));
-		animType = WidgetAnim.getAnimationFromId(input.read());
-		animFlags = (byte) input.read();
-		animValue = input.readFloat();
-		animTicks = input.readShort();
-		animCount = input.readShort();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		setX(buf.getInt());
+		setY(buf.getInt());
+		setWidth(buf.getInt());
+		setHeight(buf.getInt());
+		setAnchor(WidgetAnchor.getAnchorFromId(buf.get()));
+		setVisible(buf.getBoolean());
+		setPriority(RenderPriority.getRenderPriorityFromId(buf.getInt()));
+		setTooltip(buf.getUTF8());
+		setPlugin(Bukkit.getServer().getPluginManager().getPlugin(buf.getUTF8()));
+		animType = WidgetAnim.getAnimationFromId(buf.get());
+		animFlags = buf.get();
+		animValue = buf.getFloat();
+		animTicks = buf.getShort();
+		animCount = buf.getShort();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeInt(getX());
-		output.writeInt(getY());
-		output.writeInt(getWidth());
-		output.writeInt(getHeight());
-		output.write(getAnchor().getId());
-		output.writeBoolean(isVisible());
-		output.writeInt(priority.getId());
-		output.writeString(getTooltip());
-		output.writeString(plugin != null ? plugin : "Spoutcraft");
-		output.write(animType.getId());
-		output.write(animFlags);
-		output.writeFloat(animValue);
-		output.writeShort(animTicks);
-		output.writeShort(animCount);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putInt(getX());
+		buf.putInt(getY());
+		buf.putInt(getWidth());
+		buf.putInt(getHeight());
+		buf.put((byte) getAnchor().getId());
+		buf.putBoolean(isVisible());
+		buf.putInt(priority.getId());
+		buf.putUTF8(getTooltip());
+		buf.putUTF8(plugin != null ? plugin : "Spoutcraft");
+		buf.put((byte) animType.getId());
+		buf.put(animFlags);
+		buf.putFloat(animValue);
+		buf.putShort(animTicks);
+		buf.putShort(animCount);
 	}
 
 	@Override

@@ -37,7 +37,6 @@ import java.util.zip.ZipOutputStream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
-
 import org.getspout.spout.Spout;
 import org.getspout.spout.player.SimpleFileManager;
 import org.getspout.spoutapi.SpoutManager;
@@ -72,8 +71,8 @@ public class PrecacheManager {
 			cacheFolder.mkdirs();
 		}
 
-		List<File> fileCaches = ((SimpleFileManager)SpoutManager.getFileManager()).getPluginPreLoginCache(plugin);
-		List<String> urlCaches = ((SimpleFileManager)SpoutManager.getFileManager()).getPluginPreLoginUrlCache(plugin);
+		List<File> fileCaches = ((SimpleFileManager) SpoutManager.getFileManager()).getPluginPreLoginCache(plugin);
+		List<String> urlCaches = ((SimpleFileManager) SpoutManager.getFileManager()).getPluginPreLoginUrlCache(plugin);
 		List<CustomBlock> blocks = MaterialData.getCustomBlocks(plugin);
 
 		if (blocks.size() > 0) {
@@ -91,25 +90,24 @@ public class PrecacheManager {
 						}
 
 						if (target.exists()) {
-							beforeCRC = FileUtil.getCRC(target,  new byte[(int) target.length()]);
+							beforeCRC = FileUtil.getCRC(target, new byte[(int) target.length()]);
 							target.delete();
 						}
 
 						try {
 							DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(target)));
 
-							out.writeShort((short)block.getCustomId());
+							out.writeShort((short) block.getCustomId());
 							out.writeByte(i);
-							design.write(out);
+							design.encode(out); // TODO: Check this
 							out.flush();
 							out.close();
-
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
 
 						if (target.exists()) {
-							long newCRC = FileUtil.getCRC(target,  new byte[(int) target.length()]);
+							long newCRC = FileUtil.getCRC(target, new byte[(int) target.length()]);
 							if (newCRC != beforeCRC) {
 								changed = true;
 								Bukkit.getLogger().info("[SpoutPlugin] Block Design Cache Updated: " + block.getName() + " " + String.valueOf(i));
@@ -146,7 +144,7 @@ public class PrecacheManager {
 			for (String url : urlCaches) {
 				try {
 					URL fileURL = new URL(url);
-					String fileName = url.substring( url.lastIndexOf('/')+1, url.length() );
+					String fileName = url.substring(url.lastIndexOf('/') + 1, url.length());
 
 					File target = new File(getPluginCacheFolder(plugin), fileName);
 
@@ -176,8 +174,7 @@ public class PrecacheManager {
 
 					// Update modified time on file
 					target.setLastModified(urlLastModified);
-					changed= true;
-
+					changed = true;
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -246,7 +243,7 @@ public class PrecacheManager {
 		zos.close();
 	}
 
-	public static void addFileToZip(File file, ZipOutputStream zip) throws IOException  {
+	public static void addFileToZip(File file, ZipOutputStream zip) throws IOException {
 		byte[] buf = new byte[1024];
 		int len;
 		FileInputStream in = new FileInputStream(file);

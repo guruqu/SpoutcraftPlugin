@@ -23,11 +23,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+
 public class GenericRadioButton extends GenericButton implements RadioButton {
 	boolean selected = false;
 	int group = 0;
 
-	public GenericRadioButton() {
+	protected GenericRadioButton() {
 	}
 
 	public GenericRadioButton(String text) {
@@ -35,17 +37,17 @@ public class GenericRadioButton extends GenericButton implements RadioButton {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		selected = input.readBoolean();
-		group = input.readInt();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		selected = buf.getBoolean();
+		group = buf.getInt();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeBoolean(isSelected());
-		output.writeInt(getGroup());
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		buf.putBoolean(isSelected());
+		buf.putInt(getGroup());
 	}
 
 	@Override

@@ -31,9 +31,9 @@ import org.getspout.spoutapi.Spout;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.inventory.MaterialManager;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.material.CustomItem;
 import org.getspout.spoutapi.material.MaterialData;
-import org.getspout.spoutapi.packet.PacketType;
 import org.getspout.spoutapi.packet.SpoutPacket;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
@@ -135,33 +135,24 @@ public class GenericCustomItem extends GenericItem implements CustomItem, SpoutP
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		customId = input.readInt();
-		setName(input.readString());
-		plugin = Bukkit.getServer().getPluginManager().getPlugin(input.readString());
-		texture = input.readString();
+    public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		customId = buf.getInt();
+		setName(buf.getUTF8());
+		plugin = Bukkit.getServer().getPluginManager().getPlugin(buf.getUTF8());
+		texture = buf.getUTF8();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeInt(customId);
-		output.writeString(getName());
-		output.writeString(getPlugin().getDescription().getName());
-		output.writeString(getTexture());
+    public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+        buf.putInt(customId);
+        buf.putUTF8(getName());
+        buf.putUTF8(getPlugin().getDescription().getName());
+        buf.putUTF8(getTexture());
 	}
 
-	@Override
-	public void run(int playerId) {
-	}
-
-	@Override
-	public void failure(int playerId) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketCustomItem;
-	}
+    @Override
+    public void handle(SpoutPlayer player) {
+    }
 
 	@Override
 	public int getVersion() {

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.packet.PacketComboBox;
 
 public class GenericComboBox extends GenericButton implements ComboBox {
@@ -85,7 +86,8 @@ public class GenericComboBox extends GenericButton implements ComboBox {
 
 	/**
 	 * Sets the open status.
-	 * @param open       the state
+	 *
+	 * @param open the state
 	 * @param sendPacket if true, send an update packet
 	 * @return the instance
 	 */
@@ -108,24 +110,24 @@ public class GenericComboBox extends GenericButton implements ComboBox {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeInt(selection);
-		output.writeInt(getItems().size());
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		buf.putInt(selection);
+		buf.putInt(getItems().size());
 		for (String item : getItems()) {
-			output.writeString(item);
+			buf.putUTF8(item);
 		}
-		output.writeString(format);
+		buf.putUTF8(format);
 	}
 
 	@Override
 	public int getVersion() {
-		return super.getVersion() + 1;
+		return super.getVersion();
 	}
 
 	public String getFormat() {

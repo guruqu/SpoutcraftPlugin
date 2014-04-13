@@ -22,16 +22,18 @@ package org.getspout.spoutapi.packet;
 import java.io.IOException;
 
 import org.bukkit.Location;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
 import org.getspout.spoutapi.sound.Music;
 import org.getspout.spoutapi.sound.SoundEffect;
 
 public class PacketPlaySound implements SpoutPacket {
-	short soundId;
-	boolean location = false;
-	int x, y, z;
-	int volume, distance;
+	private short soundId;
+	private boolean location = false;
+	private int x, y, z;
+	private int volume, distance;
 
-	public PacketPlaySound() {
+	protected PacketPlaySound() {
 	}
 
 	public PacketPlaySound(SoundEffect sound, int distance, int volume) {
@@ -56,45 +58,36 @@ public class PacketPlaySound implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		soundId = input.readShort();
-		location = input.readBoolean();
-		x = input.readInt();
-		y = input.readInt();
-		z = input.readInt();
-		distance = input.readInt();
-		volume = input.readInt();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		soundId = buf.getShort();
+		location = buf.getBoolean();
+		x = buf.getInt();
+		y = buf.getInt();
+		z = buf.getInt();
+		distance = buf.getInt();
+		volume = buf.getInt();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeShort(soundId);
-		output.writeBoolean(location);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putShort(soundId);
+		buf.putBoolean(location);
 		if (!location) {
-			output.writeInt(-1);
-			output.writeInt(-1);
-			output.writeInt(-1);
-			output.writeInt(-1);
+			buf.putInt(-1);
+			buf.putInt(-1);
+			buf.putInt(-1);
+			buf.putInt(-1);
 		} else {
-			output.writeInt(x);
-			output.writeInt(y);
-			output.writeInt(z);
-			output.writeInt(distance);
+			buf.putInt(x);
+			buf.putInt(y);
+			buf.putInt(z);
+			buf.putInt(distance);
 		}
-		output.writeInt(volume);
+		buf.putInt(volume);
 	}
 
 	@Override
-	public void run(int PlayerId) {
-	}
-
-	@Override
-	public void failure(int id) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketPlaySound;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override

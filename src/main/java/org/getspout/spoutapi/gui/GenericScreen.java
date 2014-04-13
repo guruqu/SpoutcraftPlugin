@@ -20,20 +20,19 @@
 package org.getspout.spoutapi.gui;
 
 import java.io.IOException;
-import java.lang.NullPointerException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
-
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.event.screen.ScreenCloseEvent;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.packet.PacketWidget;
 import org.getspout.spoutapi.packet.PacketWidgetRemove;
 import org.getspout.spoutapi.player.SpoutPlayer;
@@ -43,12 +42,12 @@ public abstract class GenericScreen extends GenericWidget implements Screen {
 	protected int playerId;
 	protected boolean bg = true;
 
-	public GenericScreen() {
+	protected GenericScreen() {
 	}
 
 	@Override
 	public int getVersion() {
-		return super.getVersion() + 0;
+		return super.getVersion();
 	}
 
 	public GenericScreen(int playerId) {
@@ -64,8 +63,12 @@ public abstract class GenericScreen extends GenericWidget implements Screen {
 
 	@Override
 	public Screen attachWidget(Plugin plugin, Widget widget) {
-		if (plugin == null) throw new NullPointerException("Plugin can not be null!");
-		if (widget == null) throw new NullPointerException("Widget can not be null!");
+		if (plugin == null) {
+			throw new NullPointerException("Plugin can not be null!");
+		}
+		if (widget == null) {
+			throw new NullPointerException("Widget can not be null!");
+		}
 		widgets.put(widget, plugin);
 		widget.setPlugin(plugin);
 		widget.setDirty(true);
@@ -173,7 +176,8 @@ public abstract class GenericScreen extends GenericWidget implements Screen {
 										+ " belonging to " + widget.getPlugin().getDescription().getName()
 										+ " does not have a default "
 										+ (!widget.hasSize() ? "size" : "") + (!widget.hasSize() && !widget.hasPosition() ? " or " : "") + (!widget.hasPosition() ? "position" : "")
-										+ "!");
+										+ "!"
+						);
 						widget.setX(widget.getX());
 						widget.setHeight(widget.getHeight());
 					}
@@ -203,15 +207,15 @@ public abstract class GenericScreen extends GenericWidget implements Screen {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		setBgVisible(input.readBoolean());
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		setBgVisible(buf.getBoolean());
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeBoolean(isBgVisible());
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		buf.putBoolean(isBgVisible());
 	}
 
 	@Override

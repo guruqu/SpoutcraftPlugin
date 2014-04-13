@@ -20,17 +20,18 @@
 package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.UUID;
 
 import org.getspout.spoutapi.gui.Widget;
 import org.getspout.spoutapi.gui.WidgetType;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketWidget implements SpoutPacket {
 	protected Widget widget;
 	protected UUID screen;
 
-	public PacketWidget() {
+	protected PacketWidget() {
 	}
 
 	public PacketWidget(Widget widget, UUID screen) {
@@ -39,24 +40,18 @@ public class PacketWidget implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		int id = input.readInt();
-		long msb = input.readLong();
-		long lsb = input.readLong();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		final int id = buf.getInt();
+		screen = buf.getUUID();
 
-		int size = input.readInt();
-		byte[] widgetData = new byte[size];
-		input.read(widgetData);
-		SpoutInputStream data = new SpoutInputStream(ByteBuffer.wrap(widgetData));
-
-		int version = input.readShort();
-		screen = new UUID(msb, lsb);
-		WidgetType widgetType = WidgetType.getWidgetFromId(id);
+		final WidgetType widgetType = WidgetType.getWidgetFromId(id);
 		if (widgetType != null) {
 			try {
 				widget = widgetType.getWidgetClass().newInstance();
-				if (widget.getVersion() == version) {
-					widget.readData(data);
+				if (widget.getVersion() == buf.getInt()) {
+					final byte[] data = new byte[buf.getInt()];
+					buf.get(data);
+					widget.decode(new MinecraftExpandableByteBuffer(data));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -65,37 +60,24 @@ public class PacketWidget implements SpoutPacket {
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeInt(widget.getType().getId());
-		output.writeUUID(screen);
-		output.writeUUID(widget.getId());
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putInt(widget.getType().getId());
+		buf.putUUID(screen);
+		buf.putUUID(widget.getId());
+		buf.putShort((short) widget.getVersion());
 
-		SpoutOutputStream data = new SpoutOutputStream();
-		widget.writeData(data);
-		ByteBuffer buffer = data.getRawBuffer();
-		byte[] widgetData = new byte[buffer.capacity() - buffer.remaining()];
-		System.arraycopy(buffer.array(), 0, widgetData, 0, widgetData.length);
-
-		output.writeInt(widgetData.length);
-		output.writeShort((short) widget.getVersion());
-		output.write(widgetData);
+		buf.mark();
+		widget.encode(buf);
+		buf.reset();
+		buf.putInt(buf.remaining());
 	}
 
 	@Override
-	public void run(int PlayerId) {
-	}
-
-	@Override
-	public void failure(int id) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketWidget;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override
 	public int getVersion() {
-		return 2;
+		return 0;
 	}
 }

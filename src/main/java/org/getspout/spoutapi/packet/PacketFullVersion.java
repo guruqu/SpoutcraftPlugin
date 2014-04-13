@@ -22,11 +22,13 @@ package org.getspout.spoutapi.packet;
 import java.io.IOException;
 
 import org.getspout.spoutapi.SpoutManager;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketFullVersion implements SpoutPacket {
 	private String versionString;
 
-	public PacketFullVersion() {
+	protected PacketFullVersion() {
 	}
 
 	public PacketFullVersion(String versionString) {
@@ -34,27 +36,18 @@ public class PacketFullVersion implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		versionString = input.readString();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		versionString = buf.getUTF8();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeString(versionString);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putUTF8(versionString);
 	}
 
 	@Override
-	public void run(int playerId) {
-		SpoutManager.getPlayerChunkMap().setVersionString(playerId, versionString);
-	}
-
-	@Override
-	public void failure(int playerId) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketFullVersion;
+	public void handle(SpoutPlayer player) {
+		SpoutManager.getPlayerChunkMap().setVersionString(player.getEntityId(), versionString);
 	}
 
 	@Override

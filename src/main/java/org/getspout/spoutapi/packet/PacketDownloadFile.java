@@ -37,7 +37,7 @@ public class PacketDownloadFile implements CompressiblePacket {
 	private byte[] fileData;
 	private boolean compressed = false;
 
-	public PacketDownloadFile() {
+	protected PacketDownloadFile() {
 	}
 
 	public PacketDownloadFile(String plugin, File file) {

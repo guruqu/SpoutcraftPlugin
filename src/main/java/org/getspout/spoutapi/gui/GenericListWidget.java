@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+
 public class GenericListWidget extends GenericScrollable implements ListWidget {
 	private List<ListWidgetItem> items = new ArrayList<ListWidgetItem>();
 	private int selected = -1;
@@ -179,30 +181,30 @@ public class GenericListWidget extends GenericScrollable implements ListWidget {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		selected = input.readInt();
-		int count = input.readInt();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		selected = buf.getInt();
+		int count = buf.getInt();
 		for (int i = 0; i < count; i++) {
-			ListWidgetItem item = new ListWidgetItem(input.readString(), input.readString(), input.readString());
+			ListWidgetItem item = new ListWidgetItem(buf.getUTF8(), buf.getUTF8(), buf.getUTF8());
 			addItem(item);
 		}
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeInt(selected); // Write which item is selected.
-		output.writeInt(getItems().length); // Write number of items first!
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		buf.putInt(selected); // Write which item is selected.
+		buf.putInt(getItems().length); // Write number of items first!
 		for (ListWidgetItem item : getItems()) {
-			output.writeString(item.getTitle());
-			output.writeString(item.getText());
-			output.writeString(item.getIconUrl());
+			buf.putUTF8(item.getTitle());
+			buf.putUTF8(item.getText());
+			buf.putUTF8(item.getIconUrl());
 		}
 	}
 
 	@Override
 	public int getVersion() {
-		return super.getVersion() + 1;
+		return super.getVersion();
 	}
 }

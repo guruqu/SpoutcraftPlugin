@@ -98,7 +98,7 @@ public class GenericBlockDesign implements BlockDesign {
 	}
 
 	public int getVersion() {
-		return 3;
+		return 0;
 	}
 
 	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {

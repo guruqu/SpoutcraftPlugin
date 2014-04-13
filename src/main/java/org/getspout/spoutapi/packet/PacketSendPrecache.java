@@ -28,14 +28,16 @@ import java.util.zip.Inflater;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.bukkit.plugin.Plugin;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketSendPrecache implements CompressablePacket {
+public class PacketSendPrecache implements CompressiblePacket {
 	private byte[] fileData;
 	private String plugin;
 	private String version;
 	private boolean compressed = false;
 
-	public PacketSendPrecache() {
+	protected PacketSendPrecache() {
 	}
 
 	public PacketSendPrecache(Plugin plugin, File file) {
@@ -46,6 +48,34 @@ public class PacketSendPrecache implements CompressablePacket {
 		}
 		this.plugin = plugin.getDescription().getName();
 		this.version = plugin.getDescription().getVersion();
+	}
+
+	@Override
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		this.plugin = buf.getUTF8();
+		this.version = buf.getUTF8();
+		compressed = buf.getBoolean();
+		int size = buf.getInt();
+		this.fileData = new byte[size];
+		buf.get(fileData);
+	}
+
+	@Override
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putUTF8(plugin);
+		buf.putUTF8(version);
+		buf.putBoolean(compressed);
+		buf.putInt(fileData.length);
+		buf.put(fileData);
+	}
+
+	@Override
+	public void handle(SpoutPlayer player) {
+	}
+
+	@Override
+	public int getVersion() {
+		return 0;
 	}
 
 	// TODO Move to separate thread?
@@ -94,42 +124,5 @@ public class PacketSendPrecache implements CompressablePacket {
 
 	public boolean isCompressed() {
 		return compressed;
-	}
-
-	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		this.plugin = input.readString();
-		this.version = input.readString();
-		compressed = input.readBoolean();
-		int size = input.readInt();
-		this.fileData = new byte[size];
-		input.read(fileData);
-	}
-
-	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeString(plugin);
-		output.writeString(version);
-		output.writeBoolean(compressed);
-		output.writeInt(fileData.length);
-		output.write(fileData);
-	}
-
-	@Override
-	public void run(int playerId) {
-	}
-
-	@Override
-	public void failure(int playerId) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketSendPrecache;
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
 	}
 }

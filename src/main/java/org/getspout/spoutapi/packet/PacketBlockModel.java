@@ -31,7 +31,7 @@ public class PacketBlockModel implements SpoutPacket {
 	private byte data;
 	private BlockDesign design;
 
-	public PacketBlockModel() {
+	protected PacketBlockModel() {
 	}
 
 	public PacketBlockModel(short customId, BlockDesign design, byte data) {
@@ -68,10 +68,6 @@ public class PacketBlockModel implements SpoutPacket {
 
 	@Override
 	public int getVersion() {
-		return design.getVersion() + 3;
-	}
-
-	public PacketType getPacketType() {
-		return PacketType.PacketCustomBlockDesign;
+		return design.getVersion();
 	}
 }

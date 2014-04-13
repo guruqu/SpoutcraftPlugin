@@ -33,7 +33,7 @@ public class PacketComboBox implements SpoutPacket {
 	private boolean open;
 	private int selection;
 
-	public PacketComboBox() {
+	protected PacketComboBox() {
 	}
 
 	public PacketComboBox(GenericComboBox box) {

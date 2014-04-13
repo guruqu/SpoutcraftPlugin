@@ -25,11 +25,12 @@ import java.util.Map.Entry;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 
 public class GenericSlot extends GenericControl implements Slot {
 	private ItemStack stack = new ItemStack(Material.AIR);
 	private int depth = 16;
-    private boolean renderAmount = true;
+	private boolean renderAmount = true;
 
 	public WidgetType getType() {
 		return WidgetType.Slot;
@@ -52,15 +53,15 @@ public class GenericSlot extends GenericControl implements Slot {
 		return this;
 	}
 
-    public boolean doesRenderAmount() {
-        return renderAmount;
-    }
+	public boolean doesRenderAmount() {
+		return renderAmount;
+	}
 
-    public GenericSlot setRenderAmount(boolean renderAmount) {
-        this.renderAmount = renderAmount;
-        setDirty(true);
-        return this;
-    }
+	public GenericSlot setRenderAmount(boolean renderAmount) {
+		this.renderAmount = renderAmount;
+		setDirty(true);
+		return this;
+	}
 
 	public boolean onItemPut(ItemStack item) {
 		return true;
@@ -88,50 +89,50 @@ public class GenericSlot extends GenericControl implements Slot {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		stack.setTypeId(input.readInt());
-		stack.setAmount((int) input.readShort());
-		stack.setDurability(input.readShort());
-		depth = input.readInt();
-        renderAmount = input.readBoolean();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		stack.setTypeId(buf.getInt());
+		stack.setAmount((int) buf.getShort());
+		stack.setDurability(buf.getShort());
+		depth = buf.getInt();
+		renderAmount = buf.getBoolean();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeInt(stack.getTypeId());
-		output.writeShort((short) stack.getAmount());
-		output.writeShort(stack.getDurability());
-		output.writeInt(depth);
-        output.writeBoolean(renderAmount);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		buf.putInt(stack.getTypeId());
+		buf.putShort((short) stack.getAmount());
+		buf.putShort(stack.getDurability());
+		buf.putInt(depth);
+		buf.putBoolean(renderAmount);
 
 		if (stack.hasItemMeta() && stack.getItemMeta().hasDisplayName()) {
-			output.writeBoolean(true);
-			output.writeString(stack.getItemMeta().getDisplayName());
+			buf.putBoolean(true);
+			buf.putUTF8(stack.getItemMeta().getDisplayName());
 		} else {
-			output.writeBoolean(false);
+			buf.putBoolean(false);
 		}
 
 		if (stack.hasItemMeta() && stack.getItemMeta().hasLore()) {
-			output.writeBoolean(true);
-			output.writeInt(stack.getItemMeta().getLore().size());
+			buf.putBoolean(true);
+			buf.putInt(stack.getItemMeta().getLore().size());
 			for (String l : stack.getItemMeta().getLore()) {
-				output.writeString(l);
+				buf.putUTF8(l);
 			}
 		} else {
-			output.writeBoolean(false);
+			buf.putBoolean(false);
 		}
 
 		if (stack.hasItemMeta() && stack.getItemMeta().hasEnchants()) {
-			output.writeBoolean(true);
-			output.writeInt(stack.getItemMeta().getEnchants().size());
+			buf.putBoolean(true);
+			buf.putInt(stack.getItemMeta().getEnchants().size());
 			for (Entry e : stack.getItemMeta().getEnchants().entrySet()) {
-				output.writeInt(((Enchantment)e.getKey()).getId());
-				output.writeInt((Integer) e.getValue());
+				buf.putInt(((Enchantment) e.getKey()).getId());
+				buf.putInt((Integer) e.getValue());
 			}
 		} else {
-			output.writeBoolean(false);
+			buf.putBoolean(false);
 		}
 	}
 }

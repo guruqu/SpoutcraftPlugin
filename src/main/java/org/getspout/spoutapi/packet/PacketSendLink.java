@@ -23,10 +23,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class PacketSendLink implements SpoutPacket {
-	protected URL link;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
-	public PacketSendLink() {
+public class PacketSendLink implements SpoutPacket {
+	private URL link;
+
+	protected PacketSendLink() {
 		link = null;
 	}
 
@@ -39,29 +42,20 @@ public class PacketSendLink implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
 		throw new IOException("The server cannot receive a link from the client!");
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
 		if (link == null) {
 			throw new IOException("Attempt made to serialize " + this + " with a null URL link reference!");
 		}
-		output.writeString(link.toString());
+		buf.putUTF8(link.toString());
 	}
 
 	@Override
-	public void run(int playerId) {
-	}
-
-	@Override
-	public void failure(int playerId) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketSendLink;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override

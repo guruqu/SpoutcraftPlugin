@@ -21,10 +21,12 @@ package org.getspout.spoutapi.gui;
 
 import java.io.IOException;
 
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+
 public class GenericEntityWidget extends GenericWidget implements EntityWidget {
 	private int entityId = 0;
 
-	public GenericEntityWidget() {
+	protected GenericEntityWidget() {
 	}
 
 	public GenericEntityWidget(int entityId) {
@@ -51,15 +53,15 @@ public class GenericEntityWidget extends GenericWidget implements EntityWidget {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		entityId = input.readInt();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		entityId = buf.getInt();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeInt(entityId);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		buf.putInt(entityId);
 	}
 
 	@Override

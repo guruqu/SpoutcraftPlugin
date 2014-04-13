@@ -22,6 +22,7 @@ package org.getspout.spoutapi.gui;
 import java.io.IOException;
 
 import org.getspout.spoutapi.event.screen.TextFieldChangeEvent;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 
 public class GenericTextField extends GenericControl implements TextField {
 	private static final char MASK_MAXLINES = 0x7F; // bits 1–7
@@ -39,39 +40,39 @@ public class GenericTextField extends GenericControl implements TextField {
 	protected Color fieldColor = new Color(0, 0, 0);
 	protected Color borderColor = new Color(0.625F, 0.625F, 0.625F);
 
-	public GenericTextField() {
+	protected GenericTextField() {
 	}
 
 	@Override
 	public int getVersion() {
-		return super.getVersion() + 3;
+		return super.getVersion();
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		setFieldColor(input.readColor());
-		setBorderColor(input.readColor());
-		char c = input.readChar();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		setFieldColor(buf.getColor());
+		setBorderColor(buf.getColor());
+		char c = buf.getChar();
 		setPasswordField((c & FLAG_PASSWORD) > 0);
 		setMaximumLines(c & MASK_MAXLINES);
 		setTabIndex((c & MASK_TABINDEX) >>> 7);
-		setCursorPosition(input.readChar());
-		setMaximumCharacters(input.readChar());
-		setText(input.readString());
-		setPlaceholder(input.readString());
+		setCursorPosition(buf.getChar());
+		setMaximumCharacters(buf.getChar());
+		setText(buf.getUTF8());
+		setPlaceholder(buf.getUTF8());
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeColor(getFieldColor());
-		output.writeColor(getBorderColor());
-		output.writeChar((char) (getMaximumLines() & MASK_MAXLINES | (getTabIndex() << 7) & MASK_TABINDEX | (isPasswordField() ? FLAG_PASSWORD : 0)));
-		output.writeChar((char) getCursorPosition());
-		output.writeChar((char) getMaximumCharacters());
-		output.writeString(getText());
-		output.writeString(getPlaceholder());
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		buf.putColor(getFieldColor());
+		buf.putColor(getBorderColor());
+		buf.putChar((char) (getMaximumLines() & MASK_MAXLINES | (getTabIndex() << 7) & MASK_TABINDEX | (isPasswordField() ? FLAG_PASSWORD : 0)));
+		buf.putChar((char) getCursorPosition());
+		buf.putChar((char) getMaximumCharacters());
+		buf.putUTF8(getText());
+		buf.putUTF8(getPlaceholder());
 	}
 
 	@Override

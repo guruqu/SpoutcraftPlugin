@@ -22,19 +22,19 @@ package org.getspout.spoutapi.packet;
 import java.io.IOException;
 
 import org.bukkit.Bukkit;
-import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.event.screen.ScreenCloseEvent;
 import org.getspout.spoutapi.event.screen.ScreenEvent;
 import org.getspout.spoutapi.event.screen.ScreenOpenEvent;
 import org.getspout.spoutapi.gui.PopupScreen;
 import org.getspout.spoutapi.gui.ScreenType;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketScreenAction implements SpoutPacket {
 	protected byte action = -1;
 	protected byte screen = -1; // UnknownScreen
 
-	public PacketScreenAction() {
+	protected PacketScreenAction() {
 	}
 
 	public PacketScreenAction(ScreenAction action, ScreenType screen) {
@@ -43,20 +43,19 @@ public class PacketScreenAction implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		action = (byte) input.read();
-		screen = (byte) input.read();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		action = buf.get();
+		screen = buf.get();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.write(action);
-		output.write(screen);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.put(action);
+		buf.put(screen);
 	}
 
 	@Override
-	public void run(int playerId) {
-		SpoutPlayer player = SpoutManager.getPlayerFromId(playerId);
+	public void handle(SpoutPlayer player) {
 		ScreenEvent event;
 		switch (ScreenAction.getScreenActionFromId(action)) {
 			case Close:
@@ -120,16 +119,7 @@ public class PacketScreenAction implements SpoutPacket {
 	}
 
 	@Override
-	public void failure(int id) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketScreenAction;
-	}
-
-	@Override
 	public int getVersion() {
-		return 2;
+		return 0;
 	}
 }

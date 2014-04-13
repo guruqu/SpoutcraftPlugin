@@ -22,6 +22,8 @@ package org.getspout.spoutapi.packet;
 import java.io.IOException;
 
 import org.bukkit.entity.Entity;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketEntitySkin implements SpoutPacket {
 	protected String texture = "";
@@ -35,34 +37,25 @@ public class PacketEntitySkin implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		entityId = input.readInt();
-		textureId = (byte) input.read();
-		texture = input.readString();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		entityId = buf.getInt();
+		textureId = buf.get();
+		texture = buf.getUTF8();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeInt(entityId);
-		output.write(textureId);
-		output.writeString(texture);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putInt(entityId);
+		buf.put(textureId);
+		buf.putUTF8(texture);
 	}
 
 	@Override
-	public void run(int PlayerId) {
-	}
-
-	@Override
-	public void failure(int id) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketEntitySkin;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override
 	public int getVersion() {
-		return 1;
+		return 0;
 	}
 }

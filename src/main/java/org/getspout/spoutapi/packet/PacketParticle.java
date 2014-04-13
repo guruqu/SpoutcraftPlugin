@@ -21,47 +21,40 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.particle.Particle;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketParticle implements SpoutPacket {
-	Particle p;
+	Particle particle;
 
-	public PacketParticle() {
+	protected PacketParticle() {
 	}
 
-	public PacketParticle(Particle p) {
-		this.p = p;
-	}
-
-	@Override
-	public void readData(SpoutInputStream input) throws IOException {
+	public PacketParticle(Particle particle) {
+		this.particle = particle;
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeString(p.getName());
-		output.writeLocation(p.getLocation());
-		output.writeVector(p.getMotion());
-		output.writeFloat(p.getScale());
-		output.writeFloat(p.getGravity());
-		output.writeFloat(p.getParticleRed());
-		output.writeFloat(p.getParticleBlue());
-		output.writeFloat(p.getParticleGreen());
-		output.writeInt(p.getMaxAge());
-		output.writeInt(p.getAmount());
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
 	}
 
 	@Override
-	public void run(int playerId) {
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putUTF8(particle.getName());
+		buf.putLocation(particle.getLocation());
+		buf.putVector(particle.getMotion());
+		buf.putFloat(particle.getScale());
+		buf.putFloat(particle.getGravity());
+		buf.putFloat(particle.getParticleRed());
+		buf.putFloat(particle.getParticleBlue());
+		buf.putFloat(particle.getParticleGreen());
+		buf.putInt(particle.getMaxAge());
+		buf.putInt(particle.getAmount());
 	}
 
 	@Override
-	public void failure(int playerId) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketParticle;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override

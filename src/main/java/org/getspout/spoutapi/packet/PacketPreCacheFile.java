@@ -22,7 +22,7 @@ package org.getspout.spoutapi.packet;
 import java.io.File;
 import java.io.IOException;
 
-import org.getspout.spoutapi.SpoutManager;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketPreCacheFile implements SpoutPacket {
@@ -32,7 +32,7 @@ public class PacketPreCacheFile implements SpoutPacket {
 	private String file;
 	private String plugin;
 
-	public PacketPreCacheFile() {
+	protected PacketPreCacheFile() {
 	}
 
 	public PacketPreCacheFile(String plugin, String file, long expectedCRC, boolean url) {
@@ -43,27 +43,26 @@ public class PacketPreCacheFile implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		this.cached = input.readBoolean();
-		this.url = input.readBoolean();
-		this.expectedCRC = input.readLong();
-		this.file = input.readString();
-		this.plugin = input.readString();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		cached = buf.getBoolean();
+		url = buf.getBoolean();
+		expectedCRC = buf.getLong();
+		file = buf.getUTF8();
+		plugin = buf.getUTF8();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeBoolean(this.cached);
-		output.writeBoolean(this.url);
-		output.writeLong(this.expectedCRC);
-		output.writeString(this.file);
-		output.writeString(this.plugin);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putBoolean(this.cached);
+		buf.putBoolean(this.url);
+		buf.putLong(this.expectedCRC);
+		buf.putUTF8(this.file);
+		buf.putUTF8(this.plugin);
 	}
 
 	@Override
-	public void run(int playerId) {
+	public void handle(SpoutPlayer player) {
 		if (!cached) {
-			SpoutPlayer player = SpoutManager.getPlayerFromId(playerId);
 			if (player != null) {
 				File file = new File(this.file);
 				if (file.exists()) {
@@ -71,15 +70,6 @@ public class PacketPreCacheFile implements SpoutPacket {
 				}
 			}
 		}
-	}
-
-	@Override
-	public void failure(int playerId) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketPreCacheFile;
 	}
 
 	@Override

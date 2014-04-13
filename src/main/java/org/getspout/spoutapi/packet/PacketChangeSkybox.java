@@ -31,7 +31,7 @@ public class PacketChangeSkybox implements SpoutPacket {
 	private int cloudY = 0, stars = 0, sunPercent = 0, moonPercent = 0;
 	private Color skyColor = Color.ignore(), fogColor = Color.ignore(), cloudColor = Color.ignore();
 
-	public PacketChangeSkybox() {
+	protected PacketChangeSkybox() {
 	}
 
 	public PacketChangeSkybox(int cloudY, int stars, int sunPercent, int moonPercent) {

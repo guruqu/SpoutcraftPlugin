@@ -32,7 +32,7 @@ public class PacketChangeMusic implements SpoutPacket {
 	public int volumePercent;
 	public boolean cancel = false;
 
-	public PacketChangeMusic() {
+	protected PacketChangeMusic() {
 	}
 
 	public PacketChangeMusic(int music, int volumePercent) {

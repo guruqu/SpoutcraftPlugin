@@ -37,7 +37,7 @@ public class GenericContainer extends GenericWidget implements Container {
 	protected boolean recalculating = false;
 	protected boolean needsLayout = true;
 
-	public GenericContainer() {
+	protected GenericContainer() {
 	}
 
 	public GenericContainer(Widget... children) {

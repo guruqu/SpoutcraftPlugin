@@ -23,6 +23,8 @@ import java.io.IOException;
 
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketSpawnTextEntity implements SpoutPacket {
 	private String text;
@@ -30,6 +32,9 @@ public class PacketSpawnTextEntity implements SpoutPacket {
 	private int duration;
 	private Vector movement;
 	private float scale;
+
+	protected PacketSpawnTextEntity() {
+	}
 
 	public PacketSpawnTextEntity(String text, Location location, float scale, int duration, Vector movement) {
 		this.text = text;
@@ -40,46 +45,36 @@ public class PacketSpawnTextEntity implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		text = input.readString();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		text = buf.getUTF8();
 		double x, y, z;
-		x = input.readDouble();
-		y = input.readDouble();
-		z = input.readDouble();
+		x = buf.getDouble();
+		y = buf.getDouble();
+		z = buf.getDouble();
 		location = new Location(null, x, y, z);
-		scale = input.readFloat();
-		duration = input.readInt();
-		x = input.readDouble();
-		y = input.readDouble();
-		z = input.readDouble();
+		scale = buf.getFloat();
+		duration = buf.getInt();
+		x = buf.getDouble();
+		y = buf.getDouble();
+		z = buf.getDouble();
 		movement = new Vector(x, y, z);
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeString(text);
-		output.writeDouble(location.getX());
-		output.writeDouble(location.getY());
-		output.writeDouble(location.getZ());
-		output.writeFloat(scale);
-		output.writeInt(duration);
-		output.writeDouble(movement.getX());
-		output.writeDouble(movement.getY());
-		output.writeDouble(movement.getZ());
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putUTF8(text);
+		buf.putDouble(location.getX());
+		buf.putDouble(location.getY());
+		buf.putDouble(location.getZ());
+		buf.putFloat(scale);
+		buf.putInt(duration);
+		buf.putDouble(movement.getX());
+		buf.putDouble(movement.getY());
+		buf.putDouble(movement.getZ());
 	}
 
 	@Override
-	public void run(int playerId) {
-		// Nothing to do here
-	}
-
-	@Override
-	public void failure(int playerId) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketSpawnTextEntity;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override

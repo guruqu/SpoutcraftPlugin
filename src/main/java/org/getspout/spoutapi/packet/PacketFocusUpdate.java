@@ -22,10 +22,10 @@ package org.getspout.spoutapi.packet;
 import java.io.IOException;
 import java.util.UUID;
 
-import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.gui.Control;
 import org.getspout.spoutapi.gui.PopupScreen;
 import org.getspout.spoutapi.gui.Widget;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketFocusUpdate implements SpoutPacket {
@@ -33,7 +33,7 @@ public class PacketFocusUpdate implements SpoutPacket {
 	private boolean focus;
 	private UUID widgetId;
 
-	public PacketFocusUpdate() {
+	protected PacketFocusUpdate() {
 	}
 
 	public PacketFocusUpdate(Control control, boolean focus) {
@@ -41,20 +41,21 @@ public class PacketFocusUpdate implements SpoutPacket {
 		this.focus = focus;
 	}
 
-	public void readData(SpoutInputStream input) throws IOException {
-		widgetId = new UUID(input.readLong(), input.readLong());
-		focus = input.readBoolean();
-	}
-
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeLong(control.getId().getMostSignificantBits());
-		output.writeLong(control.getId().getLeastSignificantBits());
-		output.writeBoolean(focus);
+	@Override
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		widgetId = new UUID(buf.getLong(), buf.getLong());
+		focus = buf.getBoolean();
 	}
 
 	@Override
-	public void run(int playerId) {
-		SpoutPlayer player = SpoutManager.getPlayerFromId(playerId);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putLong(control.getId().getMostSignificantBits());
+		buf.putLong(control.getId().getLeastSignificantBits());
+		buf.putBoolean(focus);
+	}
+
+	@Override
+	public void handle(SpoutPlayer player) {
 		if (player != null) {
 			PopupScreen popup = player.getMainScreen().getActivePopup();
 			if (popup != null) {
@@ -64,15 +65,6 @@ public class PacketFocusUpdate implements SpoutPacket {
 				}
 			}
 		}
-	}
-
-	@Override
-	public void failure(int playerId) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketFocusUpdate;
 	}
 
 	@Override

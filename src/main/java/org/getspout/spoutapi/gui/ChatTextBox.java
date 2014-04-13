@@ -22,17 +22,17 @@ package org.getspout.spoutapi.gui;
 import java.io.IOException;
 import java.util.UUID;
 
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+
 /**
- * The Spout implementation of the default Chat Text Box.
- * <p/>
- * This provides extra abilities above the default version.
+ * The Spout implementation of the default Chat Text Box. <p/> This provides extra abilities above the default version.
  */
 public class ChatTextBox extends GenericWidget implements Widget {
 	protected int visibleLines = 10;
 	protected int visibleChatLines = 20;
 	protected int fadeoutTicks = 250;
 
-	public ChatTextBox() {
+	protected ChatTextBox() {
 		setWidth(getWidth()); // Don't know the default - ignored, but prevents warnings...
 		setDirty(false);
 	}
@@ -43,19 +43,19 @@ public class ChatTextBox extends GenericWidget implements Widget {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		setNumVisibleLines(input.readInt());
-		setNumVisibleChatLines(input.readInt());
-		setFadeoutTicks(input.readInt());
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		setNumVisibleLines(buf.getInt());
+		setNumVisibleChatLines(buf.getInt());
+		setFadeoutTicks(buf.getInt());
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeInt(getNumVisibleLines());
-		output.writeInt(getNumVisibleChatLines());
-		output.writeInt(getFadeoutTicks());
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		buf.putInt(getNumVisibleLines());
+		buf.putInt(getNumVisibleChatLines());
+		buf.putInt(getFadeoutTicks());
 	}
 
 	@Override
@@ -68,6 +68,7 @@ public class ChatTextBox extends GenericWidget implements Widget {
 
 	/**
 	 * Gets the number of visible lines of chat for the player
+	 *
 	 * @return visible chat lines
 	 */
 	public int getNumVisibleLines() {
@@ -76,6 +77,7 @@ public class ChatTextBox extends GenericWidget implements Widget {
 
 	/**
 	 * Sets the number of visible lines of chat for the player
+	 *
 	 * @param lines to view
 	 * @return ChatTextBox
 	 */
@@ -86,6 +88,7 @@ public class ChatTextBox extends GenericWidget implements Widget {
 
 	/**
 	 * Gets the number of visible lines of chat for the player, when fully opened
+	 *
 	 * @return visible chat lines
 	 */
 	public int getNumVisibleChatLines() {
@@ -94,6 +97,7 @@ public class ChatTextBox extends GenericWidget implements Widget {
 
 	/**
 	 * Sets the number of visible lines of chat for the player, when fully opened
+	 *
 	 * @param lines to view
 	 * @return ChatTextBox
 	 */
@@ -104,6 +108,7 @@ public class ChatTextBox extends GenericWidget implements Widget {
 
 	/**
 	 * The number ticks until the text fades out from the main screen
+	 *
 	 * @return fadeout ticks
 	 */
 	public int getFadeoutTicks() {
@@ -111,8 +116,8 @@ public class ChatTextBox extends GenericWidget implements Widget {
 	}
 
 	/**
-	 * Sets the number of ticks until the text fades out from the main screen.
-	 * 20 ticks is equivelent to one second.
+	 * Sets the number of ticks until the text fades out from the main screen. 20 ticks is equivelent to one second.
+	 *
 	 * @param ticks to set
 	 * @return this
 	 */
@@ -123,6 +128,6 @@ public class ChatTextBox extends GenericWidget implements Widget {
 
 	@Override
 	public int getVersion() {
-		return super.getVersion() + 1;
+		return super.getVersion();
 	}
 }

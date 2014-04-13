@@ -21,11 +21,13 @@ package org.getspout.spoutapi.gui;
 
 import java.io.IOException;
 
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+
 public class GenericGradient extends GenericWidget implements Gradient {
 	protected Color color1 = new Color(0, 0, 0, 0), color2 = new Color(0, 0, 0, 0);
 	protected Orientation axis = Orientation.VERTICAL;
 
-	public GenericGradient() {
+	protected GenericGradient() {
 	}
 
 	public GenericGradient(Color both) {
@@ -83,19 +85,19 @@ public class GenericGradient extends GenericWidget implements Gradient {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		this.setTopColor(input.readColor());
-		this.setBottomColor(input.readColor());
-		this.setOrientation(Orientation.getOrientationFromId(input.read()));
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		this.setTopColor(buf.getColor());
+		this.setBottomColor(buf.getColor());
+		this.setOrientation(Orientation.getOrientationFromId(buf.get()));
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeColor(getTopColor());
-		output.writeColor(getBottomColor());
-		output.write(getOrientation().getId());
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		buf.putColor(getTopColor());
+		buf.putColor(getBottomColor());
+		buf.put((byte) getOrientation().getId());
 	}
 
 	@Override

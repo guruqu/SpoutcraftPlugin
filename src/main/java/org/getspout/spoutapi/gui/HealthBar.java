@@ -22,6 +22,8 @@ package org.getspout.spoutapi.gui;
 import java.io.IOException;
 import java.util.UUID;
 
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+
 /**
  * The Spout implementation of the default Health Bar.
  */
@@ -30,7 +32,7 @@ public class HealthBar extends GenericWidget {
 	private int iconOffset = 8;
 	private float dangerPercent = 20f;
 
-	public HealthBar() {
+	protected HealthBar() {
 		super();
 		setDirty(false);
 		setX(427 / 2 - 91); // 122
@@ -40,19 +42,19 @@ public class HealthBar extends GenericWidget {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		setMaxNumHearts(input.readInt());
-		setIconOffset(input.readInt());
-		setDangerPercent(input.readFloat());
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		setMaxNumHearts(buf.getInt());
+		setIconOffset(buf.getInt());
+		setDangerPercent(buf.getFloat());
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeInt(getMaxNumHearts());
-		output.writeInt(getIconOffset());
-		output.writeFloat(getDangerPercent());
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		buf.putInt(getMaxNumHearts());
+		buf.putInt(getIconOffset());
+		buf.putFloat(getDangerPercent());
 	}
 
 	@Override
@@ -66,9 +68,8 @@ public class HealthBar extends GenericWidget {
 	}
 
 	/**
-	 * Gets the maximum number of hearts displayed on the HUD.
-	 * <p/>
-	 * Health is scaled to fit the number of hearts appropriately.
+	 * Gets the maximum number of hearts displayed on the HUD. <p/> Health is scaled to fit the number of hearts appropriately.
+	 *
 	 * @return hearts displayed
 	 */
 	public int getMaxNumHearts() {
@@ -76,9 +77,8 @@ public class HealthBar extends GenericWidget {
 	}
 
 	/**
-	 * Sets the maximum number of hearts displayed on the HUD.
-	 * <p/>
-	 * Health is scaled to fit the number of hearts appropriately.
+	 * Sets the maximum number of hearts displayed on the HUD. <p/> Health is scaled to fit the number of hearts appropriately.
+	 *
 	 * @param hearts to display
 	 * @return this
 	 */
@@ -89,6 +89,7 @@ public class HealthBar extends GenericWidget {
 
 	/**
 	 * Gets the number of pixels each heart is offset when drawing the next heart.
+	 *
 	 * @return pixel offset
 	 */
 	public int getIconOffset() {
@@ -97,6 +98,7 @@ public class HealthBar extends GenericWidget {
 
 	/**
 	 * Sets the number of pixels each heart is offset when drawing the next heart.
+	 *
 	 * @param offset when drawing hearts
 	 * @return this
 	 */
@@ -106,9 +108,8 @@ public class HealthBar extends GenericWidget {
 	}
 
 	/**
-	 * Gets the percent of health a player needs to fall to or below in order for the hearts to begin blinking.
-	 * <p/>
-	 * Valid percents are between zero and one hundred, inclusive.
+	 * Gets the percent of health a player needs to fall to or below in order for the hearts to begin blinking. <p/> Valid percents are between zero and one hundred, inclusive.
+	 *
 	 * @return danger percent
 	 */
 	public float getDangerPercent() {
@@ -116,10 +117,8 @@ public class HealthBar extends GenericWidget {
 	}
 
 	/**
-	 * Sets the percent of health a player needs to fall to or below in order for the hearts to begin blinking.
-	 * <p/>
-	 * Valid percents are between zero and one hundred, inclusive.
-	 * @param percent
+	 * Sets the percent of health a player needs to fall to or below in order for the hearts to begin blinking. <p/> Valid percents are between zero and one hundred, inclusive.
+	 *
 	 * @return this
 	 */
 	public HealthBar setDangerPercent(float percent) {
@@ -129,6 +128,6 @@ public class HealthBar extends GenericWidget {
 
 	@Override
 	public int getVersion() {
-		return super.getVersion() + 1;
+		return super.getVersion();
 	}
 }

@@ -21,11 +21,14 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
+
 public class PacketEntityNameplate implements SpoutPacket {
 	public String title;
 	public int entityId;
 
-	public PacketEntityNameplate() {
+	protected PacketEntityNameplate() {
 	}
 
 	public PacketEntityNameplate(int entityId, String title) {
@@ -34,28 +37,19 @@ public class PacketEntityNameplate implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		entityId = input.readInt();
-		title = input.readString();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		entityId = buf.getInt();
+		title = buf.getUTF8();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeInt(entityId);
-		output.writeString(title);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putInt(entityId);
+		buf.putUTF8(title);
 	}
 
 	@Override
-	public void run(int id) {
-	}
-
-	@Override
-	public void failure(int id) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketEntityTitle;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override

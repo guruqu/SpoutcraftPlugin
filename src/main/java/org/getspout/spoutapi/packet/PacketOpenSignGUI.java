@@ -21,8 +21,14 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
+
 public class PacketOpenSignGUI implements SpoutPacket {
-	int x, y, z;
+	private int x, y, z;
+
+	protected PacketOpenSignGUI() {
+	}
 
 	public PacketOpenSignGUI(int x, int y, int z) {
 		this.x = x;
@@ -31,30 +37,21 @@ public class PacketOpenSignGUI implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		x = input.readInt();
-		y = input.readInt();
-		z = input.readInt();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		x = buf.getInt();
+		y = buf.getInt();
+		z = buf.getInt();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeInt(x);
-		output.writeInt(y);
-		output.writeInt(z);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putInt(x);
+		buf.putInt(y);
+		buf.putInt(z);
 	}
 
 	@Override
-	public void run(int playerId) {
-	}
-
-	@Override
-	public void failure(int playerId) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketOpenSignGUI;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override

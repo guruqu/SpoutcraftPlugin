@@ -45,7 +45,7 @@ public class PacketControlAction implements SpoutPacket {
 	private float state;
 	private String data = "";
 
-	public PacketControlAction() {
+	protected PacketControlAction() {
 	}
 
 	public PacketControlAction(Screen screen, Widget widget, float state) {

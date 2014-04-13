@@ -21,7 +21,7 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
-import org.getspout.spoutapi.SpoutManager;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketPreCacheCompleted implements SpoutPacket {
@@ -29,26 +29,16 @@ public class PacketPreCacheCompleted implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
 	}
 
 	@Override
-	public void run(int playerId) {
-		SpoutPlayer player = SpoutManager.getPlayerFromId(playerId);
+	public void handle(SpoutPlayer player) {
 		player.setPreCachingComplete(true);
-	}
-
-	@Override
-	public void failure(int playerId) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketPreCacheCompleted;
 	}
 
 	@Override

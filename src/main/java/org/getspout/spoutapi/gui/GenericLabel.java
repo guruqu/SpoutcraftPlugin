@@ -22,6 +22,7 @@ package org.getspout.spoutapi.gui;
 import java.io.IOException;
 
 import org.bukkit.ChatColor;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 
 public class GenericLabel extends GenericWidget implements Label {
 	protected String text = "Your Text Here";
@@ -33,7 +34,7 @@ public class GenericLabel extends GenericWidget implements Label {
 	protected float scale = 1.0F;
 	protected boolean shadow = true;
 
-	public GenericLabel() {
+	protected GenericLabel() {
 	}
 
 	public GenericLabel(String text) {
@@ -47,29 +48,29 @@ public class GenericLabel extends GenericWidget implements Label {
 
 	@Override
 	public int getVersion() {
-		return super.getVersion() + 6;
+		return super.getVersion();
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		setText(input.readString());
-		setAlign(WidgetAnchor.getAnchorFromId(input.read()));
-		setAuto(input.readBoolean());
-		setTextColor(input.readColor());
-		setScale(input.readFloat());
-		setShadow(input.readBoolean());
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		setText(buf.getUTF8());
+		setAlign(WidgetAnchor.getAnchorFromId(buf.get()));
+		setAuto(buf.getBoolean());
+		setTextColor(buf.getColor());
+		setScale(buf.getFloat());
+		setShadow(buf.getBoolean());
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeString(getText());
-		output.write(getAlign().getId());
-		output.writeBoolean(isAuto());
-		output.writeColor(getTextColor());
-		output.writeFloat(getScale());
-		output.writeBoolean(hasShadow());
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		buf.putUTF8(getText());
+		buf.put((byte) getAlign().getId());
+		buf.putBoolean(isAuto());
+		buf.putColor(getTextColor());
+		buf.putFloat(getScale());
+		buf.putBoolean(hasShadow());
 	}
 
 	@Override
@@ -194,7 +195,7 @@ public class GenericLabel extends GenericWidget implements Label {
 
 	/**
 	 * Gets the height of the text
-	 * @param text
+	 *
 	 * @return height in pixels
 	 */
 	public static int getStringHeight(String text) {
@@ -203,7 +204,7 @@ public class GenericLabel extends GenericWidget implements Label {
 
 	/**
 	 * Gets the height of the text, at the given scale
-	 * @param text
+	 *
 	 * @param scale of the text, 1.0 is default
 	 * @return height in pixels
 	 */
@@ -213,7 +214,7 @@ public class GenericLabel extends GenericWidget implements Label {
 
 	/**
 	 * Gets the width of the text
-	 * @param text
+	 *
 	 * @return width of the text
 	 */
 	public static int getStringWidth(String text) {
@@ -222,12 +223,12 @@ public class GenericLabel extends GenericWidget implements Label {
 
 	/**
 	 * Gets the width of the text, at the given scale
-	 * @param text
+	 *
 	 * @param scale of the text, 1.0 is default
 	 * @return width of the text
 	 */
 	public static int getStringWidth(String text, float scale) {
-		final int[] characterWidths = new int[]{
+		final int[] characterWidths = new int[] {
 				1, 9, 9, 8, 8, 8, 8, 7, 9, 8, 9, 9, 8, 9, 9, 9,
 				8, 8, 8, 8, 9, 9, 8, 9, 8, 8, 8, 8, 8, 9, 9, 9,
 				4, 2, 5, 6, 6, 6, 6, 3, 5, 5, 5, 6, 2, 6, 2, 6,

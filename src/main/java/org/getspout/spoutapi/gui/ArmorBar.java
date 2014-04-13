@@ -22,6 +22,8 @@ package org.getspout.spoutapi.gui;
 import java.io.IOException;
 import java.util.UUID;
 
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+
 /**
  * The Spout implementation of the default Armor Bar.
  */
@@ -30,7 +32,7 @@ public class ArmorBar extends GenericWidget {
 	private boolean alwaysVisible = false;
 	private int iconOffset = 8;
 
-	public ArmorBar() {
+	protected ArmorBar() {
 		setDirty(false);
 		setX(427 / 2 - 91); // 122
 		setY(191);
@@ -39,19 +41,19 @@ public class ArmorBar extends GenericWidget {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		setMaxNumShields(input.readInt());
-		setAlwaysVisible(input.readBoolean());
-		setIconOffset(input.readInt());
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		setMaxNumShields(buf.getInt());
+		setAlwaysVisible(buf.getBoolean());
+		setIconOffset(buf.getInt());
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeInt(getMaxNumShields());
-		output.writeBoolean(isAlwaysVisible());
-		output.writeInt(getIconOffset());
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		buf.putInt(getMaxNumShields());
+		buf.putBoolean(isAlwaysVisible());
+		buf.putInt(getIconOffset());
 	}
 
 	@Override
@@ -65,9 +67,8 @@ public class ArmorBar extends GenericWidget {
 	}
 
 	/**
-	 * Gets the maximum number of shields displayed on the HUD.
-	 * <p/>
-	 * Armor is scaled to fit the number of shields appropriately.
+	 * Gets the maximum number of shields displayed on the HUD. <p/> Armor is scaled to fit the number of shields appropriately.
+	 *
 	 * @return shields displayed
 	 */
 	public int getMaxNumShields() {
@@ -75,10 +76,9 @@ public class ArmorBar extends GenericWidget {
 	}
 
 	/**
-	 * Sets the maximum number of shields displayed on the HUD.
-	 * <p/>
-	 * Armor is scaled to fit the number of shields appropriately.
-	 * @param shields to display
+	 * Sets the maximum number of shields displayed on the HUD. <p/> Armor is scaled to fit the number of shields appropriately.
+	 *
+	 * @param icons to display
 	 * @return this
 	 */
 	public ArmorBar setMaxNumShields(int icons) {
@@ -88,6 +88,7 @@ public class ArmorBar extends GenericWidget {
 
 	/**
 	 * True if the armor bar will appear even when the player has no armor equipped.
+	 *
 	 * @return always visible
 	 */
 	public boolean isAlwaysVisible() {
@@ -96,7 +97,7 @@ public class ArmorBar extends GenericWidget {
 
 	/**
 	 * Forces the armor bar to appear, even when the player has no armor equipped.
-	 * @param visible
+	 *
 	 * @return this
 	 */
 	public ArmorBar setAlwaysVisible(boolean visible) {
@@ -106,6 +107,7 @@ public class ArmorBar extends GenericWidget {
 
 	/**
 	 * Gets the number of pixels each shield is offset when drawing the next shield.
+	 *
 	 * @return pixel offset
 	 */
 	public int getIconOffset() {
@@ -114,6 +116,7 @@ public class ArmorBar extends GenericWidget {
 
 	/**
 	 * Sets the number of pixels each shield is offset when drawing the next shield.
+	 *
 	 * @param offset when drawing shields
 	 * @return this
 	 */
@@ -124,6 +127,6 @@ public class ArmorBar extends GenericWidget {
 
 	@Override
 	public int getVersion() {
-		return super.getVersion() + 1;
+		return super.getVersion();
 	}
 }

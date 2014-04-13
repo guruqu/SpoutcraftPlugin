@@ -22,6 +22,7 @@ package org.getspout.spoutapi.gui;
 import java.io.IOException;
 
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 
 public class GenericButton extends GenericControl implements Button {
 	protected GenericLabel label = (GenericLabel) new GenericLabel().setAlign(WidgetAnchor.TOP_CENTER);
@@ -29,12 +30,12 @@ public class GenericButton extends GenericControl implements Button {
 	protected Color hoverColor = new Color(1, 1, 0.627F);
 	protected float scale = 1.0F;
 
-	public GenericButton() {
+	protected GenericButton() {
 	}
 
 	@Override
 	public int getVersion() {
-		return super.getVersion() + 4;
+		return super.getVersion();
 	}
 
 	public GenericButton(String text) {
@@ -42,21 +43,21 @@ public class GenericButton extends GenericControl implements Button {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		label.readData(input);
-		setDisabledText(input.readString());
-		setHoverColor(input.readColor());
-		scale = input.readFloat();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		label.decode(buf);
+		setDisabledText(buf.getUTF8());
+		setHoverColor(buf.getColor());
+		scale = buf.getFloat();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		label.writeData(output);
-		output.writeString(getDisabledText());
-		output.writeColor(getHoverColor());
-		output.writeFloat(scale);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		label.encode(buf);
+		buf.putUTF8(getDisabledText());
+		buf.putColor(getHoverColor());
+		buf.putFloat(scale);
 	}
 
 	@Override

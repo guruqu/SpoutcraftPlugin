@@ -27,12 +27,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import org.getspout.spoutapi.inventory.SpoutEnchantment;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.material.Block;
 import org.getspout.spoutapi.material.CustomBlock;
 import org.getspout.spoutapi.material.Material;
 import org.getspout.spoutapi.material.MaterialData;
 import org.getspout.spoutapi.material.Tool;
-import org.getspout.spoutapi.packet.PacketType;
 
 public class GenericCustomTool extends GenericCustomItem implements Tool {
 	private short maxdurability = 100;
@@ -78,14 +78,14 @@ public class GenericCustomTool extends GenericCustomItem implements Tool {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		setMaxDurability(input.readShort());
-		short size = input.readShort();
+    public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		setMaxDurability(buf.getShort());
+		short size = buf.getShort();
 		for (int i = 0; i < size; i++) {
-			int id = input.readInt();
-			int data = input.readShort();
-			float mod = input.readFloat();
+			int id = buf.getInt();
+			int data = buf.getShort();
+			float mod = buf.getFloat();
 			Block block = MaterialData.getBlock(id, (short) data);
 			if (data == -1) {
 				block = MaterialData.getCustomBlock(id);
@@ -95,32 +95,26 @@ public class GenericCustomTool extends GenericCustomItem implements Tool {
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeShort(getMaxDurability());
+    public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+        buf.putShort(getMaxDurability());
 		Block[] mod = getStrengthModifiedBlocks();
-		output.writeShort((short) mod.length);
-		for (int i = 0; i < mod.length; i++) {
-			Block block = mod[i];
-			if (block instanceof CustomBlock) {
-				output.writeInt(((CustomBlock) block).getCustomId());
-				output.writeShort((short) -1);
-			} else {
-				output.writeInt(block.getRawId());
-				output.writeShort((short) block.getRawData());
-			}
-			output.writeFloat(getStrengthModifier(block));
-		}
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketCustomTool;
+        buf.putShort((short) mod.length);
+        for (Block block : mod) {
+            if (block instanceof CustomBlock) {
+                buf.putInt(((CustomBlock) block).getCustomId());
+                buf.putShort((short) -1);
+            } else {
+                buf.putInt(block.getRawId());
+                buf.putShort((short) block.getRawData());
+            }
+            buf.putFloat(getStrengthModifier(block));
+        }
 	}
 
 	@Override
 	public int getVersion() {
-		return super.getVersion() + 0;
+		return super.getVersion();
 	}
 
 	public static short getDurability(ItemStack is) {

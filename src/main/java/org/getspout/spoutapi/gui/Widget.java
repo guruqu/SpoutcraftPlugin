@@ -23,90 +23,87 @@ import java.io.IOException;
 import java.util.UUID;
 
 import org.bukkit.plugin.Plugin;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 
 /**
- * This is the base class of all other widgets, and should never be used
- * directly.
- * <p/>
- * If you subclass this for a custom type of widget then you must make sure
- * that isDirty() always returns false otherwise the widget will try to be sent
- * to the client and will cause an exception to be thrown.
+ * This is the base class of all other widgets, and should never be used directly. <p/> If you subclass this for a custom type of widget then you must make sure that isDirty() always returns false
+ * otherwise the widget will try to be sent to the client and will cause an exception to be thrown.
  */
 public interface Widget {
 	/**
 	 * Is this running on Spoutcraft (ie, not on the server) - declared final in GenericWidget!
+	 *
 	 * @return if it's running on a client
 	 */
 	public boolean isSpoutcraft();
 
 	/**
 	 * The version this widget is. Mismatched versions will fail to be created.
+	 *
 	 * @return version
 	 */
 	public int getVersion();
 
 	/**
 	 * The type of widget this is. Required for proper synchronization between the server and client.
+	 *
 	 * @return widget type
 	 */
 	public WidgetType getType();
 
 	/**
 	 * Returns a unique id for this widget
+	 *
 	 * @return id
 	 */
 	public UUID getId();
 
 	/**
 	 * Called after this widget this created for serialization.
-	 * @param input
-	 * @throws IOException
 	 */
-	public void readData(SpoutInputStream input) throws IOException;
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException;
 
 	/**
-	 * Called when this widget is serialized to the client.
-	 * <p/>
-	 * Note: ensure that any changes here are reflected in {@link getNumBytes()} and are also present on the client.
-	 * @param output
-	 * @throws IOException
+	 * Called when this widget is serialized to the client. <p/> Note: ensure that any changes here are reflected in {@link getNumBytes()} and are also present on the client.
 	 */
-	public void writeData(SpoutOutputStream output) throws IOException;
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException;
 
 	/**
 	 * Gets the plugin that attached this widget to the screen, or null if this screen is unattached.
+	 *
 	 * @return plugin that attached this widget to the screen
 	 */
 	public Plugin getPlugin();
 
 	/**
 	 * Internal use only.
-	 * @param plugin
+	 *
 	 * @return this
 	 */
 	public Widget setPlugin(Plugin plugin);
 
 	/**
-	 * Marks this widget as needing an update on the client. It will be updated after the next onTick call, and marked as setDirty(false)
-	 * Every widget is dirty immediately after creation
-	 * @param dirty
+	 * Marks this widget as needing an update on the client. It will be updated after the next onTick call, and marked as setDirty(false) Every widget is dirty immediately after creation
 	 */
 	public void setDirty(boolean dirty);
 
 	/**
 	 * Is true if this widget has been marked dirty
+	 *
 	 * @return dirty
 	 */
 	public boolean isDirty();
 
 	/**
 	 * Gets the render priority for this widget. Highest priorities render first (in the background), the lowest priorities render on top (in the foreground).
+	 *
 	 * @return priority.
 	 */
 	public RenderPriority getPriority();
 
 	/**
 	 * Sets the render priority for this widget. Highest priorities render first (in the background), the lowest priorities render on top (in the foreground).
+	 *
 	 * @param priority to render at
 	 * @return widget
 	 */
@@ -114,12 +111,14 @@ public interface Widget {
 
 	/**
 	 * Gets the width of this widget, in pixels
+	 *
 	 * @return width
 	 */
 	public int getWidth();
 
 	/**
 	 * Sets the width of this widget, in pixels
+	 *
 	 * @param width to set
 	 * @return widget
 	 */
@@ -127,12 +126,14 @@ public interface Widget {
 
 	/**
 	 * Gets the height of this widget, in pixels
+	 *
 	 * @return height
 	 */
 	public int getHeight();
 
 	/**
 	 * Sets the height of this widget, in pixels
+	 *
 	 * @param height to set
 	 * @return widget
 	 */
@@ -140,12 +141,14 @@ public interface Widget {
 
 	/**
 	 * Gets the screen this widget is attached to, or null if unattached
+	 *
 	 * @return screen
 	 */
 	public Screen getScreen();
 
 	/**
 	 * Sets the screen this widget is attached to. Should not be used normally, is handled with screen.attachWidget() is called.
+	 *
 	 * @param screen this is attached to
 	 * @return widget
 	 */
@@ -153,6 +156,7 @@ public interface Widget {
 
 	/**
 	 * Sets the screen and plugin this widget is attached to. Should not be used normally, is handled with screen.attachWidget() is called.
+	 *
 	 * @param screen this is attached to
 	 * @param plugin this is attached to
 	 * @return widget
@@ -161,18 +165,21 @@ public interface Widget {
 
 	/**
 	 * Gets the x coordinate of this widget. Widgets (and screens) render from the top left cornor the screen. 0,0 represents the top left corner.
+	 *
 	 * @return x-coordinate
 	 */
 	public int getX();
 
 	/**
 	 * Gets the y coordinate of this widget. Widgets (and screens) render from the top left cornor the screen. 0,0 represents the top left corner.
+	 *
 	 * @return y-coordinate
 	 */
 	public int getY();
 
 	/**
 	 * Sets the x coordinate of this widget. Widgets (and screens) render from the top left cornor the screen. 0,0 represents the top left corner.
+	 *
 	 * @param pos to set
 	 * @return widget
 	 */
@@ -180,6 +187,7 @@ public interface Widget {
 
 	/**
 	 * Sets the y coordinate of this widget. Widgets (and screens) render from the top left cornor the screen. 0,0 represents the top left corner.
+	 *
 	 * @param pos to set
 	 * @return widget
 	 */
@@ -187,6 +195,7 @@ public interface Widget {
 
 	/**
 	 * Shifts this widget the given number of pixels in the x direction.
+	 *
 	 * @param x pixels to shift
 	 * @return widget
 	 */
@@ -194,6 +203,7 @@ public interface Widget {
 
 	/**
 	 * Shifts this widget the given number of pixels in the y direction
+	 *
 	 * @param y pixels to shift
 	 * @return widget
 	 */
@@ -201,12 +211,14 @@ public interface Widget {
 
 	/**
 	 * Is true if this widget is visible and rendering on the screen
+	 *
 	 * @return visible
 	 */
 	public boolean isVisible();
 
 	/**
 	 * Sets the visibility of this widget. If true, it will render normally. If false, it will not appear on the screen.
+	 *
 	 * @param enable the visibility
 	 * @return widget
 	 */
@@ -218,8 +230,7 @@ public interface Widget {
 	public void onTick();
 
 	/**
-	 * Set the widget's tooltip.
-	 * Returns the current instance of the widget to make chainable calls.
+	 * Set the widget's tooltip. Returns the current instance of the widget to make chainable calls.
 	 */
 	public Widget setTooltip(String tooltip);
 
@@ -245,6 +256,7 @@ public interface Widget {
 
 	/**
 	 * Container Layout - Set whether the widget will be resized with its container
+	 *
 	 * @param fixed if it is a static size
 	 * @return the container
 	 */
@@ -252,13 +264,13 @@ public interface Widget {
 
 	/**
 	 * Use isFixed() instead
+	 *
 	 * @deprecated
 	 */
 	public boolean getFixed();
 
 	/**
 	 * Container Layout - Whether the widget is fixed size inside its container
-	 * @return
 	 */
 	public boolean isFixed();
 
@@ -266,187 +278,142 @@ public interface Widget {
 
 	/**
 	 * Container Layout - Padding to use for automatic container layout - not included in dimensions
-	 * @param marginAll
-	 * @return
 	 */
 	public Widget setMargin(int marginAll);
 
 	/**
 	 * Container Layout - Padding to use for automatic container layout - not included in dimensions
-	 * @param marginTopBottom
-	 * @param marginLeftRight
-	 * @return
 	 */
 	public Widget setMargin(int marginTopBottom, int marginLeftRight);
 
 	/**
 	 * Container Layout - Padding to use for automatic container layout - not included in dimensions
-	 * @param marginTop
-	 * @param marginLeftRight
-	 * @param marginBottom
-	 * @return
 	 */
 	public Widget setMargin(int marginTop, int marginLeftRight, int marginBottom);
 
 	/**
 	 * Container Layout - Padding to use for automatic container layout - not included in dimensions
-	 * @param marginTop
-	 * @param marginRight
-	 * @param marginBottom
-	 * @param marginLeft
-	 * @return
 	 */
 	public Widget setMargin(int marginTop, int marginRight, int marginBottom, int marginLeft);
 
 	/**
 	 * Container Layout - Padding to use for automatic container layout - not included in dimensions
-	 * @param marginLeft
-	 * @return
 	 */
 	public Widget setMarginTop(int marginTop);
 
 	/**
 	 * Container Layout - Padding to use for automatic container layout - not included in dimensions
-	 * @param marginLeft
-	 * @return
 	 */
 	public Widget setMarginRight(int marginRight);
 
 	/**
 	 * Container Layout - Padding to use for automatic container layout - not included in dimensions
-	 * @param marginLeft
-	 * @return
 	 */
 	public Widget setMarginBottom(int marginBottom);
 
 	/**
 	 * Container Layout - Padding to use for automatic container layout - not included in dimensions
-	 * @param marginLeft
-	 * @return
 	 */
 	public Widget setMarginLeft(int marginLeft);
 
 	/**
 	 * Container Layout - Get the margin used for container layout
-	 * @return
 	 */
 	public int getMarginTop();
 
 	/**
 	 * Container Layout - Get the margin used for container layout
-	 * @return
 	 */
 	public int getMarginRight();
 
 	/**
 	 * Container Layout - Get the margin used for container layout
-	 * @return
 	 */
 	public int getMarginBottom();
 
 	/**
 	 * Container Layout - Get the margin used for container layout
-	 * @return
 	 */
 	public int getMarginLeft();
 
 	/**
 	 * Container Layout - Set the minimum width for this widget
-	 * @param min
-	 * @return
 	 */
 	public Widget setMinWidth(int min);
 
 	/**
 	 * Container Layout - Get the minimum width for this widget
-	 * @return
 	 */
 	public int getMinWidth();
 
 	/**
 	 * Container Layout - Set the maximum width for this widget
-	 * @param min
-	 * @return
 	 */
 	public Widget setMaxWidth(int max);
 
 	/**
 	 * Container Layout - Get the maximum width for this widget
-	 * @return
 	 */
 	public int getMaxWidth();
 
 	/**
 	 * Container Layout - Set the minimum height for this widget
-	 * @param min
-	 * @return
 	 */
 	public Widget setMinHeight(int min);
 
 	/**
 	 * Container Layout - Get the minimum height for this widget
-	 * @return
 	 */
 	public int getMinHeight();
 
 	/**
 	 * Container Layout - Set the maximum height for this widget
-	 * @param min
-	 * @return
 	 */
 	public Widget setMaxHeight(int max);
 
 	/**
 	 * Container Layout - Get the maximum height for this widget
-	 * @return
 	 */
 	public int getMaxHeight();
 
 	/**
 	 * Container Layout - Save the position for later restoration
-	 * @return
 	 */
 	public Widget savePos();
 
 	/**
 	 * Container Layout - Restore the earlier saved position
-	 * @return
 	 */
 	public Widget restorePos();
 
 	/**
 	 * Set the anchor point for this widget, default is CENTER
-	 * @param anchor
-	 * @return
 	 */
 	public Widget setAnchor(WidgetAnchor anchor);
 
 	/**
 	 * Get the current anchor position
-	 * @return
 	 */
 	public WidgetAnchor getAnchor();
 
 	/**
-	 * Returns a copy of this widget with a new UUID.
-	 * <p/>
-	 * Copies will not be equal to each other, but will have the same internal data.
-	 * <p/>
-	 * Note: the copy will not be attached to a screen, nor be part of a container even if the original was.
-	 * <p/>
-	 * Warning: copy will not work on screens.
+	 * Returns a copy of this widget with a new UUID. <p/> Copies will not be equal to each other, but will have the same internal data. <p/> Note: the copy will not be attached to a screen, nor be
+	 * part of a container even if the original was. <p/> Warning: copy will not work on screens.
+	 *
 	 * @return a copy of this widget
 	 */
 	public Widget copy();
 
 	/**
 	 * Called when any dimension or limit changes
+	 *
 	 * @return widget
 	 */
 	public Widget updateSize();
 
 	/**
 	 * Sets whether this widget should automatically be marked as dirty when it is changed.
+	 *
 	 * @param dirty if it should be automatic (default: true)
 	 * @return widget
 	 */
@@ -454,6 +421,7 @@ public interface Widget {
 
 	/**
 	 * Check whether this widget is automatically being marked as dirty.
+	 *
 	 * @return if autodirty is on
 	 */
 	public boolean isAutoDirty();
@@ -464,11 +432,10 @@ public interface Widget {
 	public void autoDirty();
 
 	/**
-	 * Setup a simple automatic animation that automatically repeats and resets when finished.
-	 * Please note that some animation types are limited to certain types of widget.
-	 * All animation is carried out on the client, so it isn't possible to update
-	 * the server side values affected by the animation...
-	 * @param type  the type of animation to use
+	 * Setup a simple automatic animation that automatically repeats and resets when finished. Please note that some animation types are limited to certain types of widget. All animation is carried
+	 * out on the client, so it isn't possible to update the server side values affected by the animation...
+	 *
+	 * @param type the type of animation to use
 	 * @param value a custom value used by some types (default: 1)
 	 * @param count how many frames
 	 * @param ticks how many ticks per "frame"
@@ -477,78 +444,70 @@ public interface Widget {
 	public Widget animate(WidgetAnim type, float value, short count, short ticks);
 
 	/**
-	 * Setup a simple automatic animation that resets when finished.
-	 * Please note that some animation types are limited to certain types of widget.
-	 * All animation is carried out on the client, so it isn't possible to update
-	 * the server side values affected by the animation...
-	 * @param type   the type of animation to use
-	 * @param value  a custom value used by some types (default: 1)
-	 * @param count  how many frames
-	 * @param ticks  how many ticks per "frame"
+	 * Setup a simple automatic animation that resets when finished. Please note that some animation types are limited to certain types of widget. All animation is carried out on the client, so it
+	 * isn't possible to update the server side values affected by the animation...
+	 *
+	 * @param type the type of animation to use
+	 * @param value a custom value used by some types (default: 1)
+	 * @param count how many frames
+	 * @param ticks how many ticks per "frame"
 	 * @param repeat should the animation be repeated
 	 * @return widget
 	 */
 	public Widget animate(WidgetAnim type, float value, short count, short ticks, boolean repeat);
 
 	/**
-	 * Setup a simple automatic animation.
-	 * Please note that some animation types are limited to certain types of widget.
-	 * All animation is carried out on the client, so it isn't possible to update
-	 * the server side values affected by the animation...
-	 * @param type   the type of animation to use
-	 * @param value  a custom value used by some types (default: 1)
-	 * @param count  how many frames
-	 * @param ticks  how many ticks per "frame"
+	 * Setup a simple automatic animation. Please note that some animation types are limited to certain types of widget. All animation is carried out on the client, so it isn't possible to update the
+	 * server side values affected by the animation...
+	 *
+	 * @param type the type of animation to use
+	 * @param value a custom value used by some types (default: 1)
+	 * @param count how many frames
+	 * @param ticks how many ticks per "frame"
 	 * @param repeat should the animation be repeated
-	 * @param reset  should it reset back to the first frame after finishing
+	 * @param reset should it reset back to the first frame after finishing
 	 * @return widget
 	 */
 	public Widget animate(WidgetAnim type, float value, short count, short ticks, boolean repeat, boolean reset);
 
 	/**
 	 * Start the animation.
+	 *
 	 * @return widget
 	 */
 	public Widget animateStart();
 
 	/**
-	 * Stop the animation, optionally letting it finish a loop.
-	 * If the "reset" option was set when creating the animation it will go
-	 * back to the first frame, otherwise it will stop where it is.
+	 * Stop the animation, optionally letting it finish a loop. If the "reset" option was set when creating the animation it will go back to the first frame, otherwise it will stop where it is.
+	 *
 	 * @param finish should it finish the current loop (if repeating)
 	 * @return widget
 	 */
 	public Widget animateStop(boolean finish);
 
 	/**
-	 * This handles animation every frame.
-	 * NOTE: On the server the default animation handler doesn't do anything as
-	 * all animation is handled on the client. If you are writing an animation
-	 * handler then please keep bandwidth use in mind...
+	 * This handles animation every frame. NOTE: On the server the default animation handler doesn't do anything as all animation is handled on the client. If you are writing an animation handler then
+	 * please keep bandwidth use in mind...
 	 */
 	public void onAnimate();
 
 	/**
-	 * This is called when the animation stops, and can be used for chaining
-	 * together animations.
-	 * This is called whether the stop was automatic or manual, and occurs at
-	 * the start of the final frame (so the frame hasn't had any ticks of
-	 * visibility yet).
-	 * NOTE: On the server the values changed in the animation <b>will not<b>
-	 * have changed, this is due to the animation being client side. If you
-	 * didn't tell the animation to reset after finishing then please remember
-	 * to change them!
+	 * This is called when the animation stops, and can be used for chaining together animations. This is called whether the stop was automatic or manual, and occurs at the start of the final frame
+	 * (so the frame hasn't had any ticks of visibility yet). NOTE: On the server the values changed in the animation <b>will not<b> have changed, this is due to the animation being client side. If
+	 * you didn't tell the animation to reset after finishing then please remember to change them!
 	 */
 	public void onAnimateStop();
 
 	/**
 	 * Returns true if the widget has had its position set.
+	 *
 	 * @return true if it has a position
 	 */
 	public boolean hasPosition();
 
 	/**
 	 * Returns true if a widget has had its size set.
+	 *
 	 * @return if it has a size
 	 */
 	public boolean hasSize();

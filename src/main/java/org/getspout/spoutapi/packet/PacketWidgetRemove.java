@@ -23,11 +23,13 @@ import java.io.IOException;
 import java.util.UUID;
 
 import org.getspout.spoutapi.gui.Widget;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketWidgetRemove implements SpoutPacket {
 	protected Widget widget;
 
-	public PacketWidgetRemove() {
+	protected PacketWidgetRemove() {
 	}
 
 	public PacketWidgetRemove(Widget widget, UUID screen) {
@@ -35,29 +37,19 @@ public class PacketWidgetRemove implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeUUID(widget.getId());
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
 	}
 
 	@Override
-	public void run(int PlayerId) {
-	}
-
-	@Override
-	public void failure(int id) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketWidgetRemove;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override
 	public int getVersion() {
-		return 1;
+		return 0;
 	}
 }

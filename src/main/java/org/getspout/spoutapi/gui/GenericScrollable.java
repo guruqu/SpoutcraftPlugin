@@ -21,6 +21,8 @@ package org.getspout.spoutapi.gui;
 
 import java.io.IOException;
 
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+
 public abstract class GenericScrollable extends GenericControl implements Scrollable {
 	protected ScrollBarPolicy sbpVert;
 	protected ScrollBarPolicy sbpHoriz = sbpVert = ScrollBarPolicy.SHOW_IF_NEEDED;
@@ -193,32 +195,32 @@ public abstract class GenericScrollable extends GenericControl implements Scroll
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		sbpHoriz = ScrollBarPolicy.getById(input.readInt());
-		sbpVert = ScrollBarPolicy.getById(input.readInt());
-		scrollX = input.readInt();
-		scrollY = input.readInt();
-		innerSizeHoriz = input.readInt();
-		innerSizeVert = input.readInt();
-		setBackgroundColor(input.readColor());
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		sbpHoriz = ScrollBarPolicy.getById(buf.getInt());
+		sbpVert = ScrollBarPolicy.getById(buf.getInt());
+		scrollX = buf.getInt();
+		scrollY = buf.getInt();
+		innerSizeHoriz = buf.getInt();
+		innerSizeVert = buf.getInt();
+		setBackgroundColor(buf.getColor());
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeInt(sbpHoriz.getId());
-		output.writeInt(sbpVert.getId());
-		output.writeInt(scrollX);
-		output.writeInt(scrollY);
-		output.writeInt(innerSizeHoriz);
-		output.writeInt(innerSizeVert);
-		output.writeColor(getBackgroundColor());
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		buf.putInt(sbpHoriz.getId());
+		buf.putInt(sbpVert.getId());
+		buf.putInt(scrollX);
+		buf.putInt(scrollY);
+		buf.putInt(innerSizeHoriz);
+		buf.putInt(innerSizeVert);
+		buf.putColor(getBackgroundColor());
 	}
 
 	@Override
 	public int getVersion() {
-		return super.getVersion() + 1;
+		return super.getVersion();
 	}
 
 	@Override

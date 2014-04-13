@@ -21,11 +21,13 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
-public class PacketNotification extends PacketShowAchievement {
-	protected int time;
-	protected short data;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 
-	public PacketNotification() {
+public class PacketNotification extends PacketShowAchievement {
+	private int time;
+	private short data;
+
+	protected PacketNotification() {
 	}
 
 	public PacketNotification(String title, String message, int itemId, short data, int time) {
@@ -35,26 +37,21 @@ public class PacketNotification extends PacketShowAchievement {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		this.data = input.readShort();
-		this.time = input.readInt();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		this.data = buf.getShort();
+		this.time = buf.getInt();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeShort(data);
-		output.writeInt(time);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		buf.putShort(data);
+		buf.putInt(time);
 	}
 
 	@Override
 	public int getVersion() {
 		return 0;
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketNotification;
 	}
 }

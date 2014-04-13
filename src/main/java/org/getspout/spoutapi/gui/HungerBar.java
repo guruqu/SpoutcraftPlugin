@@ -22,11 +22,13 @@ package org.getspout.spoutapi.gui;
 import java.io.IOException;
 import java.util.UUID;
 
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+
 public class HungerBar extends GenericWidget {
 	private int icons = 10;
 	private int iconOffset = 8;
 
-	public HungerBar() {
+	protected HungerBar() {
 		super();
 		setX(427 / 2 + 82); // 295
 		setY(201);
@@ -35,23 +37,22 @@ public class HungerBar extends GenericWidget {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		setNumOfIcons(input.readInt());
-		setIconOffset(input.readInt());
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		setNumOfIcons(buf.getInt());
+		setIconOffset(buf.getInt());
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeInt(getNumOfIcons());
-		output.writeInt(getIconOffset());
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		buf.putInt(getNumOfIcons());
+		buf.putInt(getIconOffset());
 	}
 
 	/**
-	 * Gets the maximum number of food icons to display on the HUD.
-	 * <p/>
-	 * Hunger bar is scaled to fit the number of icons appropriately.
+	 * Gets the maximum number of food icons to display on the HUD. <p/> Hunger bar is scaled to fit the number of icons appropriately.
+	 *
 	 * @return icons displayed
 	 */
 	public int getNumOfIcons() {
@@ -59,9 +60,8 @@ public class HungerBar extends GenericWidget {
 	}
 
 	/**
-	 * Sets the maximum number of food icons to display on the HUD.
-	 * <p/>
-	 * Hunger bar is scaled to fit the number of icons appropriately.
+	 * Sets the maximum number of food icons to display on the HUD. <p/> Hunger bar is scaled to fit the number of icons appropriately.
+	 *
 	 * @param icons to display
 	 * @return this
 	 */
@@ -72,6 +72,7 @@ public class HungerBar extends GenericWidget {
 
 	/**
 	 * Gets the number of pixels each icon is offset when drawing the next icon.
+	 *
 	 * @return pixel offset
 	 */
 	public int getIconOffset() {
@@ -80,6 +81,7 @@ public class HungerBar extends GenericWidget {
 
 	/**
 	 * Sets the number of pixels each icon is offset when drawing the next icon.
+	 *
 	 * @param iconOffset when drawing icons
 	 * @return this
 	 */
@@ -98,6 +100,6 @@ public class HungerBar extends GenericWidget {
 
 	@Override
 	public int getVersion() {
-		return super.getVersion() + 1;
+		return super.getVersion();
 	}
 }

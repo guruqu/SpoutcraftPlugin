@@ -23,28 +23,29 @@ import java.io.IOException;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 
 public class GenericPopup extends GenericScreen implements PopupScreen {
 	protected boolean transparent = false;
 
-	public GenericPopup() {
+	protected GenericPopup() {
 	}
 
 	@Override
 	public int getVersion() {
-		return super.getVersion() + 0;
+		return super.getVersion();
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		super.readData(input);
-		this.setTransparent(input.readBoolean());
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.decode(buf);
+		this.setTransparent(buf.getBoolean());
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		super.writeData(output);
-		output.writeBoolean(isTransparent());
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		super.encode(buf);
+		buf.putBoolean(isTransparent());
 	}
 
 	@Override

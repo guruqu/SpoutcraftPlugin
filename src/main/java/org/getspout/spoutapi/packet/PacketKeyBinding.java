@@ -23,19 +23,19 @@ import java.io.IOException;
 import java.util.UUID;
 
 import org.getspout.spoutapi.SpoutManager;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.keyboard.KeyBinding;
 import org.getspout.spoutapi.keyboard.Keyboard;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class PacketKeyBinding implements SpoutPacket {
 	KeyBinding binding;
 	Keyboard key;
 	String id;
-	String plugin;
 	boolean pressed;
-	int screen;
 	UUID uniqueId;
 
-	public PacketKeyBinding() {
+	protected PacketKeyBinding() {
 	}
 
 	public PacketKeyBinding(KeyBinding binding) {
@@ -43,34 +43,25 @@ public class PacketKeyBinding implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		key = Keyboard.getKey(input.readInt());
-		pressed = input.readBoolean();
-		uniqueId = new UUID(input.readLong(), input.readLong());
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		key = Keyboard.getKey(buf.getInt());
+		pressed = buf.getBoolean();
+		uniqueId = new UUID(buf.getLong(), buf.getLong());
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeString(binding.getId());
-		output.writeString(binding.getDescription());
-		output.writeString(binding.getPlugin().getDescription().getName());
-		output.writeInt(binding.getDefaultKey().getKeyCode());
-		output.writeLong(binding.getUniqueId().getMostSignificantBits());
-		output.writeLong(binding.getUniqueId().getLeastSignificantBits());
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putUTF8(binding.getId());
+		buf.putUTF8(binding.getDescription());
+		buf.putUTF8(binding.getPlugin().getDescription().getName());
+		buf.putInt(binding.getDefaultKey().getKeyCode());
+		buf.putLong(binding.getUniqueId().getMostSignificantBits());
+		buf.putLong(binding.getUniqueId().getLeastSignificantBits());
 	}
 
 	@Override
-	public void run(int playerId) {
-		SpoutManager.getKeyBindingManager().summonKey(uniqueId, SpoutManager.getPlayerFromId(playerId), key, pressed);
-	}
-
-	@Override
-	public void failure(int playerId) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketKeyBinding;
+	public void handle(SpoutPlayer player) {
+		SpoutManager.getKeyBindingManager().summonKey(uniqueId, SpoutManager.getPlayerFromId(player.getEntityId()), key, pressed);
 	}
 
 	@Override

@@ -21,12 +21,15 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
+
 public class PacketWaypoint implements SpoutPacket {
 	private double x, y, z;
 	private String name;
 	private boolean death = false;
 
-	public PacketWaypoint() {
+	protected PacketWaypoint() {
 	}
 
 	public PacketWaypoint(double x, double y, double z, String name) {
@@ -45,34 +48,25 @@ public class PacketWaypoint implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		x = input.readDouble();
-		y = input.readDouble();
-		z = input.readDouble();
-		name = input.readString();
-		death = input.readBoolean();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		x = buf.getDouble();
+		y = buf.getDouble();
+		z = buf.getDouble();
+		name = buf.getUTF8();
+		death = buf.getBoolean();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeDouble(x);
-		output.writeDouble(y);
-		output.writeDouble(z);
-		output.writeString(name);
-		output.writeBoolean(death);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putDouble(x);
+		buf.putDouble(y);
+		buf.putDouble(z);
+		buf.putUTF8(name);
+		buf.putBoolean(death);
 	}
 
 	@Override
-	public void run(int playerId) {
-	}
-
-	@Override
-	public void failure(int playerId) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketWaypoint;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override

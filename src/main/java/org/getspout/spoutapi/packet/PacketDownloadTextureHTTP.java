@@ -21,13 +21,16 @@ package org.getspout.spoutapi.packet;
 
 import java.io.IOException;
 
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
+import org.getspout.spoutapi.player.SpoutPlayer;
+
 public class PacketDownloadTextureHTTP implements SpoutPacket {
 	public int entityId;
 	public String skinURL;
 	public String cloakURL;
 	public boolean release = true;
 
-	public PacketDownloadTextureHTTP() {
+	protected PacketDownloadTextureHTTP() {
 	}
 
 	public PacketDownloadTextureHTTP(int id, String skinURL, String cloakURL) {
@@ -50,36 +53,27 @@ public class PacketDownloadTextureHTTP implements SpoutPacket {
 	}
 
 	@Override
-	public void readData(SpoutInputStream input) throws IOException {
-		entityId = input.readInt();
-		skinURL = input.readString();
-		cloakURL = input.readString();
-		release = input.readBoolean();
+	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
+		entityId = buf.getInt();
+		skinURL = buf.getUTF8();
+		cloakURL = buf.getUTF8();
+		release = buf.getBoolean();
 	}
 
 	@Override
-	public void writeData(SpoutOutputStream output) throws IOException {
-		output.writeInt(entityId);
-		output.writeString(skinURL);
-		output.writeString(cloakURL);
-		output.writeBoolean(release);
+	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
+		buf.putInt(entityId);
+		buf.putUTF8(skinURL);
+		buf.putUTF8(cloakURL);
+		buf.putBoolean(release);
 	}
 
 	@Override
-	public void run(int PlayerId) {
-	}
-
-	@Override
-	public void failure(int id) {
-	}
-
-	@Override
-	public PacketType getPacketType() {
-		return PacketType.PacketSkinURL;
+	public void handle(SpoutPlayer player) {
 	}
 
 	@Override
 	public int getVersion() {
-		return 1;
+		return 0;
 	}
 }
