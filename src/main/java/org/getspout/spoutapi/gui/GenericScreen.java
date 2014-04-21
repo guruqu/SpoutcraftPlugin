@@ -32,14 +32,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.event.screen.ScreenCloseEvent;
-<<<<<<< Updated upstream
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
-import org.getspout.spoutapi.packet.PacketWidget;
-import org.getspout.spoutapi.packet.PacketWidgetRemove;
-=======
 import org.getspout.spout.packet.builtin.PacketWidget;
 import org.getspout.spout.packet.builtin.PacketWidgetRemove;
->>>>>>> Stashed changes
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public abstract class GenericScreen extends GenericWidget implements Screen {

@@ -24,9 +24,6 @@ import java.io.IOException;
 import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.material.Food;
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
 
 public class GenericCustomFood extends GenericCustomItem implements Food {
 	private int hunger;
