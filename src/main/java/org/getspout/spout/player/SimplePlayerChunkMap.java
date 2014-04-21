@@ -43,7 +43,7 @@ public class SimplePlayerChunkMap implements PlayerChunkMap {
 
 	@Override
 	public SpoutPlayer getPlayer(Player player) {
-		return SpoutCraftPlayer.getPlayer(player);
+		return SpoutcraftPlayer.getPlayer(player);
 	}
 
 	@Override
@@ -110,8 +110,8 @@ public class SimplePlayerChunkMap implements PlayerChunkMap {
 	@Override
 	public void setVersionString(int playerId, String versionString) {
 		SpoutPlayer sp = getPlayer(playerId);
-		if (sp instanceof SpoutCraftPlayer) {
-			SpoutCraftPlayer scp = (SpoutCraftPlayer)sp;
+		if (sp instanceof SpoutcraftPlayer) {
+			SpoutcraftPlayer scp = (SpoutcraftPlayer)sp;
 			scp.setVersionString(versionString);
 			System.out.println("[SpoutPlugin] " + scp.getName() + " is running " + scp.getVersionString());
 			int build;
@@ -120,7 +120,7 @@ public class SimplePlayerChunkMap implements PlayerChunkMap {
 			} catch (Exception e) {
 				build = 1700;
 			}
-			((SpoutCraftPlayer) sp).setBuildVersion(build);
+			((SpoutcraftPlayer) sp).setBuildVersion(build);
 			SpoutcraftBuildSetEvent sbse = new SpoutcraftBuildSetEvent(sp, build);
 			Bukkit.getPluginManager().callEvent(sbse);
 		}

@@ -30,13 +30,13 @@ import org.getspout.spout.inventory.SimpleMaterialManager;
 import org.getspout.spout.keyboard.SimpleKeyBindingManager;
 import org.getspout.spout.player.SimpleBiomeManager;
 import org.getspout.spout.player.SimpleSkyManager;
-import org.getspout.spout.player.SpoutCraftPlayer;
+import org.getspout.spout.player.SpoutcraftPlayer;
 import org.getspout.spout.precache.PrecacheManager;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.event.spout.SpoutCraftEnableEvent;
 import org.getspout.spoutapi.event.spout.SpoutcraftFailedEvent;
-import org.getspout.spoutapi.packet.PacketToggleCheats;
-import org.getspout.spoutapi.packet.PacketBlockData;
+import org.getspout.spout.packet.builtin.PacketToggleCheats;
+import org.getspout.spout.packet.builtin.PacketBlockData;
 import org.getspout.spoutapi.player.PlayerInformation;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
@@ -56,7 +56,7 @@ public class PlayerChunkMap {
 					timer.put(player.getName(), ticksLeft);
 				} else {
 					timer.remove(player.getName());
-					SpoutCraftPlayer scp = (SpoutCraftPlayer)SpoutManager.getPlayer(player);
+					SpoutcraftPlayer scp = (SpoutcraftPlayer)SpoutManager.getPlayer(player);
 					Bukkit.getServer().getPluginManager().callEvent(new SpoutcraftFailedEvent(scp));
 					scp.queued = null;
 					if (player.hasPermission("spout.plugin.ignorespoutcraft")) {
@@ -90,6 +90,6 @@ public class PlayerChunkMap {
 		PrecacheManager.onPlayerJoin(player);
 		player.sendPacket(new PacketBlockData(SpoutManager.getMaterialManager().getModifiedBlocks()));
 		Bukkit.getServer().getPluginManager().callEvent(new SpoutCraftEnableEvent(player));
-		((SpoutCraftPlayer)player).updateWaypoints();
+		((SpoutcraftPlayer)player).updateWaypoints();
 	}
 }

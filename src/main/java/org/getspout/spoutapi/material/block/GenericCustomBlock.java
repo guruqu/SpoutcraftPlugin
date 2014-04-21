@@ -38,8 +38,13 @@ import org.getspout.spoutapi.material.CustomBlock;
 import org.getspout.spoutapi.material.CustomItem;
 import org.getspout.spoutapi.material.MaterialData;
 import org.getspout.spoutapi.material.item.GenericCustomItem;
+<<<<<<< Updated upstream
 import org.getspout.spoutapi.packet.PacketBlockModel;
 import org.getspout.spoutapi.packet.SpoutPacket;
+=======
+import org.getspout.spout.packet.builtin.PacketBlockModel;
+import org.getspout.spout.packet.builtin.SpoutPacket;
+>>>>>>> Stashed changes
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class GenericCustomBlock extends GenericBlock implements CustomBlock, SpoutPacket {

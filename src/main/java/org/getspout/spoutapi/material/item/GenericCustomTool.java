@@ -33,6 +33,9 @@ import org.getspout.spoutapi.material.CustomBlock;
 import org.getspout.spoutapi.material.Material;
 import org.getspout.spoutapi.material.MaterialData;
 import org.getspout.spoutapi.material.Tool;
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
 
 public class GenericCustomTool extends GenericCustomItem implements Tool {
 	private short maxdurability = 100;

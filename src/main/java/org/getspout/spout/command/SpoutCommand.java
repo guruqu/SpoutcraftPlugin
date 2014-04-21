@@ -26,12 +26,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_6_R3.CraftServer;
 import org.bukkit.entity.Player;
 
 import org.getspout.spout.Spout;
 import org.getspout.spout.config.ConfigReader;
-import org.getspout.spout.player.SpoutCraftPlayer;
+import org.getspout.spout.player.SpoutcraftPlayer;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
@@ -71,7 +70,7 @@ public class SpoutCommand implements CommandExecutor {
 			if (!(target instanceof SpoutPlayer)) {
 				sender.sendMessage("[SpoutPlugin] Client version: standard client");
 			} else {
-				SpoutCraftPlayer sp = (SpoutCraftPlayer) target;
+				SpoutcraftPlayer sp = (SpoutcraftPlayer) target;
 				if (!sp.isSpoutCraftEnabled()) {
 					sender.sendMessage("[SpoutPlugin] Client version: standard client");
 				} else {

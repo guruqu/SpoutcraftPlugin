@@ -27,9 +27,9 @@ import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.event.screen.ScreenCloseEvent;
 import org.getspout.spoutapi.event.screen.ScreenOpenEvent;
-import org.getspout.spoutapi.packet.PacketScreenAction;
-import org.getspout.spoutapi.packet.PacketWidget;
-import org.getspout.spoutapi.packet.ScreenAction;
+import org.getspout.spout.packet.builtin.PacketScreenAction;
+import org.getspout.spout.packet.builtin.PacketWidget;
+import org.getspout.spout.packet.ScreenAction;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class InGameScreen extends GenericScreen implements InGameHUD {

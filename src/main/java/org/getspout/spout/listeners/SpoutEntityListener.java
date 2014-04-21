@@ -29,13 +29,11 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.getspout.spout.Spout;
 
-import org.getspout.spout.player.SpoutCraftPlayer;
-import org.getspout.spoutapi.SpoutManager;
+import org.getspout.spout.player.SpoutcraftPlayer;
 import org.getspout.spoutapi.block.SpoutBlock;
-import org.getspout.spoutapi.packet.PacketWaypoint;
+import org.getspout.spout.packet.builtin.PacketWaypoint;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class SpoutEntityListener implements Listener {
@@ -72,14 +70,14 @@ public class SpoutEntityListener implements Listener {
 		if (event.getEntity() instanceof SpoutPlayer) {
 			Location l = event.getEntity().getLocation();
 			((SpoutPlayer)event.getEntity()).sendPacket(new PacketWaypoint(l.getX(), l.getY(), l.getZ(), "", true));
-			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Spout.getInstance(), new PostDeath((SpoutCraftPlayer)event.getEntity()), 200);
+			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Spout.getInstance(), new PostDeath((SpoutcraftPlayer)event.getEntity()), 200);
 		}
 	}
 }
 
 class PostDeath implements Runnable {
-	SpoutCraftPlayer player;
-	public PostDeath(SpoutCraftPlayer player) {
+	SpoutcraftPlayer player;
+	public PostDeath(SpoutcraftPlayer player) {
 		this.player = player;
 	}
 

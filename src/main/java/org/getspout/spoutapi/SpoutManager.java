@@ -28,7 +28,6 @@ import org.getspout.spoutapi.chunkdatamanager.ChunkDataManager;
 import org.getspout.spoutapi.inventory.InventoryBuilder;
 import org.getspout.spoutapi.inventory.MaterialManager;
 import org.getspout.spoutapi.keyboard.KeyBindingManager;
-import org.getspout.spoutapi.packet.PacketManager;
 import org.getspout.spoutapi.player.BiomeManager;
 import org.getspout.spoutapi.player.FileManager;
 import org.getspout.spoutapi.player.PlayerChunkMap;
@@ -43,7 +42,7 @@ public class SpoutManager {
 	private SkyManager skyManager = null;
 	private BiomeManager biomeManager = null;
 	private InventoryBuilder inventoryBuilder = null;
-	private PacketManager packetManager = null;
+	private PacketPipeline packetPipeline = null;
 	private PlayerChunkMap playerChunkMap = null;
 	private ChunkDataManager chunkDataManager = null;
 	private FileManager fileManager = null;
@@ -80,13 +79,13 @@ public class SpoutManager {
 	 * Gets the packet manager
 	 * @return packet manager
 	 */
-	public static PacketManager getPacketManager() {
-		return getInstance().packetManager;
+	public static PacketPipeline getPacketPipeline() {
+		return getInstance().packetPipeline;
 	}
 
-	public void setPacketManager(PacketManager manager) {
-		if (packetManager == null) {
-			packetManager = manager;
+	public void setPacketPipeline(PacketPipeline packetPipeline) {
+		if (packetPipeline == null) {
+			this.packetPipeline = packetPipeline;
 		}
 	}
 

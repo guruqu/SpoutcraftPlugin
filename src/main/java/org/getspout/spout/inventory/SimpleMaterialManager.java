@@ -36,7 +36,7 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.getspout.spout.block.SpoutCraftBlock;
-import org.getspout.spout.player.SpoutCraftPlayer;
+import org.getspout.spout.player.SpoutcraftPlayer;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutChunk;
 import org.getspout.spoutapi.inventory.ItemMap;
@@ -48,10 +48,10 @@ import org.getspout.spoutapi.material.CustomBlock;
 import org.getspout.spoutapi.material.CustomItem;
 import org.getspout.spoutapi.material.Material;
 import org.getspout.spoutapi.material.MaterialData;
-import org.getspout.spoutapi.packet.PacketOverrideBlock;
-import org.getspout.spoutapi.packet.PacketOverrideChunk;
-import org.getspout.spoutapi.packet.PacketOverrideMultiBlock;
-import org.getspout.spoutapi.packet.SpoutPacket;
+import org.getspout.spout.packet.builtin.PacketOverrideBlock;
+import org.getspout.spout.packet.builtin.PacketOverrideChunk;
+import org.getspout.spout.packet.builtin.PacketOverrideMultiBlock;
+import org.getspout.spout.packet.builtin.SpoutPacket;
 import org.getspout.spoutapi.player.SpoutPlayer;
 import org.getspout.spoutapi.util.map.TIntPairObjectHashMap;
 
@@ -253,8 +253,8 @@ public class SimpleMaterialManager extends AbstractBlockManager implements Mater
 				}
 
 				for (Player player : players) {
-					if (player instanceof SpoutCraftPlayer) {
-						SpoutCraftPlayer spc = (SpoutCraftPlayer) player;
+					if (player instanceof SpoutcraftPlayer) {
+						SpoutcraftPlayer spc = (SpoutcraftPlayer) player;
 						if (spc.isSpoutCraftEnabled()) {
 							spc.sendPacket(packet);
 						}
@@ -264,8 +264,8 @@ public class SimpleMaterialManager extends AbstractBlockManager implements Mater
 				for (int i = 0; i < xCoords.size(); i++) {
 					SpoutPacket packet = new PacketOverrideBlock(xCoords.get(i), yCoords.get(i), zCoords.get(i), (short) typeIds.get(i), data.get(i));
 					for (Player player : players) {
-						if (player instanceof SpoutCraftPlayer) {
-							SpoutCraftPlayer spc = (SpoutCraftPlayer) player;
+						if (player instanceof SpoutcraftPlayer) {
+							SpoutcraftPlayer spc = (SpoutcraftPlayer) player;
 							if (spc.isSpoutCraftEnabled()) {
 								spc.sendPacket(packet);
 							}

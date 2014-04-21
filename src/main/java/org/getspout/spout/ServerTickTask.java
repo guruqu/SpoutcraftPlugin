@@ -24,7 +24,7 @@ import org.bukkit.entity.Player;
 
 import org.getspout.spout.block.SpoutCraftChunk;
 import org.getspout.spout.inventory.SimpleMaterialManager;
-import org.getspout.spout.player.SpoutCraftPlayer;
+import org.getspout.spout.player.SpoutcraftPlayer;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.event.spout.ServerTickEvent;
 
@@ -35,8 +35,8 @@ public class ServerTickTask implements Runnable {
 		((SimpleMaterialManager)SpoutManager.getMaterialManager()).onTick();
 		Player[] online = Bukkit.getServer().getOnlinePlayers();
 		for (Player player : online) {
-			if (player instanceof SpoutCraftPlayer) {
-				((SpoutCraftPlayer)player).onTick();
+			if (player instanceof SpoutcraftPlayer) {
+				((SpoutcraftPlayer)player).onTick();
 			}
 		}
 		SpoutCraftChunk.updateTicks();

@@ -37,8 +37,7 @@ import org.getspout.spoutapi.gui.InGameHUD;
 import org.getspout.spoutapi.gui.Screen;
 import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.keyboard.Keyboard;
-import org.getspout.spoutapi.packet.SpoutPacket;
-import org.getspout.spoutapi.packet.standard.MCPacket;
+import org.getspout.spout.packet.builtin.SpoutPacket;
 import org.getspout.spoutapi.player.accessories.AccessoryType;
 
 /**
@@ -441,24 +440,10 @@ public interface SpoutPlayer extends org.bukkit.entity.Player {
 	public Location getLastClickedLocation();
 
 	/**
-	 * Sends a MCPacket to the client
-	 * @param packet to send
-	 */
-	public void sendPacket(MCPacket packet);
-
-	/**
 	 * True if the player has completed precaching files
 	 * @return true if precaching files is complete
 	 */
 	public boolean isPreCachingComplete();
-
-	/**
-	 * Sends the packet immediately.  Packets sent using this method are placed at the start of the packet queue.
-	 * If called from within a PacketListener's canSend method, the packet will be processed immediately after the current
-	 * packet is handled.
-	 * @param packet the packet to send
-	 */
-	public void sendImmediatePacket(MCPacket packet);
 
 	/**
 	 * Orders the client to reconnect to another server

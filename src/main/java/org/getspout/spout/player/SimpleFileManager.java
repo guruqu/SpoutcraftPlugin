@@ -45,9 +45,9 @@ import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.io.CRCStore.URLCheck;
 import org.getspout.spoutapi.io.CRCStoreRunnable;
 import org.getspout.spoutapi.io.FileUtil;
-import org.getspout.spoutapi.packet.PacketDeleteFile;
-import org.getspout.spoutapi.packet.PacketPreCacheCompleted;
-import org.getspout.spoutapi.packet.PacketPreCacheFile;
+import org.getspout.spout.packet.builtin.PacketDeleteFile;
+import org.getspout.spout.packet.builtin.PacketPreCacheCompleted;
+import org.getspout.spout.packet.builtin.PacketPreCacheFile;
 import org.getspout.spoutapi.player.FileManager;
 import org.getspout.spoutapi.player.SpoutPlayer;
 

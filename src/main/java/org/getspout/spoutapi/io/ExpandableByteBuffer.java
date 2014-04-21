@@ -227,41 +227,46 @@ public class ExpandableByteBuffer {
 		return buf.asReadOnlyBuffer();
 	}
 
-    public int position() {
-        return buf.position();
-    }
+	public int position() {
+		return buf.position();
+	}
 
-    public ExpandableByteBuffer position(int position) {
-        buf.position(position);
-        return this;
-    }
+	public ExpandableByteBuffer position(int position) {
+		buf.position(position);
+		return this;
+	}
 
-    public int limit() {
-        return buf.limit();
-    }
+	public int limit() {
+		return buf.limit();
+	}
 
-    public ExpandableByteBuffer limit(int limit) {
-        buf.limit(limit);
-        return this;
-    }
+	public ExpandableByteBuffer limit(int limit) {
+		buf.limit(limit);
+		return this;
+	}
 
-    public ExpandableByteBuffer mark() {
-        buf.mark();
-        return this;
-    }
+	public ExpandableByteBuffer flip() {
+		buf.flip();
+		return this;
+	}
 
-    public ExpandableByteBuffer reset() {
-        buf.reset();
-        return this;
-    }
+	public ExpandableByteBuffer mark() {
+		buf.mark();
+		return this;
+	}
 
-    public int remaining() {
-        return buf.remaining();
-    }
+	public ExpandableByteBuffer reset() {
+		buf.reset();
+		return this;
+	}
 
-    public byte[] array() {
-        return buf.array();
-    }
+	public int remaining() {
+		return buf.remaining();
+	}
+
+	public byte[] array() {
+		return buf.array();
+	}
 
 	private void expandIfNeeded(int amount) {
 		if (buf.remaining() > amount) {

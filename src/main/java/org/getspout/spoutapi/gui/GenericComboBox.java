@@ -23,8 +23,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+<<<<<<< Updated upstream
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.packet.PacketComboBox;
+=======
+import org.getspout.spout.packet.builtin.PacketComboBox;
+>>>>>>> Stashed changes
 
 public class GenericComboBox extends GenericButton implements ComboBox {
 	private List<String> items = new ArrayList<String>();

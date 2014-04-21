@@ -51,7 +51,7 @@ import org.getspout.spout.Spout;
 import org.getspout.spout.config.PermHandler;
 import org.getspout.spout.inventory.SimpleMaterialManager;
 import org.getspout.spout.player.SimplePlayerChunkMap;
-import org.getspout.spout.player.SpoutCraftPlayer;
+import org.getspout.spout.player.SpoutcraftPlayer;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.inventory.SpoutEnchantment;
@@ -59,7 +59,7 @@ import org.getspout.spoutapi.inventory.SpoutItemStack;
 import org.getspout.spoutapi.material.CustomBlock;
 import org.getspout.spoutapi.material.CustomItem;
 import org.getspout.spoutapi.material.MaterialData;
-import org.getspout.spoutapi.packet.PacketToggleCheats;
+import org.getspout.spout.packet.builtin.PacketToggleCheats;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class SpoutPlayerListener implements Listener {
@@ -71,12 +71,12 @@ public class SpoutPlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerJoin(final PlayerJoinEvent event) {
-		if (!event.getPlayer().getClass().equals(SpoutCraftPlayer.class)) {
-			SpoutCraftPlayer.updatePlayerConnection(event.getPlayer());
-			SpoutCraftPlayer.updateBukkitEntity(event.getPlayer());
+		if (!event.getPlayer().getClass().equals(SpoutcraftPlayer.class)) {
+			SpoutcraftPlayer.updatePlayerConnection(event.getPlayer());
+			SpoutcraftPlayer.updateBukkitEntity(event.getPlayer());
 			updatePlayerEvent(event);
 			Spout.getInstance().authenticate(event.getPlayer());
-			SpoutCraftPlayer player = (SpoutCraftPlayer)SpoutCraftPlayer.getPlayer(event.getPlayer());
+			SpoutcraftPlayer player = (SpoutcraftPlayer) SpoutcraftPlayer.getPlayer(event.getPlayer());
 		}
 		((SimplePlayerChunkMap)SpoutManager.getPlayerChunkMap()).onPlayerJoin(event.getPlayer());
 		manager.onPlayerJoin(event.getPlayer());
@@ -87,8 +87,8 @@ public class SpoutPlayerListener implements Listener {
 
 	@EventHandler
 	public void onPlayerKick(PlayerKickEvent event) {
-		if (event.getPlayer() instanceof SpoutCraftPlayer) {
-			SpoutCraftPlayer player = (SpoutCraftPlayer)event.getPlayer();
+		if (event.getPlayer() instanceof SpoutcraftPlayer) {
+			SpoutcraftPlayer player = (SpoutcraftPlayer)event.getPlayer();
 			if (event.getReason().equals("You moved too quickly :( (Hacking?)")) {
 				if (player.canFly()) {
 					event.setCancelled(true);
@@ -118,7 +118,7 @@ public class SpoutPlayerListener implements Listener {
 		}
 
 		Runnable update = null;
-		final SpoutCraftPlayer scp = (SpoutCraftPlayer)SpoutCraftPlayer.getPlayer(event.getPlayer());
+		final SpoutcraftPlayer scp = (SpoutcraftPlayer) SpoutcraftPlayer.getPlayer(event.getPlayer());
 
 		if (event.getFrom().getWorld().equals(event.getTo().getWorld())) {
 			update = new PostTeleport(scp);
@@ -145,7 +145,7 @@ public class SpoutPlayerListener implements Listener {
 			return;
 		}
 
-		SpoutCraftPlayer player = (SpoutCraftPlayer) SpoutCraftPlayer.getPlayer(event.getPlayer());
+		SpoutcraftPlayer player = (SpoutcraftPlayer) SpoutcraftPlayer.getPlayer(event.getPlayer());
 
 		if (event.getClickedBlock() != null) {
 			boolean action = false;
@@ -316,7 +316,7 @@ public class SpoutPlayerListener implements Listener {
 		try {
 			Field player = PlayerEvent.class.getDeclaredField("player");
 			player.setAccessible(true);
-			player.set(event, SpoutCraftPlayer.getPlayer(event.getPlayer()));
+			player.set(event, SpoutcraftPlayer.getPlayer(event.getPlayer()));
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -363,8 +363,8 @@ public class SpoutPlayerListener implements Listener {
 }
 
 class PostTeleport implements Runnable {
-	SpoutCraftPlayer player;
-	public PostTeleport(SpoutCraftPlayer player) {
+	SpoutcraftPlayer player;
+	public PostTeleport(SpoutcraftPlayer player) {
 		this.player = player;
 	}
 
@@ -375,8 +375,8 @@ class PostTeleport implements Runnable {
 }
 
 class PostWorldTeleport implements Runnable {
-	SpoutCraftPlayer player;
-	public PostWorldTeleport(SpoutCraftPlayer player) {
+	SpoutcraftPlayer player;
+	public PostWorldTeleport(SpoutcraftPlayer player) {
 		this.player = player;
 	}
 

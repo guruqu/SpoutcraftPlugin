@@ -24,11 +24,11 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import org.getspout.spout.player.SpoutCraftPlayer;
+import org.getspout.spout.player.SpoutcraftPlayer;
 import org.getspout.spoutapi.event.sound.BackgroundMusicEvent;
-import org.getspout.spoutapi.packet.PacketDownloadMusic;
-import org.getspout.spoutapi.packet.PacketPlaySound;
-import org.getspout.spoutapi.packet.PacketStopMusic;
+import org.getspout.spout.packet.builtin.PacketDownloadMusic;
+import org.getspout.spout.packet.builtin.PacketPlaySound;
+import org.getspout.spout.packet.builtin.PacketStopMusic;
 import org.getspout.spoutapi.player.SpoutPlayer;
 import org.getspout.spoutapi.sound.Music;
 import org.getspout.spoutapi.sound.SoundEffect;
@@ -53,7 +53,7 @@ public class SimpleSoundManager implements SoundManager {
 	@Override
 	public void playGlobalSoundEffect(SoundEffect effect, Location location, int distance, int volumePercent) {
 		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-			playSoundEffect((SpoutCraftPlayer) SpoutCraftPlayer.getPlayer(player), effect, location, distance, volumePercent);
+			playSoundEffect((SpoutcraftPlayer) SpoutcraftPlayer.getPlayer(player), effect, location, distance, volumePercent);
 		}
 	}
 
@@ -75,7 +75,7 @@ public class SimpleSoundManager implements SoundManager {
 	@Override
 	public void playSoundEffect(SpoutPlayer target, SoundEffect effect, Location location, int distance, int volumePercent) {
 		if (target.isSpoutCraftEnabled()) {
-			SpoutCraftPlayer ccp = (SpoutCraftPlayer) target;
+			SpoutcraftPlayer ccp = (SpoutcraftPlayer) target;
 			if (location == null || ccp.getWorld().equals(location.getWorld())) {
 				if (location == null) {
 					ccp.sendPacket(new PacketPlaySound(effect, distance, volumePercent));
@@ -94,7 +94,7 @@ public class SimpleSoundManager implements SoundManager {
 	@Override
 	public void playGlobalMusic(Music music, int volumePercent) {
 		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-			playMusic((SpoutCraftPlayer) SpoutCraftPlayer.getPlayer(player), music, volumePercent);
+			playMusic((SpoutcraftPlayer) SpoutcraftPlayer.getPlayer(player), music, volumePercent);
 		}
 	}
 
@@ -112,7 +112,7 @@ public class SimpleSoundManager implements SoundManager {
 				return;
 			}
 
-			((SpoutCraftPlayer) target).sendPacket(new PacketPlaySound(music, event.getVolumePercent()));
+			((SpoutcraftPlayer) target).sendPacket(new PacketPlaySound(music, event.getVolumePercent()));
 		}
 	}
 
@@ -129,7 +129,7 @@ public class SimpleSoundManager implements SoundManager {
 	@Override
 	public void stopMusic(SpoutPlayer target, boolean resetTimer, int fadeOutTime) {
 		if (target.isSpoutCraftEnabled()) {
-			((SpoutCraftPlayer) target).sendPacket(new PacketStopMusic(resetTimer, fadeOutTime));
+			((SpoutcraftPlayer) target).sendPacket(new PacketStopMusic(resetTimer, fadeOutTime));
 		}
 	}
 
@@ -151,7 +151,7 @@ public class SimpleSoundManager implements SoundManager {
 	@Override
 	public void playGlobalCustomMusic(Plugin plugin, String Url, boolean notify, Location location, int distance, int volumePercent) {
 		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-			playCustomMusic(plugin, (SpoutCraftPlayer) SpoutCraftPlayer.getPlayer(player), Url, notify, location, distance, volumePercent);
+			playCustomMusic(plugin, (SpoutcraftPlayer) SpoutcraftPlayer.getPlayer(player), Url, notify, location, distance, volumePercent);
 		}
 	}
 
@@ -193,7 +193,7 @@ public class SimpleSoundManager implements SoundManager {
 	@Override
 	public void playGlobalCustomSoundEffect(Plugin plugin, String Url, boolean notify, Location location, int distance, int volumePercent) {
 		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-			playCustomSoundEffect(plugin, (SpoutCraftPlayer) SpoutCraftPlayer.getPlayer(player), Url, notify, location, distance, volumePercent);
+			playCustomSoundEffect(plugin, (SpoutcraftPlayer) SpoutcraftPlayer.getPlayer(player), Url, notify, location, distance, volumePercent);
 		}
 	}
 
@@ -233,7 +233,7 @@ public class SimpleSoundManager implements SoundManager {
 						}
 						volumePercent = event.getVolumePercent();
 					}
-					SpoutCraftPlayer ccp = (SpoutCraftPlayer) target;
+					SpoutcraftPlayer ccp = (SpoutcraftPlayer) target;
 					ccp.sendPacket(new PacketDownloadMusic(plugin != null ? plugin.getDescription().getName() : "temp", Url, location, distance, volumePercent, soundEffect, notify));
 				}
 			} else {

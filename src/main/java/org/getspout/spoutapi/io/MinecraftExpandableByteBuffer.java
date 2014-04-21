@@ -29,10 +29,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.ByteBuffer;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import net.minecraft.server.v1_6_R3.Item;
 import net.minecraft.server.v1_6_R3.NBTBase;
 import net.minecraft.server.v1_6_R3.NBTTagCompound;
 import net.minecraft.server.v1_6_R3.NBTTagEnd;
@@ -42,7 +42,6 @@ import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-import org.getspout.spoutapi.block.design.BlockDesign;
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.material.Material;
 import org.getspout.spoutapi.material.MaterialData;
@@ -51,9 +50,24 @@ public class MinecraftExpandableByteBuffer extends ExpandableByteBuffer {
 	public static final byte FLAG_COLORINVALID = 1;
 	public static final byte FLAG_COLOROVERRIDE = 2;
 
-    public MinecraftExpandableByteBuffer(byte[] data) {
-        super(data);
-    }
+	public MinecraftExpandableByteBuffer() {
+	}
+
+	public MinecraftExpandableByteBuffer(ByteBuffer buf) {
+		super(buf);
+	}
+
+	public MinecraftExpandableByteBuffer(int initialSize) {
+		super(initialSize);
+	}
+
+	public MinecraftExpandableByteBuffer(byte[] data) {
+		super(data);
+	}
+
+	public MinecraftExpandableByteBuffer(byte[] data, int offset, int length) {
+		super(data, offset, length);
+	}
 
 	public void putLocation(Location loc) {
 		putUUID(loc.getWorld().getUID());
@@ -178,9 +192,8 @@ public class MinecraftExpandableByteBuffer extends ExpandableByteBuffer {
 
 	private byte[] compress(NBTBase base) throws IOException {
 		final ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
-		final DataOutputStream dataoutputstream = new DataOutputStream(new GZIPOutputStream(bytearrayoutputstream));
 
-		try {
+		try (DataOutputStream dataoutputstream = new DataOutputStream(new GZIPOutputStream(bytearrayoutputstream))) {
 			dataoutputstream.writeByte(base.getTypeId());
 			if (base.getTypeId() != 0) {
 				dataoutputstream.writeUTF("");
@@ -191,17 +204,14 @@ public class MinecraftExpandableByteBuffer extends ExpandableByteBuffer {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			dataoutputstream.close();
 		}
 
 		return bytearrayoutputstream.toByteArray();
 	}
 
 	private NBTBase decompress(byte[] compressed) throws IOException {
-		final DataInputStream datainputstream = new DataInputStream(new BufferedInputStream(new GZIPInputStream(new ByteArrayInputStream(compressed))));
 
-		try {
+		try (DataInputStream datainputstream = new DataInputStream(new BufferedInputStream(new GZIPInputStream(new ByteArrayInputStream(compressed))))) {
 			final byte typeId = datainputstream.readByte();
 			if (typeId == 0) {
 				return new NBTTagEnd();
@@ -216,14 +226,8 @@ public class MinecraftExpandableByteBuffer extends ExpandableByteBuffer {
 			nbtLoad.setAccessible(true);
 			nbtLoad.invoke(found, datainputstream, 0);
 			return found;
-		} catch (NoSuchMethodException e) {
+		} catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
 			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} finally {
-			datainputstream.close();
 		}
 		return null;
 	}
