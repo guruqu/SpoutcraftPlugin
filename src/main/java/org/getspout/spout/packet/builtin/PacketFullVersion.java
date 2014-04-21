@@ -25,7 +25,7 @@ import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketFullVersion implements SpoutPacket {
+public class PacketFullVersion extends SpoutPacket {
 	private String versionString;
 
 	protected PacketFullVersion() {
@@ -48,10 +48,5 @@ public class PacketFullVersion implements SpoutPacket {
 	@Override
 	public void handle(SpoutPlayer player) {
 		SpoutManager.getPlayerChunkMap().setVersionString(player.getEntityId(), versionString);
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
 	}
 }

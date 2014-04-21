@@ -32,7 +32,7 @@ import org.getspout.spoutapi.block.SpoutChunk;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketOverrideChunk implements CompressiblePacket {
+public class PacketOverrideChunk extends CompressiblePacket {
 	private int chunkX;
 	private int chunkZ;
 	private boolean hasData = false;
@@ -92,11 +92,6 @@ public class PacketOverrideChunk implements CompressiblePacket {
 			SpoutChunk chunk = (SpoutChunk) c;
 			player.sendPacket(new PacketOverrideChunk(chunk.getCustomBlockIds(), chunk.getCustomBlockData(), chunkX, chunkZ));
 		}
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
 	}
 
 	@Override

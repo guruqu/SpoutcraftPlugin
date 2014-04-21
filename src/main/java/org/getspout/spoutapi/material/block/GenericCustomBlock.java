@@ -19,30 +19,25 @@
  */
 package org.getspout.spoutapi.material.block;
 
-import java.io.IOException;
-
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-
+import org.getspout.spout.packet.builtin.PacketCustomBlock;
 import org.getspout.spoutapi.Spout;
 import org.getspout.spoutapi.block.design.Axis;
 import org.getspout.spoutapi.block.design.BlockDesign;
 import org.getspout.spoutapi.inventory.SpoutItemStack;
-import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.material.CustomBlock;
 import org.getspout.spoutapi.material.CustomItem;
 import org.getspout.spoutapi.material.MaterialData;
 import org.getspout.spoutapi.material.item.GenericCustomItem;
 import org.getspout.spout.packet.builtin.PacketBlockModel;
-import org.getspout.spout.packet.builtin.SpoutPacket;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class GenericCustomBlock extends GenericBlock implements CustomBlock, SpoutPacket {
+public class GenericCustomBlock extends GenericBlock implements CustomBlock {
 	public BlockDesign[] design = new BlockDesign[256];
 	private SpoutItemStack drop = null;
 	private String fullName;
@@ -85,7 +80,7 @@ public class GenericCustomBlock extends GenericBlock implements CustomBlock, Spo
 		this.setItemDrop(new SpoutItemStack(this, 1));
 
 		for (SpoutPlayer player : Spout.getServer().getOnlinePlayers()) {
-			player.sendPacket(this);
+			player.sendPacket(new PacketCustomBlock(this));
 		}
 	}
 	/**
@@ -543,37 +538,6 @@ public class GenericCustomBlock extends GenericBlock implements CustomBlock, Spo
 	@Override
 	public boolean isIndirectlyProvidingPowerTo(World world, int x, int y, int z, BlockFace face) {
 		return false;
-	}
-
-	@Override
-    public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
-		customId = buf.getInt();
-		setName(buf.getUTF8());
-		plugin = Bukkit.getServer().getPluginManager().getPlugin(buf.getUTF8());
-		opaque = buf.getBoolean();
-		setFriction(buf.getFloat());
-		setHardness(buf.getFloat());
-		setLightLevel(buf.getInt());
-	}
-
-	@Override
-    public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
-        buf.putInt(customId);
-        buf.putUTF8(getName());
-        buf.putUTF8(getPlugin().getDescription().getName());
-        buf.putBoolean(isOpaque());
-        buf.putFloat(getFriction());
-        buf.putFloat(getHardness());
-        buf.putInt(getLightLevel());
-	}
-
-    @Override
-    public void handle(SpoutPlayer player) {
-    }
-
-	@Override
-	public int getVersion() {
-		return 0;
 	}
 
 	public boolean isPowerSource() {

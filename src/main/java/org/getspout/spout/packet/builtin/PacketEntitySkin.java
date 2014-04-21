@@ -25,7 +25,7 @@ import org.bukkit.entity.Entity;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketEntitySkin implements SpoutPacket {
+public class PacketEntitySkin extends SpoutPacket {
 	protected String texture = "";
 	protected int entityId;
 	protected byte textureId = 0;
@@ -52,10 +52,5 @@ public class PacketEntitySkin implements SpoutPacket {
 
 	@Override
 	public void handle(SpoutPlayer player) {
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
 	}
 }

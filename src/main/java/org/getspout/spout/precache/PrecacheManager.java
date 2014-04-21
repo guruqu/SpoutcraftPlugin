@@ -42,6 +42,7 @@ import org.getspout.spout.player.SimpleFileManager;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.design.BlockDesign;
 import org.getspout.spoutapi.io.FileUtil;
+import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.material.CustomBlock;
 import org.getspout.spoutapi.material.MaterialData;
 import org.getspout.spout.packet.builtin.PacketPreCacheCompleted;
@@ -99,7 +100,9 @@ public class PrecacheManager {
 
 							out.writeShort((short) block.getCustomId());
 							out.writeByte(i);
-							design.encode(out); // TODO: Check this
+							final MinecraftExpandableByteBuffer buf = new MinecraftExpandableByteBuffer();
+							design.encode(buf);
+							out.write(buf.array());
 							out.flush();
 							out.close();
 						} catch (IOException e) {

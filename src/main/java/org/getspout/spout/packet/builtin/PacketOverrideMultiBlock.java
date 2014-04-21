@@ -31,7 +31,7 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketOverrideMultiBlock implements CompressiblePacket {
+public class PacketOverrideMultiBlock extends CompressiblePacket {
 	private int chunkX;
 	private int chunkZ;
 	private boolean compressed = false;
@@ -70,11 +70,6 @@ public class PacketOverrideMultiBlock implements CompressiblePacket {
 
 	@Override
 	public void handle(SpoutPlayer player) {
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
 	}
 
 	@Override

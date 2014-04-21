@@ -26,18 +26,16 @@ import java.io.InputStream;
 import org.bukkit.Bukkit;
 import org.bukkit.block.BlockFace;
 import org.bukkit.plugin.Plugin;
-
+import org.getspout.spout.packet.builtin.PacketCustomItem;
 import org.getspout.spoutapi.Spout;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.inventory.MaterialManager;
-import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.material.CustomItem;
 import org.getspout.spoutapi.material.MaterialData;
-import org.getspout.spout.packet.builtin.SpoutPacket;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class GenericCustomItem extends GenericItem implements CustomItem, SpoutPacket {
+public class GenericCustomItem extends GenericItem implements CustomItem {
 	public static MaterialManager mm = SpoutManager.getMaterialManager();
 	private String fullName;
 	private Plugin plugin;
@@ -54,7 +52,7 @@ public class GenericCustomItem extends GenericItem implements CustomItem, SpoutP
 		this.setName(name);
 		MaterialData.addCustomItem(this);
 		for (SpoutPlayer player : Spout.getServer().getOnlinePlayers()) {
-			player.sendPacket(this);
+			player.sendPacket(new PacketCustomItem(this));
 		}
 	}
 
@@ -102,7 +100,7 @@ public class GenericCustomItem extends GenericItem implements CustomItem, SpoutP
 	}
 
 	public CustomItem setTexture(String texture, boolean addToCache) {
-		if (addToCache == true) {
+		if (addToCache) {
 			SpoutManager.getFileManager().addToCache(plugin, texture);
 		}
 		this.texture = texture;
@@ -132,31 +130,6 @@ public class GenericCustomItem extends GenericItem implements CustomItem, SpoutP
 	@Override
 	public boolean onItemInteract(SpoutPlayer player, SpoutBlock block, BlockFace face) {
 		return true;
-	}
-
-	@Override
-    public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
-		customId = buf.getInt();
-		setName(buf.getUTF8());
-		plugin = Bukkit.getServer().getPluginManager().getPlugin(buf.getUTF8());
-		texture = buf.getUTF8();
-	}
-
-	@Override
-    public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
-        buf.putInt(customId);
-        buf.putUTF8(getName());
-        buf.putUTF8(getPlugin().getDescription().getName());
-        buf.putUTF8(getTexture());
-	}
-
-    @Override
-    public void handle(SpoutPlayer player) {
-    }
-
-	@Override
-	public int getVersion() {
-		return 0;
 	}
 
 	@Override

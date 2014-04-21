@@ -25,7 +25,7 @@ import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.particle.Particle;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketParticle implements SpoutPacket {
+public class PacketParticle extends SpoutPacket {
 	Particle particle;
 
 	protected PacketParticle() {
@@ -55,10 +55,5 @@ public class PacketParticle implements SpoutPacket {
 
 	@Override
 	public void handle(SpoutPlayer player) {
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
 	}
 }

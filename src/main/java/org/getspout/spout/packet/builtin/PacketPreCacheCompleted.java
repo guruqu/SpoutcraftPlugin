@@ -24,7 +24,7 @@ import java.io.IOException;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketPreCacheCompleted implements SpoutPacket {
+public class PacketPreCacheCompleted extends SpoutPacket {
 	public PacketPreCacheCompleted() {
 	}
 
@@ -39,10 +39,5 @@ public class PacketPreCacheCompleted implements SpoutPacket {
 	@Override
 	public void handle(SpoutPlayer player) {
 		player.setPreCachingComplete(true);
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
 	}
 }

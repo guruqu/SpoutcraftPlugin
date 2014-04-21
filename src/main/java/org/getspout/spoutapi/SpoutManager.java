@@ -42,7 +42,6 @@ public class SpoutManager {
 	private SkyManager skyManager = null;
 	private BiomeManager biomeManager = null;
 	private InventoryBuilder inventoryBuilder = null;
-	private PacketPipeline packetPipeline = null;
 	private PlayerChunkMap playerChunkMap = null;
 	private ChunkDataManager chunkDataManager = null;
 	private FileManager fileManager = null;
@@ -72,20 +71,6 @@ public class SpoutManager {
 	public void setSoundManager(SoundManager manager) {
 		if (soundManager == null) {
 			soundManager = manager;
-		}
-	}
-
-	/**
-	 * Gets the packet manager
-	 * @return packet manager
-	 */
-	public static PacketPipeline getPacketPipeline() {
-		return getInstance().packetPipeline;
-	}
-
-	public void setPacketPipeline(PacketPipeline packetPipeline) {
-		if (packetPipeline == null) {
-			this.packetPipeline = packetPipeline;
 		}
 	}
 

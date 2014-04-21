@@ -25,7 +25,7 @@ import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketOpenScreen implements SpoutPacket {
+public class PacketOpenScreen extends SpoutPacket {
 	ScreenType type = null;
 
 	public PacketOpenScreen(ScreenType type) {
@@ -44,10 +44,5 @@ public class PacketOpenScreen implements SpoutPacket {
 
 	@Override
 	public void handle(SpoutPlayer player) {
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
 	}
 }

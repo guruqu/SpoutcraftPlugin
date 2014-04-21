@@ -26,7 +26,7 @@ import java.util.Map.Entry;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketPermissionUpdate implements SpoutPacket {
+public class PacketPermissionUpdate extends SpoutPacket {
 	private Map<String, Boolean> permissions;
 
 	protected PacketPermissionUpdate() {
@@ -51,10 +51,5 @@ public class PacketPermissionUpdate implements SpoutPacket {
 
 	@Override
 	public void handle(SpoutPlayer player) {
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
 	}
 }

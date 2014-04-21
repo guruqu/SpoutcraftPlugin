@@ -27,7 +27,7 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 import org.getspout.spoutapi.sound.Music;
 import org.getspout.spoutapi.sound.SoundEffect;
 
-public class PacketPlaySound implements SpoutPacket {
+public class PacketPlaySound extends SpoutPacket {
 	private short soundId;
 	private boolean location = false;
 	private int x, y, z;
@@ -88,10 +88,5 @@ public class PacketPlaySound implements SpoutPacket {
 
 	@Override
 	public void handle(SpoutPlayer player) {
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
 	}
 }

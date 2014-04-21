@@ -28,7 +28,7 @@ import org.getspout.spoutapi.gui.Widget;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketFocusUpdate implements SpoutPacket {
+public class PacketFocusUpdate extends SpoutPacket {
 	private Control control;
 	private boolean focus;
 	private UUID widgetId;
@@ -43,32 +43,24 @@ public class PacketFocusUpdate implements SpoutPacket {
 
 	@Override
 	public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
-		widgetId = new UUID(buf.getLong(), buf.getLong());
+		widgetId = buf.getUUID();
 		focus = buf.getBoolean();
 	}
 
 	@Override
 	public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
-		buf.putLong(control.getId().getMostSignificantBits());
-		buf.putLong(control.getId().getLeastSignificantBits());
+		buf.putUUID(control.getId());
 		buf.putBoolean(focus);
 	}
 
 	@Override
 	public void handle(SpoutPlayer player) {
-		if (player != null) {
-			PopupScreen popup = player.getMainScreen().getActivePopup();
-			if (popup != null) {
-				Widget w = popup.getWidget(widgetId);
-				if (w != null && w instanceof Control) {
-					((Control) w).setFocus(focus);
-				}
+		PopupScreen popup = player.getMainScreen().getActivePopup();
+		if (popup != null) {
+			Widget w = popup.getWidget(widgetId);
+			if (w != null && w instanceof Control) {
+				((Control) w).setFocus(focus);
 			}
 		}
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
 	}
 }

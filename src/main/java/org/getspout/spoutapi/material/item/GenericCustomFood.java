@@ -37,16 +37,4 @@ public class GenericCustomFood extends GenericCustomItem implements Food {
 	public int getHungerRestored() {
 		return hunger;
 	}
-
-	@Override
-    public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
-		super.decode(buf);
-		hunger = buf.getInt();
-	}
-
-	@Override
-    public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
-		super.encode(buf);
-        buf.putInt(getHungerRestored());
-	}
 }

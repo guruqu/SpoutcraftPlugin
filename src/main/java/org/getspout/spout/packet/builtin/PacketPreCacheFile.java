@@ -25,7 +25,7 @@ import java.io.IOException;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketPreCacheFile implements SpoutPacket {
+public class PacketPreCacheFile extends SpoutPacket {
 	private boolean cached = false;
 	private boolean url = false;
 	private long expectedCRC;
@@ -63,17 +63,10 @@ public class PacketPreCacheFile implements SpoutPacket {
 	@Override
 	public void handle(SpoutPlayer player) {
 		if (!cached) {
-			if (player != null) {
-				File file = new File(this.file);
-				if (file.exists()) {
-					player.sendPacket(new PacketDownloadFile(plugin, file));
-				}
+			File file = new File(this.file);
+			if (file.exists()) {
+				player.sendPacket(new PacketDownloadFile(plugin, file));
 			}
 		}
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
 	}
 }

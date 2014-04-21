@@ -24,7 +24,7 @@ import java.io.IOException;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketOverrideBlock implements SpoutPacket {
+public class PacketOverrideBlock extends SpoutPacket {
 	private int x, y, z;
 	private short blockId;
 	private byte data;
@@ -61,10 +61,5 @@ public class PacketOverrideBlock implements SpoutPacket {
 
 	@Override
 	public void handle(SpoutPlayer player) {
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
 	}
 }

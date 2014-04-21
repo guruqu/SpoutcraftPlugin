@@ -28,7 +28,7 @@ import org.getspout.spout.precache.PrecacheManager;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketRequestPrecache implements SpoutPacket {
+public class PacketRequestPrecache extends SpoutPacket {
 	private String plugin;
 
 	protected PacketRequestPrecache() {
@@ -54,10 +54,5 @@ public class PacketRequestPrecache implements SpoutPacket {
 				player.sendPacket(new PacketSendPrecache(plugin, preCache));
 			}
 		}
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
 	}
 }

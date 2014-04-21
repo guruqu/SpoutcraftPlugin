@@ -28,7 +28,7 @@ import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketKeyPress implements SpoutPacket {
+public class PacketKeyPress extends SpoutPacket {
 	public boolean pressDown;
 	public int key;
 	public byte settingKeys[] = new byte[10];
@@ -64,18 +64,11 @@ public class PacketKeyPress implements SpoutPacket {
 
 	@Override
 	public void handle(SpoutPlayer player) {
-		if (player != null) {
-			player.updateKeys(settingKeys);
-			if (pressDown) {
-				Bukkit.getServer().getPluginManager().callEvent(new KeyPressedEvent(key, player, ScreenType.getType(screenType)));
-			} else {
-				Bukkit.getServer().getPluginManager().callEvent(new KeyReleasedEvent(key, player, ScreenType.getType(screenType)));
-			}
+		player.updateKeys(settingKeys);
+		if (pressDown) {
+			Bukkit.getServer().getPluginManager().callEvent(new KeyPressedEvent(key, player, ScreenType.getType(screenType)));
+		} else {
+			Bukkit.getServer().getPluginManager().callEvent(new KeyReleasedEvent(key, player, ScreenType.getType(screenType)));
 		}
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
 	}
 }

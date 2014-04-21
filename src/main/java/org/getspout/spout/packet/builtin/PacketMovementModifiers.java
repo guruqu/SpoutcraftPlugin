@@ -24,7 +24,7 @@ import java.io.IOException;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketMovementModifiers implements SpoutPacket {
+public class PacketMovementModifiers extends SpoutPacket {
 	double gravityMod = 1;
 	double walkingMod = 1;
 	double swimmingMod = 1;
@@ -62,10 +62,5 @@ public class PacketMovementModifiers implements SpoutPacket {
 
 	@Override
 	public void handle(SpoutPlayer player) {
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
 	}
 }

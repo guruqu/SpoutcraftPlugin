@@ -34,7 +34,7 @@ import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketEntityInformation implements CompressiblePacket {
+public class PacketEntityInformation extends CompressiblePacket {
 	private boolean compressed = false;
 	private byte[] data = null;
 
@@ -74,28 +74,21 @@ public class PacketEntityInformation implements CompressiblePacket {
 
 	@Override
 	public void handle(SpoutPlayer player) {
-		if (player != null) {
-			ByteBuffer rawData = ByteBuffer.allocate(data.length);
-			rawData.put(data);
-			ArrayList<LivingEntity> entities = new ArrayList<LivingEntity>(data.length / 4 + 1);
-			for (int i = 0; i < data.length / 4; i++) {
-				int index = i * 4;
-				int id = rawData.getInt(index);
-				Entity entity = SpoutManager.getEntityFromId(id);
-				if (entity != null && entity instanceof LivingEntity) {
-					entities.add((LivingEntity) entity);
-				}
-			}
-			if (entities.size() > 0) {
-				player.sendPacket(new PacketEntityInformation(entities));
-				player.updateEntitySkins(entities);
+		ByteBuffer rawData = ByteBuffer.allocate(data.length);
+		rawData.put(data);
+		ArrayList<LivingEntity> entities = new ArrayList<LivingEntity>(data.length / 4 + 1);
+		for (int i = 0; i < data.length / 4; i++) {
+			int index = i * 4;
+			int id = rawData.getInt(index);
+			Entity entity = SpoutManager.getEntityFromId(id);
+			if (entity != null && entity instanceof LivingEntity) {
+				entities.add((LivingEntity) entity);
 			}
 		}
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
+		if (entities.size() > 0) {
+			player.sendPacket(new PacketEntityInformation(entities));
+			player.updateEntitySkins(entities);
+		}
 	}
 
 	@Override
@@ -136,12 +129,12 @@ public class PacketEntityInformation implements CompressiblePacket {
 				try {
 					int count = decompressor.inflate(buf);
 					bos.write(buf, 0, count);
-				} catch (DataFormatException e) {
+				} catch (DataFormatException ignored) {
 				}
 			}
 			try {
 				bos.close();
-			} catch (IOException e) {
+			} catch (IOException ignored) {
 			}
 
 			data = bos.toByteArray();

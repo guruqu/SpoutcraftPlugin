@@ -24,7 +24,7 @@ import java.io.IOException;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketEntityNameplate implements SpoutPacket {
+public class PacketEntityNameplate extends SpoutPacket {
 	public String title;
 	public int entityId;
 
@@ -50,10 +50,5 @@ public class PacketEntityNameplate implements SpoutPacket {
 
 	@Override
 	public void handle(SpoutPlayer player) {
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
 	}
 }

@@ -77,46 +77,6 @@ public class GenericCustomTool extends GenericCustomItem implements Tool {
 		return modified;
 	}
 
-	@Override
-    public void decode(MinecraftExpandableByteBuffer buf) throws IOException {
-		super.decode(buf);
-		setMaxDurability(buf.getShort());
-		short size = buf.getShort();
-		for (int i = 0; i < size; i++) {
-			int id = buf.getInt();
-			int data = buf.getShort();
-			float mod = buf.getFloat();
-			Block block = MaterialData.getBlock(id, (short) data);
-			if (data == -1) {
-				block = MaterialData.getCustomBlock(id);
-			}
-			setStrengthModifier(block, mod);
-		}
-	}
-
-	@Override
-    public void encode(MinecraftExpandableByteBuffer buf) throws IOException {
-		super.encode(buf);
-        buf.putShort(getMaxDurability());
-		Block[] mod = getStrengthModifiedBlocks();
-        buf.putShort((short) mod.length);
-        for (Block block : mod) {
-            if (block instanceof CustomBlock) {
-                buf.putInt(((CustomBlock) block).getCustomId());
-                buf.putShort((short) -1);
-            } else {
-                buf.putInt(block.getRawId());
-                buf.putShort((short) block.getRawData());
-            }
-            buf.putFloat(getStrengthModifier(block));
-        }
-	}
-
-	@Override
-	public int getVersion() {
-		return super.getVersion();
-	}
-
 	public static short getDurability(ItemStack is) {
 		Material m = MaterialData.getMaterial(is.getTypeId(), is.getDurability());
 		if (!(m instanceof Tool)) {

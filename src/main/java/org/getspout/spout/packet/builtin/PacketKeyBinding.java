@@ -28,7 +28,7 @@ import org.getspout.spoutapi.keyboard.KeyBinding;
 import org.getspout.spoutapi.keyboard.Keyboard;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketKeyBinding implements SpoutPacket {
+public class PacketKeyBinding extends SpoutPacket {
 	KeyBinding binding;
 	Keyboard key;
 	String id;
@@ -62,10 +62,5 @@ public class PacketKeyBinding implements SpoutPacket {
 	@Override
 	public void handle(SpoutPlayer player) {
 		SpoutManager.getKeyBindingManager().summonKey(uniqueId, SpoutManager.getPlayerFromId(player.getEntityId()), key, pressed);
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
 	}
 }

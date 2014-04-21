@@ -24,7 +24,7 @@ import java.io.IOException;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketOpenSignGUI implements SpoutPacket {
+public class PacketOpenSignGUI extends SpoutPacket {
 	private int x, y, z;
 
 	protected PacketOpenSignGUI() {
@@ -52,10 +52,5 @@ public class PacketOpenSignGUI implements SpoutPacket {
 
 	@Override
 	public void handle(SpoutPlayer player) {
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
 	}
 }
