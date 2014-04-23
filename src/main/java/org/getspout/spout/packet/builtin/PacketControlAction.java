@@ -54,10 +54,10 @@ public class PacketControlAction extends SpoutPacket {
 		this.state = state;
 	}
 
-	public PacketControlAction(Screen screen, Widget widget, String data) {
+	public PacketControlAction(Screen screen, Widget widget, float state, String data) {
 		this.screen = screen.getId();
 		this.widget = widget.getId();
-		this.state = 0F;
+		this.state = state;
 		this.data = data;
 	}
 
