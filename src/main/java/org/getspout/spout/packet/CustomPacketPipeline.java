@@ -38,7 +38,6 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 public class CustomPacketPipeline {
 	private final Spout game;
 	private final LinkedList<Class<? extends SpoutPacket>> packets = new LinkedList<Class<? extends SpoutPacket>>();
-	private boolean enabled = false;
 
 	public CustomPacketPipeline(Spout game) {
 		this.game = game;
@@ -122,7 +121,6 @@ public class CustomPacketPipeline {
 				return com;
 			}
 		});
-		enabled = true;
 	}
 
 	private int getId(Class<? extends SpoutPacket> clazz) {
