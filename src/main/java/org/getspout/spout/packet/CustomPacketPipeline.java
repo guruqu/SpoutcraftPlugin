@@ -44,11 +44,6 @@ public class CustomPacketPipeline {
 	}
 
 	public void register(Class<? extends SpoutPacket> clazz) {
-		if (enabled) {
-			game.getLogger().severe("Attempt made to register a message after initialization!");
-			Thread.dumpStack();
-			return;
-		}
 		if (packets.size() > Short.MAX_VALUE) {
 			game.getLogger().info("A maximum of Short.MAX_VALUE messages can only be registered at one time!");
 			return;
