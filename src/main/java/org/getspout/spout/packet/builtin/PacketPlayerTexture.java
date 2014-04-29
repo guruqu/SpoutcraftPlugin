@@ -24,29 +24,29 @@ import java.io.IOException;
 import org.getspout.spoutapi.io.MinecraftExpandableByteBuffer;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PacketDownloadTextureHTTP extends SpoutPacket {
+public class PacketPlayerTexture extends SpoutPacket {
 	public int entityId;
 	public String skinURL;
 	public String cloakURL;
 	public boolean release = true;
 
-	protected PacketDownloadTextureHTTP() {
+	protected PacketPlayerTexture() {
 	}
 
-	public PacketDownloadTextureHTTP(int id, String skinURL, String cloakURL) {
+	public PacketPlayerTexture(int id, String skinURL, String cloakURL) {
 		this.entityId = id;
 		this.skinURL = skinURL;
 		this.cloakURL = cloakURL;
 		release = false;
 	}
 
-	public PacketDownloadTextureHTTP(int id, String skinURL) {
+	public PacketPlayerTexture(int id, String skinURL) {
 		this.entityId = id;
 		this.skinURL = skinURL;
 		this.cloakURL = "none";
 	}
 
-	public PacketDownloadTextureHTTP(String cloakURL, int id) {
+	public PacketPlayerTexture(String cloakURL, int id) {
 		this.entityId = id;
 		this.skinURL = "none";
 		this.cloakURL = cloakURL;

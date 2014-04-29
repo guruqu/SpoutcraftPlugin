@@ -82,7 +82,7 @@ import org.getspout.spout.packet.builtin.PacketAccessory;
 import org.getspout.spout.packet.builtin.PacketAirCapacity;
 import org.getspout.spout.packet.builtin.PacketChangeRenderDistance;
 import org.getspout.spout.packet.builtin.PacketClipboardText;
-import org.getspout.spout.packet.builtin.PacketDownloadTextureHTTP;
+import org.getspout.spout.packet.builtin.PacketPlayerTexture;
 import org.getspout.spout.packet.builtin.PacketEntityNameplate;
 import org.getspout.spout.packet.builtin.PacketEntitySkin;
 import org.getspout.spout.packet.builtin.PacketMovementModifiers;
@@ -938,7 +938,7 @@ public class SpoutcraftPlayer extends CraftPlayer implements SpoutPlayer {
 		if (!isSpoutCraftEnabled()) {
 			return;
 		}
-		viewer.sendDelayedPacket(new PacketDownloadTextureHTTP(getEntityId(),
+		viewer.sendDelayedPacket(new PacketPlayerTexture(getEntityId(),
 				getSkin(viewer), getCape(viewer)));
 		viewer.sendDelayedPacket(new PacketEntityNameplate(getEntityId(),
 				getTitleFor(viewer)));
@@ -957,7 +957,7 @@ public class SpoutcraftPlayer extends CraftPlayer implements SpoutPlayer {
 
 		for (Player p : getWorld().getPlayers()) {
 			if (p instanceof SpoutPlayer) {
-				((SpoutPlayer) p).sendPacket(new PacketDownloadTextureHTTP(getEntityId(), getSkin((SpoutPlayer) p)));
+				((SpoutPlayer) p).sendPacket(new PacketPlayerTexture(getEntityId(), getSkin((SpoutPlayer) p)));
 			}
 		}
 	}
@@ -966,7 +966,7 @@ public class SpoutcraftPlayer extends CraftPlayer implements SpoutPlayer {
 	public void setSkinFor(SpoutPlayer viewingPlayer, String url) {
 		checkUrl(url);
 		skinsFor.put(viewingPlayer.getName(), url);
-		viewingPlayer.sendPacket(new PacketDownloadTextureHTTP(getEntityId(), url));
+		viewingPlayer.sendPacket(new PacketPlayerTexture(getEntityId(), url));
 	}
 
 	@Override
@@ -999,7 +999,7 @@ public class SpoutcraftPlayer extends CraftPlayer implements SpoutPlayer {
 
 		for (Player p : getWorld().getPlayers()) {
 			if (p instanceof SpoutPlayer) {
-				((SpoutPlayer) p).sendPacket(new PacketDownloadTextureHTTP(getCape((SpoutPlayer) p), getEntityId()));
+				((SpoutPlayer) p).sendPacket(new PacketPlayerTexture(getCape((SpoutPlayer) p), getEntityId()));
 			}
 		}
 	}
@@ -1008,7 +1008,7 @@ public class SpoutcraftPlayer extends CraftPlayer implements SpoutPlayer {
 	public void setCapeFor(SpoutPlayer viewingPlayer, String url) {
 		checkUrl(url);
 		capesFor.put(viewingPlayer.getName(), url);
-		viewingPlayer.sendPacket(new PacketDownloadTextureHTTP(url, getEntityId()));
+		viewingPlayer.sendPacket(new PacketPlayerTexture(url, getEntityId()));
 	}
 
 	@Override
